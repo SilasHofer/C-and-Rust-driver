@@ -65,6 +65,7 @@ int main(int argc, char **argv)
         return 2;
     }
 
+    while(1){
     bme280_reading_t r;
     if (bme280_read(&sensor, mask, &r) != BME280_OK) {
         fprintf(stderr, "Read failed\n");
@@ -84,6 +85,7 @@ int main(int argc, char **argv)
         printf("Humidity:    %.2f %%RH\n", r.humidity_rh);
 
     printf("-----------------------\n");
+    }
 
     close(fd);
     return 0;

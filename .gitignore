@@ -1,3 +1,5 @@
 C_driver/bme280_id
 C_driver/bme280_demo
 
+C_bare-bones_driver/bme280_test
+C_driver/bme280_demo
