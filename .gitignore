@@ -1,5 +1,8 @@
 C_driver/bme280_id
 C_driver/bme280_demo
+Rust_driver/target
+Rust_driver/Cargo.lock
+
 
 C_bare-bones_driver/bme280_test
 C_driver/bme280_demo
