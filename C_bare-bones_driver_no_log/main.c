@@ -33,16 +33,17 @@ int main(int argc, char **argv)
     }
 
     printf("BME280 sensor initialized successfully\n");
+    while(1){
+        float temp_c = 0.0f;
+        if (bme280_read_temperature(&sensor, &temp_c) < 0) {
+            fprintf(stderr, "Failed to read temperature\n");
+            close(fd);
+            return 3;
+        }
 
-    float temp_c = 0.0f;
-    if (bme280_read_temperature(&sensor, &temp_c) < 0) {
-        fprintf(stderr, "Failed to read temperature\n");
-        close(fd);
-        return 3;
+        printf("Temperature: %.2f C\n", temp_c);
+        fflush(stdout);
     }
-
-    printf("Temperature: %.2f C\n", temp_c);
-
     close(fd);
     return 0;
 }

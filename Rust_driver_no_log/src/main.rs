@@ -24,11 +24,10 @@ fn run() -> Result<(), DriverError> {
     let mut sensor = Bme280::new(file, addr)?;
 
     println!("BME280 sensor initialized successfully");
-
-    let temp_c = sensor.read_temperature_c()?;
-    println!("Temperature: {temp_c:.2} C");
-
-    Ok(())
+    loop {
+        let temp_c = sensor.read_temperature_c()?;
+        println!("Temperature: {temp_c:.2} C");
+    }
 }
 
 fn parse_address(value: &str) -> Result<u8, DriverError> {
