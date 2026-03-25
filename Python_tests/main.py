@@ -251,10 +251,11 @@ Examples:
   python run_drivers.py --both           # Compile + run both drivers
   python run_drivers.py --both --log     # Run both and save logs to Python_tests/
   python run_drivers.py --both --timeout 120
+    python run_drivers.py --parallel       # Alternate C/Rust readings, compare results
         """,
     )
 
-    driver_group = parser.add_mutually_exclusive_group(required=True)
+    driver_group = parser.add_mutually_exclusive_group(required=False)
     driver_group.add_argument("--c",    action="store_true", help="Compile and run the C driver only")
     driver_group.add_argument("--rust", action="store_true", help="Compile and run the Rust driver only")
     driver_group.add_argument("--both", action="store_true", help="Compile and run both drivers")
@@ -279,7 +280,22 @@ Examples:
         help="Save each driver's output to a timestamped .log file in Python_tests/",
     )
 
-    return parser.parse_args()
+    parser.add_argument(
+        "--parallel",
+        action="store_true",
+        help="Alternate C/Rust readings, compare results at end (1000 total readings)",
+    )
+
+    args = parser.parse_args()
+    # If --parallel is set, force --both and ignore --c/--rust
+    if args.parallel:
+        args.both = True
+        args.c = False
+        args.rust = False
+    # If neither --c, --rust, nor --both is set, and not parallel, show error
+    if not (args.c or args.rust or args.both or args.parallel):
+        parser.error("one of the arguments --c --rust --both is required")
+    return args
 
 
 def main() -> None:
@@ -290,6 +306,81 @@ def main() -> None:
     print(f"  Started : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"  Root    : {ROOT_DIR}")
     print("=" * 50)
+
+
+    if args.parallel:
+        print(f"\n{'─' * 50}")
+        print("  Parallel Mode: Alternating C/Rust readings")
+        print(f"{'─' * 50}")
+
+        c_temps = []
+        rust_temps = []
+        total_reads = args.samples
+        timeout = args.timeout
+
+        def get_temp_from_line(line):
+            # Expects line like: "Temperature: <value> ..."
+            import re
+            m = re.search(r"Temperature:\s*([-+]?[0-9]*\.?[0-9]+)", line)
+            if m:
+                return float(m.group(1))
+            return None
+
+        for i in range(1, total_reads + 1):
+            if i % 2 == 1:
+                # Odd: C driver
+                label = f"C_read_{i}"
+                cmd = [f"./{C_BINARY}"]
+                cwd = C_DIR
+            else:
+                # Even: Rust driver
+                label = f"Rust_read_{i}"
+                cmd = ["cargo", "run", "--release"]
+                cwd = RUST_DIR
+
+            try:
+                proc = subprocess.Popen(
+                    [str(c) for c in cmd],
+                    cwd=str(cwd),
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                )
+                temp_val = None
+                for line in proc.stdout:
+                    if TEMP_PATTERN in line:
+                        temp_val = get_temp_from_line(line)
+                        print(f"  [{i}/{total_reads}] {label}: {line.strip()}")
+                        break
+                proc.kill()
+                proc.wait()
+                if temp_val is not None:
+                    if i % 2 == 1:
+                        c_temps.append(temp_val)
+                    else:
+                        rust_temps.append(temp_val)
+                else:
+                    print(f"  ✗ No temperature found for {label}")
+            except Exception as e:
+                print(f"  ✗ Error running {label}: {e}")
+
+        # Compare results
+        print(f"\n{'=' * 50}")
+        print("  Comparison of Sensor Readings")
+        print(f"{'=' * 50}")
+        min_len = min(len(c_temps), len(rust_temps))
+        diffs = []
+        for idx in range(min_len):
+            diff = abs(c_temps[idx] - rust_temps[idx])
+            diffs.append(diff)
+            print(f"  Pair {idx+1}: C={c_temps[idx]:.2f}  Rust={rust_temps[idx]:.2f}  |Δ|={diff:.4f}")
+        if diffs:
+            print(f"\n  Average |Δ|: {sum(diffs)/len(diffs):.4f}")
+            print(f"  Max |Δ|: {max(diffs):.4f}")
+        else:
+            print("  No valid pairs to compare.")
+        print(f"{'=' * 50}\n")
+        sys.exit(0)
 
     results: dict[str, bool] = {}
 
