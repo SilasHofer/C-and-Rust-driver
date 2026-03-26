@@ -4,29 +4,31 @@ Driver Test Runner for Raspberry Pi 3
 Compiles and runs the C driver, Rust driver, or both.
 
 Assumed folder layout (relative to this script's location):
-  ../C_bare-bones_driver_no_log/   ← C source files
-  ../Rust_driver_no_log/           ← Rust project (has Cargo.toml)
+  ../C_bare-bones_driver_no_log/   <- C source files
+  ../Rust_driver_no_log/           <- Rust project (has Cargo.toml)
 """
 
 import argparse
+import math
 import subprocess
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
+import psutil
+import threading
 
 
-# ── Paths (resolved relative to this script's location) ──────────────────────
+# -- Paths (resolved relative to this script's location) ----------------------
 SCRIPT_DIR  = Path(__file__).parent.resolve()
 ROOT_DIR    = SCRIPT_DIR.parent
 
 C_DIR       = ROOT_DIR / "C_bare-bones_driver_no_log"
-C_BINARY    = "c_driver"               # compiled output name (relative to C_DIR)
+C_BINARY    = "c_driver"
 
 RUST_DIR    = ROOT_DIR / "Rust_driver_no_log"
-# Binary ends up at target/debug/<package-name> — must match [package] name in Cargo.toml
 RUST_BINARY = RUST_DIR / "target" / "debug" / "rust_driver_no_log"
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 
 def run_step(label: str, cmd: list, cwd: Path, timeout: int, log_file) -> bool:
@@ -46,31 +48,171 @@ def run_step(label: str, cmd: list, cwd: Path, timeout: int, log_file) -> bool:
         if log_file:
             log_file.write(f"[{label}]\n{output}\n")
         if result.returncode != 0:
-            print(f"  ✗ '{label}' exited with code {result.returncode}")
+            print(f"  x '{label}' exited with code {result.returncode}")
             return False
         return True
 
     except FileNotFoundError as e:
-        msg = f"  ✗ Command not found: {e}"
+        msg = f"  x Command not found: {e}"
         print(msg)
         if log_file:
             log_file.write(msg + "\n")
         return False
 
     except subprocess.TimeoutExpired:
-        msg = f"  ✗ '{label}' timed out after {timeout}s"
+        msg = f"  x '{label}' timed out after {timeout}s"
         print(msg)
         if log_file:
             log_file.write(msg + "\n")
         return False
 
 
-TEMP_SAMPLES    = 1000  # default number of readings (override with --samples)
-TEMP_PATTERN    = "Temperature:"  # matched against each line of driver output
-LOG_EVERY_N     = 10    # log a temperature reading every N samples (e.g. 10 or 50)
+TEMP_SAMPLES    = 1000
+TEMP_PATTERN    = "Temperature:"
+LOG_EVERY_N     = 10
 
 
-def capture_temperature_readings(label: str, cmd: list, cwd: Path, timeout: int, log_file, samples: int) -> bool:
+def _latency_stats(intervals: list[float]) -> dict:
+    """
+    Compute mean, std-dev, and worst-case latency from a list of
+    inter-reading intervals (in seconds). Returns an empty dict if
+    there are no intervals recorded.
+    """
+    n = len(intervals)
+    if n == 0:
+        return {}
+    mean = sum(intervals) / n
+    variance = sum((x - mean) ** 2 for x in intervals) / n
+    return {
+        "n":        n,
+        "mean_ms":  mean * 1000,
+        "std_ms":   math.sqrt(variance) * 1000,
+        "worst_ms": max(intervals) * 1000,
+    }
+
+
+def _resource_stats(cpu_samples: list[float], mem_samples: list[float]) -> dict:
+    """
+    Summarise CPU (%) and RSS memory (bytes) collected during a run.
+    """
+    valid_cpu = cpu_samples
+    n_cpu = len(valid_cpu)
+    n_mem = len(mem_samples)
+    if n_cpu == 0 and n_mem == 0:
+        return {}
+
+    result = {}
+    if n_cpu:
+        result["cpu_mean"]     = sum(valid_cpu) / n_cpu
+        result["cpu_peak"]     = max(valid_cpu)
+        result["cpu_n"]        = n_cpu
+        result["cpu_skipped"]  = len(cpu_samples) - n_cpu
+    if n_mem:
+        result["mem_mean_kb"]  = (sum(mem_samples) / n_mem) / 1024
+        result["mem_peak_kb"]  = max(mem_samples) / 1024
+        result["mem_n"]        = n_mem
+    return result
+
+
+def _print_latency_stats(stats: dict, log_file) -> None:
+    if not stats:
+        return
+    lines = [
+        f"  Latency (inter-reading interval, n={stats['n']}):",
+        f"    Mean        : {stats['mean_ms']:8.3f} ms",
+        f"    Std-dev     : {stats['std_ms']:8.3f} ms",
+        f"    Worst-case  : {stats['worst_ms']:8.3f} ms",
+    ]
+    for line in lines:
+        print(line)
+        if log_file:
+            log_file.write(line.lstrip() + "\n")
+
+
+def _print_resource_stats(stats: dict, log_file) -> None:
+    if not stats:
+        return
+    lines = ["  Resource usage (driver process):"]
+    if "cpu_mean" in stats:
+        skipped = stats.get("cpu_skipped", 0)
+        skip_note = f"  ({skipped} zero samples excluded)" if skipped else ""
+        lines += [
+            f"    CPU mean    : {stats['cpu_mean']:6.1f} %  (n={stats['cpu_n']}{skip_note})",
+            f"    CPU peak    : {stats['cpu_peak']:6.1f} %",
+        ]
+    if "mem_mean_kb" in stats:
+        lines += [
+            f"    Mem mean    : {stats['mem_mean_kb']:8.1f} KB",
+            f"    Mem peak    : {stats['mem_peak_kb']:8.1f} KB",
+        ]
+    for line in lines:
+        print(line)
+        if log_file:
+            log_file.write(line.lstrip() + "\n")
+
+def _print_cpu_time_stats(cpu_time: float, wall_time: float, log_file) -> None:
+    """
+    Print total CPU time consumed and CPU efficiency.
+    """
+    if wall_time <= 0:
+        return
+
+    efficiency = (cpu_time / wall_time) * 100.0
+
+    lines = [
+        "  CPU time (process accounting):",
+        f"    CPU time     : {cpu_time:8.3f} s",
+        f"    CPU efficiency: {efficiency:8.2f} %",
+    ]
+
+    for line in lines:
+        print(line)
+        if log_file:
+            log_file.write(line.lstrip() + "\n")
+
+class ResourceSampler:
+    def __init__(self, pid: int, interval: float = 0.02):
+        self.proc = psutil.Process(pid)
+        self.interval = interval
+
+        self.cpu_samples = []
+        self.mem_samples = []
+
+        self._running = False
+        self._thread = None
+
+    def start(self):
+        self._running = True
+
+        # prime cpu measurement
+        self.proc.cpu_percent(None)
+
+        self._thread = threading.Thread(target=self._run, daemon=True)
+        self._thread.start()
+
+    def stop(self):
+        self._running = False
+        if self._thread:
+            self._thread.join()
+
+    def _run(self):
+        while self._running:
+            try:
+                cpu = self.proc.cpu_percent(None)
+                mem = self.proc.memory_info().rss
+
+                self.cpu_samples.append(cpu)
+                self.mem_samples.append(mem)
+
+            except psutil.NoSuchProcess:
+                break
+
+            time.sleep(self.interval)
+
+
+def capture_temperature_readings(
+    label: str, cmd: list, cwd: Path, timeout: int, log_file, samples: int
+) -> bool:
     """
     Launch a driver process, capture `samples` temperature lines, then kill it.
     Returns True if the target count was reached without error.
@@ -87,8 +229,12 @@ def capture_temperature_readings(label: str, cmd: list, cwd: Path, timeout: int,
         log_file.write(f"Start time : {start_dt.strftime('%Y-%m-%d %H:%M:%S')}\n")
         log_file.write(f"Target     : {samples} readings (logging every {LOG_EVERY_N})\n\n")
 
-    count = 0
-    ok    = False
+    count       = 0
+    ok          = False
+    intervals   = []    # inter-reading latencies (seconds)
+    last_ts     = None
+    cpu_samples = []    # per-reading CPU % snapshots
+    mem_samples = []    # per-reading RSS bytes snapshots
 
     try:
         proc = subprocess.Popen(
@@ -99,18 +245,33 @@ def capture_temperature_readings(label: str, cmd: list, cwd: Path, timeout: int,
             text=True,
         )
 
+
+        ps_proc = psutil.Process(proc.pid)
+        cpu_start = ps_proc.cpu_times()
+
+        sampler = ResourceSampler(proc.pid)
+        sampler.start()
+
         for line in proc.stdout:
             line = line.rstrip()
 
             if TEMP_PATTERN in line:
+                now = time.monotonic()
+
+                # Latency
+                if last_ts is not None:
+                    intervals.append(now - last_ts)
+                last_ts = now
+
                 count += 1
-                # Always print to terminal
                 print(f"  [{count}/{samples}] {line}")
-                # Only write to log every LOG_EVERY_N readings
+
                 if log_file and count % LOG_EVERY_N == 0:
-                    log_file.write(f"[{count}/{samples}] {line}\n")
+                    log_file.write(
+                        f"[{count}/{samples}] {line}\n"
+                    )
+
             else:
-                # Non-temperature lines (errors, warnings etc.) always logged
                 print(f"  {line}")
                 if log_file:
                     log_file.write(line + "\n")
@@ -120,19 +281,26 @@ def capture_temperature_readings(label: str, cmd: list, cwd: Path, timeout: int,
                 break
 
             if time.monotonic() - start > timeout:
-                print(f"\n  ✗ Timed out after {timeout}s ({count}/{samples} readings)")
+                print(f"\n  x Timed out after {timeout}s ({count}/{samples} readings)")
                 if log_file:
                     log_file.write(f"\nTimed out after {timeout}s ({count}/{samples} readings)\n")
                 break
 
     except FileNotFoundError as e:
-        print(f"  ✗ Command not found: {e}")
+        print(f"  x Command not found: {e}")
         if log_file:
             log_file.write(f"Command not found: {e}\n")
         return False
 
     finally:
+        cpu_end = None
         try:
+            cpu_end = ps_proc.cpu_times()
+        except Exception:
+            pass
+
+        try:
+            sampler.stop()
             proc.kill()
             proc.wait()
         except Exception:
@@ -141,14 +309,37 @@ def capture_temperature_readings(label: str, cmd: list, cwd: Path, timeout: int,
     end_dt  = datetime.now()
     elapsed = time.monotonic() - start
 
+    cpu_time_total = None
+    if cpu_end:
+        cpu_time_total = (
+            (cpu_end.user - cpu_start.user) +
+            (cpu_end.system - cpu_start.system)
+        )
+
+    throughput = count / elapsed if elapsed > 0 else 0
+
     print(f"\n  End time   : {end_dt.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"  Readings   : {count}/{samples}")
     print(f"  Duration   : {elapsed:.2f}s")
+    print(f"  Throughput : {throughput:.2f} reads/sec")
 
     if log_file:
         log_file.write(f"\nEnd time   : {end_dt.strftime('%Y-%m-%d %H:%M:%S')}\n")
         log_file.write(f"Readings   : {count}/{samples}\n")
         log_file.write(f"Duration   : {elapsed:.2f}s\n")
+        log_file.write(f"Throughput : {throughput:.2f} reads/sec\n")
+
+    lat_stats = _latency_stats(intervals)
+    _print_latency_stats(lat_stats, log_file)
+
+    if cpu_time_total is not None:
+        _print_cpu_time_stats(cpu_time_total, elapsed, log_file)
+
+    res_stats = _resource_stats(
+        sampler.cpu_samples,
+        sampler.mem_samples
+    )
+    _print_resource_stats(res_stats, log_file)
 
     return ok
 
@@ -160,12 +351,11 @@ def build_and_run_c(timeout: int, log: bool, samples: int) -> bool:
 
     log_file = None
     if log:
-        log_path = SCRIPT_DIR / f"c_driver_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        log_path = SCRIPT_DIR / "Logs" / "Performance" / "C" / f"c_driver_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         log_file = open(log_path, "w")
         print(f"  Logging to: {log_path.name}")
 
     try:
-        # Step 1 — compile
         ok = run_step(
             "gcc compile",
             [
@@ -181,7 +371,6 @@ def build_and_run_c(timeout: int, log: bool, samples: int) -> bool:
         if not ok:
             return False
 
-        # Step 2 — run and capture 1000 temperature readings
         ok = capture_temperature_readings(
             "run",
             [f"./{C_BINARY}"],
@@ -191,7 +380,7 @@ def build_and_run_c(timeout: int, log: bool, samples: int) -> bool:
             samples=samples,
         )
 
-        print(f"\n  {'✓ PASSED' if ok else '✗ FAILED'}")
+        print(f"\n  {'PASSED' if ok else 'FAILED'}")
         return ok
 
     finally:
@@ -206,12 +395,11 @@ def build_and_run_rust(timeout: int, log: bool, samples: int) -> bool:
 
     log_file = None
     if log:
-        log_path = SCRIPT_DIR / f"rust_driver_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        log_path = SCRIPT_DIR / "Logs" / "Performance" / "Rust" / f"rust_driver_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         log_file = open(log_path, "w")
         print(f"  Logging to: {log_path.name}")
 
     try:
-        # Step 1 — cargo build
         ok = run_step(
             "cargo build",
             ["cargo", "build", "--release"],
@@ -222,7 +410,6 @@ def build_and_run_rust(timeout: int, log: bool, samples: int) -> bool:
         if not ok:
             return False
 
-        # Step 2 — run and capture 1000 temperature readings
         ok = capture_temperature_readings(
             "cargo run",
             ["cargo", "run", "--release"],
@@ -232,7 +419,7 @@ def build_and_run_rust(timeout: int, log: bool, samples: int) -> bool:
             samples=samples,
         )
 
-        print(f"\n  {'✓ PASSED' if ok else '✗ FAILED'}")
+        print(f"\n  {'PASSED' if ok else 'FAILED'}")
         return ok
 
     finally:
@@ -251,7 +438,7 @@ Examples:
   python run_drivers.py --both           # Compile + run both drivers
   python run_drivers.py --both --log     # Run both and save logs to Python_tests/
   python run_drivers.py --both --timeout 120
-    python run_drivers.py --parallel       # Alternate C/Rust readings, compare results
+  python run_drivers.py --parallel       # Alternate C/Rust readings, compare results
         """,
     )
 
@@ -261,38 +448,27 @@ Examples:
     driver_group.add_argument("--both", action="store_true", help="Compile and run both drivers")
 
     parser.add_argument(
-        "--samples",
-        type=int,
-        default=TEMP_SAMPLES,
-        metavar="N",
-        help=f"Number of temperature readings to capture before stopping (default: {TEMP_SAMPLES})",
+        "--samples", type=int, default=TEMP_SAMPLES, metavar="N",
+        help=f"Number of temperature readings to capture (default: {TEMP_SAMPLES})",
     )
     parser.add_argument(
-        "--timeout",
-        type=int,
-        default=60,
-        metavar="SECONDS",
+        "--timeout", type=int, default=60, metavar="SECONDS",
         help="Per-step timeout in seconds (default: 60)",
     )
     parser.add_argument(
-        "--log",
-        action="store_true",
+        "--log", action="store_true",
         help="Save each driver's output to a timestamped .log file in Python_tests/",
     )
-
     parser.add_argument(
-        "--parallel",
-        action="store_true",
-        help="Alternate C/Rust readings, compare results at end (1000 total readings)",
+        "--parallel", action="store_true",
+        help="Alternate C/Rust readings, compare results at end",
     )
 
     args = parser.parse_args()
-    # If --parallel is set, force --both and ignore --c/--rust
     if args.parallel:
         args.both = True
         args.c = False
         args.rust = False
-    # If neither --c, --rust, nor --both is set, and not parallel, show error
     if not (args.c or args.rust or args.both or args.parallel):
         parser.error("one of the arguments --c --rust --both is required")
     return args
@@ -307,7 +483,6 @@ def main() -> None:
     print(f"  Root    : {ROOT_DIR}")
     print("=" * 50)
 
-
     if args.parallel:
         print(f"\n{'─' * 50}")
         print("  Parallel Mode: Alternating C/Rust readings")
@@ -319,7 +494,6 @@ def main() -> None:
         timeout = args.timeout
 
         def get_temp_from_line(line):
-            # Expects line like: "Temperature: <value> ..."
             import re
             m = re.search(r"Temperature:\s*([-+]?[0-9]*\.?[0-9]+)", line)
             if m:
@@ -328,12 +502,10 @@ def main() -> None:
 
         for i in range(1, total_reads + 1):
             if i % 2 == 1:
-                # Odd: C driver
                 label = f"C_read_{i}"
                 cmd = [f"./{C_BINARY}"]
                 cwd = C_DIR
             else:
-                # Even: Rust driver
                 label = f"Rust_read_{i}"
                 cmd = ["cargo", "run", "--release"]
                 cwd = RUST_DIR
@@ -360,11 +532,10 @@ def main() -> None:
                     else:
                         rust_temps.append(temp_val)
                 else:
-                    print(f"  ✗ No temperature found for {label}")
+                    print(f"  x No temperature found for {label}")
             except Exception as e:
-                print(f"  ✗ Error running {label}: {e}")
+                print(f"  x Error running {label}: {e}")
 
-        # Compare results
         print(f"\n{'=' * 50}")
         print("  Comparison of Sensor Readings")
         print(f"{'=' * 50}")
@@ -373,10 +544,10 @@ def main() -> None:
         for idx in range(min_len):
             diff = abs(c_temps[idx] - rust_temps[idx])
             diffs.append(diff)
-            print(f"  Pair {idx+1}: C={c_temps[idx]:.2f}  Rust={rust_temps[idx]:.2f}  |Δ|={diff:.4f}")
+            print(f"  Pair {idx+1}: C={c_temps[idx]:.2f}  Rust={rust_temps[idx]:.2f}  |d|={diff:.4f}")
         if diffs:
-            print(f"\n  Average |Δ|: {sum(diffs)/len(diffs):.4f}")
-            print(f"  Max |Δ|: {max(diffs):.4f}")
+            print(f"\n  Average |d|: {sum(diffs)/len(diffs):.4f}")
+            print(f"  Max |d|: {max(diffs):.4f}")
         else:
             print("  No valid pairs to compare.")
         print(f"{'=' * 50}\n")
@@ -390,13 +561,12 @@ def main() -> None:
     if args.rust or args.both:
         results["Rust"] = build_and_run_rust(args.timeout, args.log, args.samples)
 
-    # ── Summary ───────────────────────────────────────────────────────────────
     print(f"\n{'=' * 50}")
     print("  Summary")
     print(f"{'=' * 50}")
     all_passed = True
     for driver, passed in results.items():
-        icon = "✓" if passed else "✗"
+        icon = "+" if passed else "x"
         print(f"  {icon}  {driver} driver — {'PASSED' if passed else 'FAILED'}")
         if not passed:
             all_passed = False
