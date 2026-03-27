@@ -1,5 +1,7 @@
 use std::env;
 use std::fs::OpenOptions;
+use std::time::Duration;
+use std::thread;
 
 use bme280_bare_bones::{Bme280, DriverError};
 
@@ -14,19 +16,47 @@ fn main() {
 }
 
 fn run() -> Result<(), DriverError> {
+    // Parse I2C address
     let addr = env::args()
         .nth(1)
         .map(|arg| parse_address(&arg))
-        .transpose()?
+        .transpose()?  // parse_address returns Result<u8, DriverError>
         .unwrap_or(DEFAULT_ADDR);
 
+    // Parse Hz argument safely
+    let hz = env::args()
+        .nth(2)
+        .map(|arg| {
+            arg.parse::<f64>().map_err(|e| {
+                DriverError::Io(std::io::Error::new(
+                    std::io::ErrorKind::InvalidInput,
+                    format!("invalid Hz value '{arg}': {e}"),
+                ))
+            })
+        })
+        .transpose()?  // convert Option<Result<..>> -> Result<Option<..>>
+        .unwrap_or(0.0); // default 0 = max stress, no delay
+
+    // Compute optional delay
+    let delay = if hz > 0.0 {
+        Some(Duration::from_micros((1_000_000.0 / hz) as u64))
+    } else {
+        None
+    };
+
+    // Open I2C device and initialize sensor
     let file = OpenOptions::new().read(true).write(true).open(I2C_PATH)?;
     let mut sensor = Bme280::new(file, addr)?;
 
     println!("BME280 sensor initialized successfully");
+
     loop {
         let temp_c = sensor.read_temperature_c()?;
         println!("Temperature: {temp_c:.2} C");
+
+        if let Some(d) = delay {
+            thread::sleep(d);
+        }
     }
 }
 
