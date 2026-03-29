@@ -17,6 +17,7 @@ from datetime import datetime
 from pathlib import Path
 import psutil
 import threading
+import re as _re
 
 
 # -- Paths (resolved relative to this script's location) ----------------------
@@ -69,6 +70,7 @@ def run_step(label: str, cmd: list, cwd: Path, timeout: int, log_file) -> bool:
 
 TEMP_PATTERN = "Temperature:"
 LOG_EVERY_N  = 100
+COMPILE_TIMEOUT = 120
 
 
 def _latency_stats(intervals: list[float]) -> dict:
@@ -91,18 +93,24 @@ def _latency_stats(intervals: list[float]) -> dict:
 
 
 def _resource_stats(mem_samples: list[float]) -> dict:
-    """
-    Summarise RSS memory (bytes) collected during a run.
-    """
     n_mem = len(mem_samples)
     if n_mem == 0:
         return {}
 
-    result = {}
-    if n_mem:
-        result["mem_mean_kb"] = (sum(mem_samples) / n_mem) / 1024
-        result["mem_peak_kb"] = max(mem_samples) / 1024
-        result["mem_n"]       = n_mem
+    result = {
+        "mem_mean_kb": (sum(mem_samples) / n_mem) / 1024,
+        "mem_peak_kb": max(mem_samples) / 1024,
+        "mem_n":       n_mem,
+    }
+
+    if n_mem >= 2:
+        xs    = list(range(n_mem))
+        x_bar = sum(xs) / n_mem
+        y_bar = sum(mem_samples) / n_mem
+        num   = sum((xs[i] - x_bar) * (mem_samples[i] - y_bar) for i in range(n_mem))
+        den   = sum((xs[i] - x_bar) ** 2 for i in range(n_mem))
+        result["mem_slope_kb_per_sample"] = (num / den if den != 0 else 0.0) / 1024
+
     return result
 
 
@@ -130,11 +138,62 @@ def _print_resource_stats(stats: dict, log_file) -> None:
             f"    Mem mean    : {stats['mem_mean_kb']:8.1f} KB",
             f"    Mem peak    : {stats['mem_peak_kb']:8.1f} KB",
         ]
+    if "mem_slope_kb_per_sample" in stats:
+        slope = stats["mem_slope_kb_per_sample"]
+        trend = "growing ⚠" if slope > 0.01 else ("shrinking" if slope < -0.01 else "stable ✓")
+        lines.append(f"    Mem trend   : {slope:+.4f} KB/sample ({trend})")
+
     for line in lines:
         print(line)
         if log_file:
             log_file.write(line.lstrip() + "\n")
 
+def _sensor_stats(temp_values: list[float]) -> dict:
+    n = len(temp_values)
+    if n == 0:
+        return {}
+    mean     = sum(temp_values) / n
+    variance = sum((x - mean) ** 2 for x in temp_values) / n
+    std      = math.sqrt(variance)
+    min_v    = min(temp_values)
+    max_v    = max(temp_values)
+
+    # Spike: reading differs from both its neighbours by more than 3x the
+    # global std-dev. Ignores first and last reading (no two neighbours).
+    spikes = 0
+    for i in range(1, n - 1):
+        prev_diff = abs(temp_values[i] - temp_values[i - 1])
+        next_diff = abs(temp_values[i] - temp_values[i + 1])
+        if prev_diff > 3 * std and next_diff > 3 * std:
+            spikes += 1
+
+    return {
+        "n":      n,
+        "mean":   mean,
+        "std":    std,
+        "min":    min_v,
+        "max":    max_v,
+        "range":  max_v - min_v,
+        "spikes": spikes,
+    }
+
+
+def _print_sensor_stats(stats: dict, log_file) -> None:
+    if not stats:
+        return
+    lines = [
+        f"  Sensor reading variation (n={stats['n']}):",
+        f"    Mean        : {stats['mean']:8.3f} °C",
+        f"    Std-dev     : {stats['std']:8.3f} °C",
+        f"    Min         : {stats['min']:8.3f} °C",
+        f"    Max         : {stats['max']:8.3f} °C",
+        f"    Range       : {stats['range']:8.3f} °C",
+        f"    Spikes (>3σ): {stats['spikes']}",
+    ]
+    for line in lines:
+        print(line)
+        if log_file:
+            log_file.write(line.lstrip() + "\n")
 
 class ResourceSampler:
     def __init__(self, pid: int, interval: float = 0.02):
@@ -163,103 +222,152 @@ class ResourceSampler:
             time.sleep(self.interval)
 
 
+
 def capture_temperature_readings(
     label: str, cmd: list, cwd: Path, timeout: int, log_file
 ) -> bool:
-    """
-    Launch a driver process and capture temperature readings until the timeout
-    expires. Logs every LOG_EVERY_N readings. Returns True if at least one
-    reading was captured without error.
-    """
-    start_dt = datetime.now()
-    start    = time.monotonic()
+    start_dt     = datetime.now()
+    global_start = time.monotonic()
 
     print(f"\n  Start time : {start_dt.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"  $ {' '.join(str(c) for c in cmd)}")
-    print(f"  Running for {timeout}s (logging every {LOG_EVERY_N} readings)...\n")
+    print(f"  Running for {timeout}s with auto-restart on failure...\n")
 
     if log_file:
         log_file.write(f"[{label}]\n")
         log_file.write(f"Start time : {start_dt.strftime('%Y-%m-%d %H:%M:%S')}\n")
-        log_file.write(f"Timeout    : {timeout}s (logging every {LOG_EVERY_N} readings)\n\n")
+        log_file.write(f"Timeout    : {timeout}s (auto-restart enabled)\n\n")
 
-    count     = 0
-    intervals = []
-    last_ts   = None
+    total_count    = 0
+    restart_count  = 0
+    intervals      = []
+    last_ts        = None
+    all_mem_samples = []
+    failure_times  = []
+    temp_values    = []
 
-    try:
-        proc = subprocess.Popen(
-            [str(c) for c in cmd],
-            cwd=str(cwd),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-        )
+    while time.monotonic() - global_start < timeout:
+        proc           = None
+        error_detected = False
+        failure_reason = ""
 
-        sampler = ResourceSampler(proc.pid)
-        sampler.start()
-
-        for line in proc.stdout:
-            # Stop once the timeout has elapsed
-            if time.monotonic() - start >= timeout:
-                break
-
-            line = line.rstrip()
-
-            if TEMP_PATTERN in line:
-                now = time.monotonic()
-
-                if last_ts is not None:
-                    intervals.append(now - last_ts)
-                last_ts = now
-
-                count += 1
-                print(f"  [{count}] {line}")
-
-                if log_file and count % LOG_EVERY_N == 0:
-                    log_file.write(f"[{count}] {line}\n")
-
-            else:
-                print(f"  {line}")
-                if log_file:
-                    log_file.write(line + "\n")
-
-    except FileNotFoundError as e:
-        print(f"  x Command not found: {e}")
-        if log_file:
-            log_file.write(f"Command not found: {e}\n")
-        return False
-
-    finally:
         try:
+            proc = subprocess.Popen(
+                [str(c) for c in cmd],
+                cwd=str(cwd),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
+
+            sampler = ResourceSampler(proc.pid)
+            sampler.start()
+
+            for line in proc.stdout:
+                if time.monotonic() - global_start >= timeout:
+                    break
+
+                line = line.rstrip()
+
+                if "Failed to" in line or "error" in line.lower() or "panicked at" in line:
+                    error_detected = True
+                    failure_reason = line
+
+                if TEMP_PATTERN in line:
+                    now = time.monotonic()
+                    if last_ts is not None:
+                        intervals.append(now - last_ts)
+                    last_ts = now
+
+                    total_count += 1
+                    print(f"  [{total_count}] {line}")
+
+                    if log_file and total_count % LOG_EVERY_N == 0:
+                        log_file.write(f"[{total_count}] {line}\n")
+
+                    m = _re.search(r"Temperature:\s*([-+]?[0-9]*\.?[0-9]+)", line)
+                    if m:
+                        temp_values.append(float(m.group(1)))
+
+                else:
+                    print(f"  {line}")
+                    if log_file:
+                        log_file.write(line + "\n")
+
+                if error_detected:
+                    break
+
             sampler.stop()
             proc.kill()
             proc.wait()
-        except Exception:
-            pass
 
-    end_dt   = datetime.now()
-    elapsed  = time.monotonic() - start
-    throughput = count / elapsed if elapsed > 0 else 0
+            all_mem_samples.extend(sampler.mem_samples)
 
-    print(f"\n  End time   : {end_dt.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"  Readings   : {count}")
-    print(f"  Duration   : {elapsed:.2f}s")
-    print(f"  Throughput : {throughput:.2f} reads/sec")
+            if error_detected:
+                restart_count += 1
+                failure_times.append(time.monotonic() - global_start)
+                ts  = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                msg = f"\n  ⚠ [{ts}] Restarting driver (#{restart_count}) due to: {failure_reason}"
+                print(msg)
+                if log_file:
+                    log_file.write(msg + "\n")
+                time.sleep(0.5)
+                continue
+
+        except Exception as e:
+            restart_count += 1
+            failure_times.append(time.monotonic() - global_start)
+            ts  = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            msg = f"\n  ⚠ [{ts}] Crash detected (#{restart_count}): {e}"
+            print(msg)
+            if log_file:
+                log_file.write(msg + "\n")
+            time.sleep(0.5)
+            continue
+
+    elapsed    = time.monotonic() - global_start
+    throughput = total_count / elapsed if elapsed > 0 else 0
+
+    # -- MTBF ------------------------------------------------------------------
+    if len(failure_times) >= 2:
+        gaps = [failure_times[i+1] - failure_times[i] for i in range(len(failure_times)-1)]
+        mtbf = sum(gaps) / len(gaps)
+    elif len(failure_times) == 1:
+        mtbf = failure_times[0]
+    else:
+        mtbf = None
+
+    # -- Summary ---------------------------------------------------------------
+    print(f"\n  Total readings  : {total_count}")
+    print(f"  Restarts        : {restart_count}")
+    print(f"  Duration        : {elapsed:.2f}s")
+    print(f"  Throughput      : {throughput:.2f} reads/sec")
 
     if log_file:
-        log_file.write(f"\nEnd time   : {end_dt.strftime('%Y-%m-%d %H:%M:%S')}\n")
-        log_file.write(f"Readings   : {count}\n")
-        log_file.write(f"Duration   : {elapsed:.2f}s\n")
-        log_file.write(f"Throughput : {throughput:.2f} reads/sec\n")
+        log_file.write(f"\nTotal readings   : {total_count}\n")
+        log_file.write(f"Restarts         : {restart_count}\n")
+        log_file.write(f"Duration         : {elapsed:.2f}s\n")
+        log_file.write(f"Throughput       : {throughput:.2f} reads/sec\n")
+
+    if mtbf is not None:
+        mtbf_line = f"  MTBF            : {mtbf:.2f}s"
+        print(mtbf_line)
+        if log_file:
+            log_file.write(mtbf_line.lstrip() + "\n")
+    else:
+        print("  MTBF            : No failures detected")
+        if log_file:
+            log_file.write("MTBF            : No failures detected\n")
+
+    sen_stats = _sensor_stats(temp_values)
+    _print_sensor_stats(sen_stats, log_file)
 
     lat_stats = _latency_stats(intervals)
     _print_latency_stats(lat_stats, log_file)
 
-    res_stats = _resource_stats(sampler.mem_samples)
+    res_stats = _resource_stats(all_mem_samples)
     _print_resource_stats(res_stats, log_file)
 
-    return count > 0
+    return total_count > 0
 
 
 def build_and_run_c(timeout: int, log: bool, hz: float) -> bool:
@@ -284,7 +392,7 @@ def build_and_run_c(timeout: int, log: bool, hz: float) -> bool:
                 "-o", C_BINARY,
             ],
             cwd=C_DIR,
-            timeout=timeout,
+            timeout=COMPILE_TIMEOUT,
             log_file=log_file,
         )
         if not ok:
@@ -327,7 +435,7 @@ def build_and_run_rust(timeout: int, log: bool, hz: float) -> bool:
             "cargo build",
             ["cargo", "build", "--release"],
             cwd=RUST_DIR,
-            timeout=timeout,
+            timeout=COMPILE_TIMEOUT,
             log_file=log_file,
         )
         if not ok:
@@ -376,7 +484,7 @@ Examples:
         help="How long to collect readings in seconds (default: 60)",
     )
     parser.add_argument(
-        "--log", action="store_true",
+        "--log", action="store_true", default=True,
         help="Save each driver's output to a timestamped .log file in Python_tests/",
     )
     parser.add_argument(
@@ -385,7 +493,7 @@ Examples:
     )
 
     parser.add_argument(
-        "--hz", type=float, default=0,
+        "--hz", type=float, default=1,
         help="Driver frequency",
     )
 
