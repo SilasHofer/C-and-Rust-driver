@@ -1,0 +1,22 @@
+[cargo build]
+   Compiling bme280_bare_bones v0.1.0 (/home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log)
+error[E0277]: `?` couldn't convert the error to `DriverError`
+  --> src/main.rs:28:21
+   |
+18 | fn run() -> Result<(), DriverError> {
+   |             ----------------------- expected `DriverError` because of this
+...
+28 |         .transpose()?
+   |          -----------^ the trait `From<ParseFloatError>` is not implemented for `DriverError`
+   |          |
+   |          this can't be annotated with `?` because it has type `Result<_, ParseFloatError>`
+   |
+   = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+   = help: the trait `From<ParseFloatError>` is not implemented for `DriverError`
+           but trait `From<std::io::Error>` is implemented for it
+   = help: for that trait implementation, expected `std::io::Error`, found `ParseFloatError`
+   = note: required for `Result<(), DriverError>` to implement `FromResidual<Result<Infallible, ParseFloatError>>`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `bme280_bare_bones` (bin "bme280_bare_bones") due to 1 previous error
+

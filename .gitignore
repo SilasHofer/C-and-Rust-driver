@@ -7,4 +7,4 @@ Rust_driver_with_log/Cargo.lock
 
 C_bare-bones_driver_no_log/c_driver
 C_driver/bme280_demo
-*.log
+Python_tests/old_logs

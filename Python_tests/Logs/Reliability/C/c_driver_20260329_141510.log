@@ -1,0 +1,42 @@
+[gcc compile]
+
+[run]
+Start time : 2026-03-29 14:15:13.298290
+Timeout    : 60s (auto-restart enabled)
+
+BME280 sensor initialized successfully
+Failed to write data: Input/output error
+
+  ⚠ [2026-03-29 14:15:21] Restarting driver (#1) due to: Failed to write data: Input/output error
+Failed to write register address: Input/output error
+
+  ⚠ [2026-03-29 14:15:21] Restarting driver (#2) due to: Failed to write register address: Input/output error
+Failed to write register address: Input/output error
+
+  ⚠ [2026-03-29 14:15:22] Restarting driver (#3) due to: Failed to write register address: Input/output error
+Failed to write register address: Input/output error
+
+  ⚠ [2026-03-29 14:15:22] Restarting driver (#4) due to: Failed to write register address: Input/output error
+Failed to write register address: Input/output error
+
+  ⚠ [2026-03-29 14:15:23] Restarting driver (#5) due to: Failed to write register address: Input/output error
+Failed to write register address: Input/output error
+
+  ⚠ [2026-03-29 14:15:24] Restarting driver (#6) due to: Failed to write register address: Input/output error
+Failed to write register address: Input/output error
+
+  ⚠ [2026-03-29 14:15:24] Restarting driver (#7) due to: Failed to write register address: Input/output error
+BME280 sensor initialized successfully
+MTBF            : 0.52s
+
+Total readings   : 56
+Restarts         : 7
+Duration         : 60.28s
+Throughput       : 0.93 reads/sec
+Latency (inter-reading interval, n=55):
+Mean        : 1076.599 ms
+Std-dev     :  490.447 ms
+Worst-case  : 4680.631 ms
+Resource usage (driver process):
+Mem mean    :   1403.4 KB
+Mem peak    :   1404.0 KB

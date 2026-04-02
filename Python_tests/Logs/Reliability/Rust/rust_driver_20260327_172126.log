@@ -1,0 +1,10 @@
+[cargo build]
+    Finished `release` profile [optimized] target(s) in 0.05s
+
+[cargo run]
+Start time : 2026-03-27 17:21:26
+Timeout    : 60s (logging every 100 readings)
+
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 2.0`
+BME280 sensor initialized successfully

@@ -1,0 +1,19 @@
+[gcc compile]
+
+[run]
+Start time : 2026-03-27 16:20:51
+Timeout    : 30s (logging every 100 readings)
+
+BME280 sensor initialized successfully
+
+End time   : 2026-03-27 16:21:21
+Readings   : 30
+Duration   : 30.31s
+Throughput : 0.99 reads/sec
+Latency (inter-reading interval, n=29):
+Mean        : 1009.217 ms
+Std-dev     :    0.220 ms
+Worst-case  : 1009.983 ms
+Resource usage (driver process):
+Mem mean    :   1395.9 KB
+Mem peak    :   1396.0 KB

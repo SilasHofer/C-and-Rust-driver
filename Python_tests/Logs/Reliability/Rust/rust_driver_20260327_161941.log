@@ -1,0 +1,15 @@
+[cargo build]
+    Finished `release` profile [optimized] target(s) in 0.68s
+
+[cargo run]
+Start time : 2026-03-27 16:19:43
+Timeout    : 30s (logging every 100 readings)
+
+    Finished `release` profile [optimized] target(s) in 0.07s
+     Running `target/release/bme280_bare_bones`
+BME280 sensor initialized successfully
+[100] Temperature: 21.96 C
+[200] Temperature: 21.98 C
+[300] Temperature: 22.00 C
+[400] Temperature: 22.01 C
+[500] Temperature: 22.02 C

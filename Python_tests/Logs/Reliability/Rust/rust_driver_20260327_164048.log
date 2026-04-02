@@ -1,0 +1,45 @@
+[cargo build]
+   Compiling bme280_bare_bones v0.1.0 (/home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log)
+error[E0433]: failed to resolve: use of undeclared type `Duration`
+  --> src/main.rs:30:14
+   |
+30 |         Some(Duration::from_micros((1_000_000.0 / hz) as u64))
+   |              ^^^^^^^^ use of undeclared type `Duration`
+   |
+help: consider importing this struct
+   |
+1  + use std::time::Duration;
+   |
+
+error[E0433]: failed to resolve: use of undeclared crate or module `thread`
+  --> src/main.rs:44:13
+   |
+44 |             thread::sleep(d);
+   |             ^^^^^^ use of undeclared crate or module `thread`
+   |
+help: consider importing this module
+   |
+1  + use std::thread;
+   |
+
+error[E0277]: `?` couldn't convert the error to `DriverError`
+  --> src/main.rs:26:21
+   |
+16 | fn run() -> Result<(), DriverError> {
+   |             ----------------------- expected `DriverError` because of this
+...
+26 |         .transpose()?
+   |          -----------^ the trait `From<ParseFloatError>` is not implemented for `DriverError`
+   |          |
+   |          this can't be annotated with `?` because it has type `Result<_, ParseFloatError>`
+   |
+   = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+   = help: the trait `From<ParseFloatError>` is not implemented for `DriverError`
+           but trait `From<std::io::Error>` is implemented for it
+   = help: for that trait implementation, expected `std::io::Error`, found `ParseFloatError`
+   = note: required for `Result<(), DriverError>` to implement `FromResidual<Result<Infallible, ParseFloatError>>`
+
+Some errors have detailed explanations: E0277, E0433.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `bme280_bare_bones` (bin "bme280_bare_bones") due to 3 previous errors
+

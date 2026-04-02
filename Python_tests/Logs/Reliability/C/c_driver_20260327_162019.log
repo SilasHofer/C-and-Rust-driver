@@ -1,0 +1,16 @@
+[gcc compile]
+
+[run]
+Start time : 2026-03-27 16:20:22
+Timeout    : 30s (logging every 100 readings)
+
+Failed to write register address: Input/output error
+Failed to initialize BME280 sensor
+
+End time   : 2026-03-27 16:20:22
+Readings   : 0
+Duration   : 0.03s
+Throughput : 0.00 reads/sec
+Resource usage (driver process):
+Mem mean    :   1200.0 KB
+Mem peak    :   1200.0 KB

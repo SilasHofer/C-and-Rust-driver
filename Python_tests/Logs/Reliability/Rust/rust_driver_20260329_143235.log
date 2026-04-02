@@ -1,0 +1,31 @@
+[cargo build]
+    Finished `release` profile [optimized] target(s) in 0.11s
+
+[cargo run]
+Start time : 2026-03-29 14:32:35
+Timeout    : 30s (auto-restart enabled)
+
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+BME280 sensor initialized successfully
+
+Total readings   : 30
+Restarts         : 0
+Duration         : 30.44s
+Throughput       : 0.99 reads/sec
+MTBF            : No failures detected
+Sensor reading variation (n=30):
+Mean        :   23.654 °C
+Std-dev     :    0.007 °C
+Min         :   23.640 °C
+Max         :   23.670 °C
+Range       :    0.030 °C
+Spikes (>3σ): 0
+Latency (inter-reading interval, n=29):
+Mean        : 1009.511 ms
+Std-dev     :    0.608 ms
+Worst-case  : 1011.600 ms
+Resource usage (driver process):
+Mem mean    :   1844.4 KB
+Mem peak    :  27684.0 KB
+Mem trend   : -0.1931 KB/sample (shrinking)

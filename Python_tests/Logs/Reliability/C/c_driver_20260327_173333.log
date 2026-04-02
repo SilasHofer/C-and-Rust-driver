@@ -1,0 +1,81 @@
+[gcc compile]
+
+[run]
+Start time : 2026-03-27 17:33:36
+Timeout    : 60s (logging every 100 readings)
+
+BME280 sensor initialized successfully
+[100] Temperature: 22.45 C
+[200] Temperature: 22.47 C
+[300] Temperature: 22.49 C
+[400] Temperature: 22.49 C
+[500] Temperature: 22.50 C
+[600] Temperature: 22.51 C
+[700] Temperature: 22.53 C
+[800] Temperature: 22.54 C
+[900] Temperature: 22.55 C
+[1000] Temperature: 22.55 C
+[1100] Temperature: 22.56 C
+[1200] Temperature: 22.56 C
+[1300] Temperature: 22.59 C
+[1400] Temperature: 22.58 C
+[1500] Temperature: 22.60 C
+[1600] Temperature: 22.60 C
+[1700] Temperature: 22.60 C
+[1800] Temperature: 22.60 C
+[1900] Temperature: 22.58 C
+[2000] Temperature: 22.58 C
+[2100] Temperature: 22.59 C
+[2200] Temperature: 22.58 C
+[2300] Temperature: 22.59 C
+[2400] Temperature: 22.59 C
+[2500] Temperature: 22.59 C
+[2600] Temperature: 22.59 C
+[2700] Temperature: 22.60 C
+[2800] Temperature: 22.61 C
+[2900] Temperature: 22.61 C
+[3000] Temperature: 22.61 C
+[3100] Temperature: 22.62 C
+[3200] Temperature: 22.62 C
+[3300] Temperature: 22.63 C
+[3400] Temperature: 22.65 C
+[3500] Temperature: 22.64 C
+[3600] Temperature: 22.65 C
+[3700] Temperature: 22.66 C
+[3800] Temperature: 22.66 C
+[3900] Temperature: 22.67 C
+[4000] Temperature: 22.68 C
+[4100] Temperature: 22.66 C
+[4200] Temperature: 22.68 C
+[4300] Temperature: 22.68 C
+[4400] Temperature: 22.67 C
+[4500] Temperature: 22.68 C
+[4600] Temperature: 22.67 C
+[4700] Temperature: 22.67 C
+[4800] Temperature: 22.67 C
+[4900] Temperature: 22.66 C
+[5000] Temperature: 22.66 C
+[5100] Temperature: 22.68 C
+[5200] Temperature: 22.68 C
+[5300] Temperature: 22.68 C
+[5400] Temperature: 22.70 C
+[5500] Temperature: 22.70 C
+[5600] Temperature: 22.70 C
+[5700] Temperature: 22.70 C
+[5800] Temperature: 22.70 C
+[5900] Temperature: 22.70 C
+[6000] Temperature: 22.70 C
+[6100] Temperature: 22.71 C
+[6200] Temperature: 22.70 C
+
+End time   : 2026-03-27 17:34:36
+Readings   : 6275
+Duration   : 60.02s
+Throughput : 104.56 reads/sec
+Latency (inter-reading interval, n=6274):
+Mean        :    9.559 ms
+Std-dev     :    0.607 ms
+Worst-case  :   18.114 ms
+Resource usage (driver process):
+Mem mean    :   1308.0 KB
+Mem peak    :   1308.0 KB

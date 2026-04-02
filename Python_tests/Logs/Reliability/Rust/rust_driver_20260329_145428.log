@@ -1,0 +1,89 @@
+[cargo build]
+    Finished `release` profile [optimized] target(s) in 0.08s
+
+[cargo run]
+Start time : 2026-03-29 14:54:29
+Timeout    : 30s (auto-restart enabled)
+
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:29] Restarting driver (#1) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:29] Restarting driver (#2) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+BME280 sensor initialized successfully
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:30] Restarting driver (#3) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+BME280 sensor initialized successfully
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:31] Restarting driver (#4) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+BME280 sensor initialized successfully
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:43] Restarting driver (#5) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:44] Restarting driver (#6) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:45] Restarting driver (#7) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:45] Restarting driver (#8) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running `target/release/bme280_bare_bones 0x76 1`
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:46] Restarting driver (#9) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:47] Restarting driver (#10) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+I/O error: Input/output error (os error 5)
+
+  ⚠ [2026-03-29 14:54:47] Restarting driver (#11) due to: I/O error: Input/output error (os error 5)
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 1`
+BME280 sensor initialized successfully
+
+Total readings   : 23
+Restarts         : 11
+Duration         : 30.41s
+Throughput       : 0.76 reads/sec
+MTBF            : 1.85s
+Sensor reading variation (n=23):
+Mean        :   28.519 °C
+Std-dev     :    0.335 °C
+Min         :   28.060 °C
+Max         :   29.290 °C
+Range       :    1.230 °C
+Spikes (>3σ): 0
+Latency (inter-reading interval, n=22):
+Mean        : 1213.980 ms
+Std-dev     :  932.345 ms
+Worst-case  : 5486.520 ms
+Resource usage (driver process):
+Mem mean    :   2529.5 KB
+Mem peak    :  28540.0 KB
+Mem trend   : -1.3489 KB/sample (shrinking)

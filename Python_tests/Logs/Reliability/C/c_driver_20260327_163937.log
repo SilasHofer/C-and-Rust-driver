@@ -1,0 +1,14 @@
+[gcc compile]
+main.c: In function ‘main’:
+main.c:30:8: warning: ‘hz’ may be used uninitialized [-Wmaybe-uninitialized]
+   30 |     if (hz >= 0.0) {
+      |        ^
+main.c:16:12: note: ‘hz’ was declared here
+   16 |     double hz;
+      |            ^~
+
+[run]
+Start time : 2026-03-27 16:39:40
+Timeout    : 30s (logging every 100 readings)
+
+BME280 sensor initialized successfully
