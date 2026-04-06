@@ -1,0 +1,124 @@
+[gcc compile]
+
+[run]
+Start time : 2026-04-03 18:17:32
+Target     : 1000 readings (logging every 10)
+
+BME280 sensor initialized successfully
+[10/1000] Temperature: 22.69 C
+[20/1000] Temperature: 22.74 C
+[30/1000] Temperature: 22.77 C
+[40/1000] Temperature: 22.79 C
+[50/1000] Temperature: 22.80 C
+[60/1000] Temperature: 22.83 C
+[70/1000] Temperature: 22.83 C
+[80/1000] Temperature: 22.86 C
+[90/1000] Temperature: 22.85 C
+[100/1000] Temperature: 22.85 C
+[110/1000] Temperature: 22.85 C
+[120/1000] Temperature: 22.86 C
+[130/1000] Temperature: 22.86 C
+[140/1000] Temperature: 22.87 C
+[150/1000] Temperature: 22.87 C
+[160/1000] Temperature: 22.87 C
+[170/1000] Temperature: 22.88 C
+[180/1000] Temperature: 22.87 C
+[190/1000] Temperature: 22.87 C
+[200/1000] Temperature: 22.87 C
+[210/1000] Temperature: 22.87 C
+[220/1000] Temperature: 22.87 C
+[230/1000] Temperature: 22.87 C
+[240/1000] Temperature: 22.87 C
+[250/1000] Temperature: 22.87 C
+[260/1000] Temperature: 22.88 C
+[270/1000] Temperature: 22.88 C
+[280/1000] Temperature: 22.88 C
+[290/1000] Temperature: 22.87 C
+[300/1000] Temperature: 22.88 C
+[310/1000] Temperature: 22.88 C
+[320/1000] Temperature: 22.88 C
+[330/1000] Temperature: 22.88 C
+[340/1000] Temperature: 22.88 C
+[350/1000] Temperature: 22.88 C
+[360/1000] Temperature: 22.87 C
+[370/1000] Temperature: 22.88 C
+[380/1000] Temperature: 22.89 C
+[390/1000] Temperature: 22.88 C
+[400/1000] Temperature: 22.89 C
+[410/1000] Temperature: 22.90 C
+[420/1000] Temperature: 22.90 C
+[430/1000] Temperature: 22.90 C
+[440/1000] Temperature: 22.90 C
+[450/1000] Temperature: 22.90 C
+[460/1000] Temperature: 22.91 C
+[470/1000] Temperature: 22.89 C
+[480/1000] Temperature: 22.89 C
+[490/1000] Temperature: 22.89 C
+[500/1000] Temperature: 22.89 C
+[510/1000] Temperature: 22.89 C
+[520/1000] Temperature: 22.90 C
+[530/1000] Temperature: 22.90 C
+[540/1000] Temperature: 22.90 C
+[550/1000] Temperature: 22.89 C
+[560/1000] Temperature: 22.91 C
+[570/1000] Temperature: 22.90 C
+[580/1000] Temperature: 22.91 C
+[590/1000] Temperature: 22.91 C
+[600/1000] Temperature: 22.91 C
+[610/1000] Temperature: 22.92 C
+[620/1000] Temperature: 22.91 C
+[630/1000] Temperature: 22.93 C
+[640/1000] Temperature: 22.92 C
+[650/1000] Temperature: 22.92 C
+[660/1000] Temperature: 22.93 C
+[670/1000] Temperature: 22.92 C
+[680/1000] Temperature: 22.93 C
+[690/1000] Temperature: 22.93 C
+[700/1000] Temperature: 22.94 C
+[710/1000] Temperature: 22.94 C
+[720/1000] Temperature: 22.94 C
+[730/1000] Temperature: 22.94 C
+[740/1000] Temperature: 22.94 C
+[750/1000] Temperature: 22.93 C
+[760/1000] Temperature: 22.93 C
+[770/1000] Temperature: 22.92 C
+[780/1000] Temperature: 22.94 C
+[790/1000] Temperature: 22.94 C
+[800/1000] Temperature: 22.94 C
+[810/1000] Temperature: 22.95 C
+[820/1000] Temperature: 22.95 C
+[830/1000] Temperature: 22.95 C
+[840/1000] Temperature: 22.95 C
+[850/1000] Temperature: 22.94 C
+[860/1000] Temperature: 22.94 C
+[870/1000] Temperature: 22.95 C
+[880/1000] Temperature: 22.95 C
+[890/1000] Temperature: 22.94 C
+[900/1000] Temperature: 22.94 C
+[910/1000] Temperature: 22.93 C
+[920/1000] Temperature: 22.93 C
+[930/1000] Temperature: 22.94 C
+[940/1000] Temperature: 22.94 C
+[950/1000] Temperature: 22.93 C
+[960/1000] Temperature: 22.94 C
+[970/1000] Temperature: 22.94 C
+[980/1000] Temperature: 22.95 C
+[990/1000] Temperature: 22.95 C
+[1000/1000] Temperature: 22.95 C
+
+End time   : 2026-04-03 18:17:41
+Readings   : 1000/1000
+Duration   : 9.42s
+Throughput : 106.13 reads/sec
+Latency (inter-reading interval, n=999):
+Mean        :    9.398 ms
+Std-dev     :    0.400 ms
+Worst-case  :   12.476 ms
+CPU time (process accounting):
+CPU time     :    0.370 s
+CPU efficiency:     3.93 %
+Resource usage (driver process):
+CPU mean    :    3.9 %  (n=449)
+CPU peak    :   48.2 %
+Mem mean    :   1399.8 KB
+Mem peak    :   1400.0 KB

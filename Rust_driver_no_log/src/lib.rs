@@ -1,11 +1,13 @@
 use std::fmt;
-use std::fs::File;
-use std::io::{self, Read, Write};
+use std::fs::{File, OpenOptions};
+use std::io;
 use std::os::fd::AsRawFd;
 use std::thread;
 use std::time::Duration;
 
 const I2C_SLAVE: libc::c_ulong = 0x0703;
+const I2C_RDWR: libc::c_ulong = 0x0707;
+const I2C_M_RD: u16 = 0x0001;
 
 const REG_CHIP_ID: u8 = 0xD0;
 const REG_RESET: u8 = 0xE0;
@@ -23,6 +25,21 @@ const STATUS_MEASURING_MASK: u8 = 0x08;
 const RESET_DELAY_MS: u64 = 2;
 const POLL_DELAY_MS: u64 = 2;
 const MAX_MEASUREMENT_POLLS: usize = 20;
+const LOCK_FILE: &str = "/tmp/bme280.lock";
+
+#[repr(C)]
+struct I2cMsg {
+    addr: u16,
+    flags: u16,
+    len: u16,
+    buf: *mut u8,
+}
+
+#[repr(C)]
+struct I2cRdwrIoctlData {
+    msgs: *mut I2cMsg,
+    nmsgs: u32,
+}
 
 #[derive(Debug)]
 pub enum DriverError {
@@ -61,47 +78,94 @@ pub struct Bme280 {
     addr: u8,
     calib: Bme280Calib,
     t_fine: i32,
+    lock_file: Option<File>,
+}
+
+struct LockGuard<'a> {
+    lock_file: Option<&'a File>,
+}
+
+impl<'a> LockGuard<'a> {
+    fn new(lock_file: Option<&'a File>) -> Result<Self, DriverError> {
+        if let Some(file) = lock_file {
+            flock_lock(file)?;
+        }
+        Ok(Self { lock_file })
+    }
+}
+
+impl Drop for LockGuard<'_> {
+    fn drop(&mut self) {
+        if let Some(file) = self.lock_file {
+            let _ = flock_unlock(file);
+        }
+    }
 }
 
 impl Bme280 {
-    pub fn new(mut file: File, addr: u8) -> Result<Self, DriverError> {
-        i2c_set_slave(&file, addr)?;
-
-        let chip_id = i2c_read_u8(&mut file, REG_CHIP_ID)?;
-        if chip_id != CHIP_ID {
-            return Err(DriverError::InvalidChipId(chip_id));
-        }
-
-        i2c_write_u8(&mut file, REG_RESET, RESET_COMMAND)?;
-        thread::sleep(Duration::from_millis(RESET_DELAY_MS));
-
-        let mut calib_buf = [0u8; 6];
-        i2c_read_buf(&mut file, REG_CALIB_START, &mut calib_buf)?;
-
-        let calib = Bme280Calib {
-            dig_t1: u16::from_le_bytes([calib_buf[0], calib_buf[1]]),
-            dig_t2: i16::from_le_bytes([calib_buf[2], calib_buf[3]]),
-            dig_t3: i16::from_le_bytes([calib_buf[4], calib_buf[5]]),
+    pub fn new(file: File, addr: u8, use_lock: bool) -> Result<Self, DriverError> {
+        let lock_file = if use_lock {
+            Some(
+                OpenOptions::new()
+                    .create(true)
+                    .read(true)
+                    .write(true)
+                    .open(LOCK_FILE)?,
+            )
+        } else {
+            None
         };
 
-        i2c_write_u8(&mut file, REG_CTRL_HUM, CTRL_HUM_X1)?;
-        i2c_write_u8(&mut file, REG_CTRL_MEAS, CTRL_MEAS_TEMP_PRESS_X1_FORCED)?;
-
-        Ok(Self {
+        let mut sensor = Self {
             file,
             addr,
-            calib,
+            calib: Bme280Calib {
+                dig_t1: 0,
+                dig_t2: 0,
+                dig_t3: 0,
+            },
             t_fine: 0,
-        })
+            lock_file,
+        };
+
+        {
+            let _guard = LockGuard::new(sensor.lock_file.as_ref())?;
+
+            i2c_set_slave(&sensor.file, sensor.addr)?;
+
+            let chip_id = i2c_read_u8(&sensor.file, sensor.addr, REG_CHIP_ID)?;
+            if chip_id != CHIP_ID {
+                return Err(DriverError::InvalidChipId(chip_id));
+            }
+
+            i2c_write_u8(&sensor.file, REG_RESET, RESET_COMMAND)?;
+            thread::sleep(Duration::from_millis(RESET_DELAY_MS));
+
+            let mut calib_buf = [0u8; 6];
+            i2c_read_buf(&sensor.file, sensor.addr, REG_CALIB_START, &mut calib_buf)?;
+
+            sensor.calib = Bme280Calib {
+                dig_t1: u16::from_le_bytes([calib_buf[0], calib_buf[1]]),
+                dig_t2: i16::from_le_bytes([calib_buf[2], calib_buf[3]]),
+                dig_t3: i16::from_le_bytes([calib_buf[4], calib_buf[5]]),
+            };
+
+            i2c_write_u8(&sensor.file, REG_CTRL_HUM, CTRL_HUM_X1)?;
+            i2c_write_u8(&sensor.file, REG_CTRL_MEAS, CTRL_MEAS_TEMP_PRESS_X1_FORCED)?;
+        }
+
+        Ok(sensor)
     }
 
     pub fn read_temperature_c(&mut self) -> Result<f32, DriverError> {
+        let _guard = LockGuard::new(self.lock_file.as_ref())?;
+
         i2c_set_slave(&self.file, self.addr)?;
-        i2c_write_u8(&mut self.file, REG_CTRL_MEAS, CTRL_MEAS_TEMP_PRESS_X1_FORCED)?;
+        i2c_write_u8(&self.file, REG_CTRL_MEAS, CTRL_MEAS_TEMP_PRESS_X1_FORCED)?;
 
         let mut measurement_complete = false;
         for _ in 0..MAX_MEASUREMENT_POLLS {
-            let status = i2c_read_u8(&mut self.file, REG_STATUS)?;
+            let status = i2c_read_u8(&self.file, self.addr, REG_STATUS)?;
             if status & STATUS_MEASURING_MASK == 0 {
                 measurement_complete = true;
                 break;
@@ -114,7 +178,7 @@ impl Bme280 {
         }
 
         let mut buf = [0u8; 3];
-        i2c_read_buf(&mut self.file, REG_TEMP_MSB, &mut buf)?;
+        i2c_read_buf(&self.file, self.addr, REG_TEMP_MSB, &mut buf)?;
 
         let adc_t = ((buf[0] as i32) << 12) | ((buf[1] as i32) << 4) | ((buf[2] as i32) >> 4);
         let temperature = compensate_temperature(adc_t, self.calib, &mut self.t_fine);
@@ -124,28 +188,77 @@ impl Bme280 {
 }
 
 fn i2c_set_slave(file: &File, addr: u8) -> Result<(), DriverError> {
-    let ret = unsafe { libc::ioctl(file.as_raw_fd(), I2C_SLAVE, libc::c_ulong::from(addr)) };
+    let ret = unsafe { libc::ioctl(file.as_raw_fd(), I2C_SLAVE, addr as libc::c_ulong) };
     if ret < 0 {
         return Err(io::Error::last_os_error().into());
     }
     Ok(())
 }
 
-fn i2c_read_u8(file: &mut File, reg: u8) -> Result<u8, DriverError> {
+fn i2c_read_u8(file: &File, addr: u8, reg: u8) -> Result<u8, DriverError> {
     let mut data = [0u8; 1];
-    file.write_all(&[reg])?;
-    file.read_exact(&mut data)?;
+    i2c_read_buf(file, addr, reg, &mut data)?;
     Ok(data[0])
 }
 
-fn i2c_write_u8(file: &mut File, reg: u8, data: u8) -> Result<(), DriverError> {
-    file.write_all(&[reg, data])?;
+fn i2c_write_u8(file: &File, reg: u8, data: u8) -> Result<(), DriverError> {
+    let payload = [reg, data];
+    let written = unsafe {
+        libc::write(
+            file.as_raw_fd(),
+            payload.as_ptr() as *const libc::c_void,
+            payload.len(),
+        )
+    };
+
+    if written != payload.len() as isize {
+        return Err(io::Error::last_os_error().into());
+    }
+
     Ok(())
 }
 
-fn i2c_read_buf(file: &mut File, reg: u8, buf: &mut [u8]) -> Result<(), DriverError> {
-    file.write_all(&[reg])?;
-    file.read_exact(buf)?;
+fn i2c_read_buf(file: &File, addr: u8, reg: u8, buf: &mut [u8]) -> Result<(), DriverError> {
+    let mut reg_buf = [reg];
+    let write_msg = I2cMsg {
+        addr: addr as u16,
+        flags: 0,
+        len: reg_buf.len() as u16,
+        buf: reg_buf.as_mut_ptr(),
+    };
+    let read_msg = I2cMsg {
+        addr: addr as u16,
+        flags: I2C_M_RD,
+        len: buf.len() as u16,
+        buf: buf.as_mut_ptr(),
+    };
+    let mut msgs = [write_msg, read_msg];
+    let mut data = I2cRdwrIoctlData {
+        msgs: msgs.as_mut_ptr(),
+        nmsgs: msgs.len() as u32,
+    };
+
+    let ret = unsafe { libc::ioctl(file.as_raw_fd(), I2C_RDWR, &mut data) };
+    if ret < 0 {
+        return Err(io::Error::last_os_error().into());
+    }
+
+    Ok(())
+}
+
+fn flock_lock(file: &File) -> Result<(), DriverError> {
+    let ret = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX) };
+    if ret < 0 {
+        return Err(io::Error::last_os_error().into());
+    }
+    Ok(())
+}
+
+fn flock_unlock(file: &File) -> Result<(), DriverError> {
+    let ret = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_UN) };
+    if ret < 0 {
+        return Err(io::Error::last_os_error().into());
+    }
     Ok(())
 }
 

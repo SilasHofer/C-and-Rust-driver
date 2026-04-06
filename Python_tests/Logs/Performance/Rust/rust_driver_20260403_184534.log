@@ -1,0 +1,127 @@
+[cargo build]
+    Finished `release` profile [optimized] target(s) in 0.09s
+
+[cargo run]
+Start time : 2026-04-03 18:45:34
+Target     : 1000 readings (logging every 10)
+
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 0`
+BME280 sensor initialized successfully
+[10/1000] Temperature: 22.65 C
+[20/1000] Temperature: 22.68 C
+[30/1000] Temperature: 22.70 C
+[40/1000] Temperature: 22.71 C
+[50/1000] Temperature: 22.72 C
+[60/1000] Temperature: 22.73 C
+[70/1000] Temperature: 22.74 C
+[80/1000] Temperature: 22.74 C
+[90/1000] Temperature: 22.74 C
+[100/1000] Temperature: 22.74 C
+[110/1000] Temperature: 22.74 C
+[120/1000] Temperature: 22.75 C
+[130/1000] Temperature: 22.74 C
+[140/1000] Temperature: 22.74 C
+[150/1000] Temperature: 22.75 C
+[160/1000] Temperature: 22.75 C
+[170/1000] Temperature: 22.75 C
+[180/1000] Temperature: 22.75 C
+[190/1000] Temperature: 22.76 C
+[200/1000] Temperature: 22.75 C
+[210/1000] Temperature: 22.76 C
+[220/1000] Temperature: 22.77 C
+[230/1000] Temperature: 22.76 C
+[240/1000] Temperature: 22.76 C
+[250/1000] Temperature: 22.75 C
+[260/1000] Temperature: 22.75 C
+[270/1000] Temperature: 22.77 C
+[280/1000] Temperature: 22.76 C
+[290/1000] Temperature: 22.76 C
+[300/1000] Temperature: 22.76 C
+[310/1000] Temperature: 22.76 C
+[320/1000] Temperature: 22.76 C
+[330/1000] Temperature: 22.77 C
+[340/1000] Temperature: 22.77 C
+[350/1000] Temperature: 22.77 C
+[360/1000] Temperature: 22.77 C
+[370/1000] Temperature: 22.76 C
+[380/1000] Temperature: 22.75 C
+[390/1000] Temperature: 22.76 C
+[400/1000] Temperature: 22.76 C
+[410/1000] Temperature: 22.76 C
+[420/1000] Temperature: 22.76 C
+[430/1000] Temperature: 22.77 C
+[440/1000] Temperature: 22.77 C
+[450/1000] Temperature: 22.77 C
+[460/1000] Temperature: 22.78 C
+[470/1000] Temperature: 22.76 C
+[480/1000] Temperature: 22.77 C
+[490/1000] Temperature: 22.76 C
+[500/1000] Temperature: 22.77 C
+[510/1000] Temperature: 22.77 C
+[520/1000] Temperature: 22.77 C
+[530/1000] Temperature: 22.77 C
+[540/1000] Temperature: 22.76 C
+[550/1000] Temperature: 22.76 C
+[560/1000] Temperature: 22.76 C
+[570/1000] Temperature: 22.77 C
+[580/1000] Temperature: 22.77 C
+[590/1000] Temperature: 22.76 C
+[600/1000] Temperature: 22.76 C
+[610/1000] Temperature: 22.77 C
+[620/1000] Temperature: 22.77 C
+[630/1000] Temperature: 22.76 C
+[640/1000] Temperature: 22.77 C
+[650/1000] Temperature: 22.77 C
+[660/1000] Temperature: 22.77 C
+[670/1000] Temperature: 22.78 C
+[680/1000] Temperature: 22.77 C
+[690/1000] Temperature: 22.77 C
+[700/1000] Temperature: 22.78 C
+[710/1000] Temperature: 22.78 C
+[720/1000] Temperature: 22.78 C
+[730/1000] Temperature: 22.79 C
+[740/1000] Temperature: 22.78 C
+[750/1000] Temperature: 22.78 C
+[760/1000] Temperature: 22.78 C
+[770/1000] Temperature: 22.77 C
+[780/1000] Temperature: 22.77 C
+[790/1000] Temperature: 22.79 C
+[800/1000] Temperature: 22.78 C
+[810/1000] Temperature: 22.79 C
+[820/1000] Temperature: 22.79 C
+[830/1000] Temperature: 22.79 C
+[840/1000] Temperature: 22.78 C
+[850/1000] Temperature: 22.78 C
+[860/1000] Temperature: 22.79 C
+[870/1000] Temperature: 22.79 C
+[880/1000] Temperature: 22.79 C
+[890/1000] Temperature: 22.79 C
+[900/1000] Temperature: 22.79 C
+[910/1000] Temperature: 22.79 C
+[920/1000] Temperature: 22.79 C
+[930/1000] Temperature: 22.79 C
+[940/1000] Temperature: 22.80 C
+[950/1000] Temperature: 22.80 C
+[960/1000] Temperature: 22.79 C
+[970/1000] Temperature: 22.80 C
+[980/1000] Temperature: 22.80 C
+[990/1000] Temperature: 22.80 C
+[1000/1000] Temperature: 22.80 C
+
+End time   : 2026-04-03 18:45:44
+Readings   : 1000/1000
+Duration   : 9.62s
+Throughput : 103.94 reads/sec
+Latency (inter-reading interval, n=999):
+Mean        :    9.458 ms
+Std-dev     :    0.437 ms
+Worst-case  :   12.278 ms
+CPU time (process accounting):
+CPU time     :    0.510 s
+CPU efficiency:     5.30 %
+Resource usage (driver process):
+CPU mean    :    5.3 %  (n=458)
+CPU peak    :  143.8 %
+Mem mean    :   1981.0 KB
+Mem peak    :  28544.0 KB

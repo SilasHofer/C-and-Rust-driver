@@ -1,0 +1,26 @@
+[gcc compile]
+main.c: In function ‘main’:
+main.c:37:9: error: ‘use_lock’ undeclared (first use in this function)
+   37 |         use_lock = 1;
+      |         ^~~~~~~~
+main.c:37:9: note: each undeclared identifier is reported only once for each function it appears in
+main.c:38:9: error: ‘lock_fd’ undeclared (first use in this function); did you mean ‘lockf’?
+   38 |         lock_fd = open(LOCK_FILE, O_CREAT | O_RDONLY, 0666);
+      |         ^~~~~~~
+      |         lockf
+i2c_linux.c: In function ‘i2c_read_u8’:
+i2c_linux.c:21:25: error: implicit declaration of function ‘ioc_get_slave_addr’ [-Wimplicit-function-declaration]
+   21 |     messages[0].addr  = ioc_get_slave_addr(fd);
+      |                         ^~~~~~~~~~~~~~~~~~
+i2c_linux.c: At top level:
+i2c_linux.c:77:21: error: static declaration of ‘ioc_get_slave_addr’ follows non-static declaration
+   77 | static inline __s32 ioc_get_slave_addr(int fd) {
+      |                     ^~~~~~~~~~~~~~~~~~
+i2c_linux.c:21:25: note: previous implicit declaration of ‘ioc_get_slave_addr’ with type ‘int()’
+   21 |     messages[0].addr  = ioc_get_slave_addr(fd);
+      |                         ^~~~~~~~~~~~~~~~~~
+i2c_linux.c: In function ‘ioc_get_slave_addr’:
+i2c_linux.c:77:44: warning: unused parameter ‘fd’ [-Wunused-parameter]
+   77 | static inline __s32 ioc_get_slave_addr(int fd) {
+      |                                        ~~~~^~
+

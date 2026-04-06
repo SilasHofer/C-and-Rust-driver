@@ -1,0 +1,88 @@
+C_driver: BME280 sensor initialized successfully
+C_driver [2026-04-06T17:56:06.605150]: Temperature: 24.68 C
+Rust_driver: BME280 sensor initialized successfully
+Rust_driver [2026-04-06T17:56:06.622591]: Temperature: 24.68 C
+C_driver [2026-04-06T17:56:07.531210]: Temperature: 24.67 C
+Rust_driver [2026-04-06T17:56:07.633980]: Temperature: 24.68 C
+C_driver [2026-04-06T17:56:08.542715]: Temperature: 24.67 C
+Rust_driver [2026-04-06T17:56:08.645442]: Temperature: 24.67 C
+C_driver [2026-04-06T17:56:09.554480]: Temperature: 24.69 C
+Rust_driver [2026-04-06T17:56:09.657327]: Temperature: 24.69 C
+C_driver [2026-04-06T17:56:10.565906]: Temperature: 24.68 C
+Rust_driver [2026-04-06T17:56:10.668774]: Temperature: 24.68 C
+C_driver [2026-04-06T17:56:11.575177]: Temperature: 24.69 C
+Rust_driver [2026-04-06T17:56:11.680473]: Temperature: 24.68 C
+C_driver [2026-04-06T17:56:12.584838]: Temperature: 24.68 C
+Rust_driver [2026-04-06T17:56:12.692114]: Temperature: 24.68 C
+C_driver [2026-04-06T17:56:13.594633]: Temperature: 24.69 C
+Rust_driver [2026-04-06T17:56:13.701700]: Temperature: 24.69 C
+C_driver [2026-04-06T17:56:14.603972]: Temperature: 24.69 C
+Rust_driver [2026-04-06T17:56:14.713287]: Temperature: 24.69 C
+C_driver [2026-04-06T17:56:15.613189]: Temperature: 24.68 C
+Rust_driver [2026-04-06T17:56:15.722535]: Temperature: 24.69 C
+C_driver [2026-04-06T17:56:16.622826]: Temperature: 24.69 C
+Rust_driver [2026-04-06T17:56:16.734206]: Temperature: 24.70 C
+C_driver [2026-04-06T17:56:17.631992]: Temperature: 24.68 C
+Rust_driver [2026-04-06T17:56:17.743416]: Temperature: 24.70 C
+C_driver [2026-04-06T17:56:18.641231]: Temperature: 24.70 C
+Rust_driver [2026-04-06T17:56:18.755135]: Temperature: 24.69 C
+C_driver [2026-04-06T17:56:19.650666]: Temperature: 24.69 C
+Rust_driver [2026-04-06T17:56:19.764472]: Temperature: 24.70 C
+C_driver [2026-04-06T17:56:20.660289]: Temperature: 24.70 C
+Rust_driver [2026-04-06T17:56:20.776109]: Temperature: 24.69 C
+C_driver [2026-04-06T17:56:21.671890]: Temperature: 24.70 C
+Rust_driver [2026-04-06T17:56:21.787650]: Temperature: 24.70 C
+C_driver [2026-04-06T17:56:22.683392]: Temperature: 24.70 C
+Rust_driver [2026-04-06T17:56:22.799216]: Temperature: 24.70 C
+C_driver [2026-04-06T17:56:23.695194]: Temperature: 24.70 C
+Rust_driver [2026-04-06T17:56:23.810609]: Temperature: 24.71 C
+C_driver [2026-04-06T17:56:24.706694]: Temperature: 24.70 C
+Rust_driver [2026-04-06T17:56:24.822098]: Temperature: 24.70 C
+C_driver [2026-04-06T17:56:25.718198]: Temperature: 24.70 C
+Rust_driver [2026-04-06T17:56:25.833593]: Temperature: 24.70 C
+
+==================================================
+  C Driver Metrics
+==================================================
+Sensor reading variation (n=20):
+Mean        :   24.689 °C
+Std-dev     :    0.010 °C
+Min         :   24.670 °C
+Max         :   24.700 °C
+Range       :    0.030 °C
+Spikes (>3σ): 0
+Latency (inter-reading interval, n=18):
+Mean        : 1010.389 ms
+Std-dev     :    1.082 ms
+Worst-case  : 1011.816 ms
+Resource usage (driver process):
+Mem mean    :   1408.0 KB
+Mem peak    :   1408.0 KB
+Mem trend   : +0.0000 KB/sample (stable ✓)
+
+==================================================
+  Rust Driver Metrics
+==================================================
+Sensor reading variation (n=20):
+Mean        :   24.691 °C
+Std-dev     :    0.010 °C
+Min         :   24.670 °C
+Max         :   24.710 °C
+Range       :    0.040 °C
+Spikes (>3σ): 0
+Latency (inter-reading interval, n=18):
+Mean        : 1011.090 ms
+Std-dev     :    0.945 ms
+Worst-case  : 1011.870 ms
+Resource usage (driver process):
+Mem mean    :   1804.0 KB
+Mem peak    :   1804.0 KB
+Mem trend   : +0.0000 KB/sample (stable ✓)
+
+==================================================
+  Comparison / Delta Metrics
+==================================================
+
+Paired readings: 20
+Average |C - Rust|: 0.0050 C
+Max |C - Rust|: 0.0200 C

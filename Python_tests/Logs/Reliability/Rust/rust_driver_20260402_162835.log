@@ -1,0 +1,110 @@
+[cargo build]
+   Compiling bme280_bare_bones v0.1.0 (/home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log)
+    Finished `release` profile [optimized] target(s) in 14.34s
+
+[cargo run]
+Start time : 2026-04-02 16:28:51
+Timeout    : 60s (auto-restart enabled)
+
+    Finished `release` profile [optimized] target(s) in 0.09s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.06s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running `target/release/bme280_bare_bones 0x76 100.0`
+unexpected chip ID: 0x00

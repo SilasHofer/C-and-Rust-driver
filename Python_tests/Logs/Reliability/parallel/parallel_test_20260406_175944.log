@@ -1,0 +1,97 @@
+C_driver: BME280 sensor initialized successfully
+Rust_driver: BME280 sensor initialized successfully
+Rust_driver [2026-04-06T17:59:45.098107]: Temperature: 24.76 C
+C_driver [2026-04-06T17:59:45.977858]: Temperature: 24.75 C
+Rust_driver [2026-04-06T17:59:46.108991]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:46.989199]: Temperature: 24.76 C
+Rust_driver [2026-04-06T17:59:47.120395]: Temperature: 24.76 C
+C_driver [2026-04-06T17:59:48.000766]: Temperature: 24.74 C
+Rust_driver [2026-04-06T17:59:48.131878]: Temperature: 24.76 C
+C_driver [2026-04-06T17:59:49.012361]: Temperature: 24.75 C
+Rust_driver [2026-04-06T17:59:49.143422]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:50.023867]: Temperature: 24.74 C
+Rust_driver [2026-04-06T17:59:50.154905]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:51.035386]: Temperature: 24.74 C
+Rust_driver [2026-04-06T17:59:51.167346]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:52.044947]: Temperature: 24.75 C
+Rust_driver [2026-04-06T17:59:52.176721]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:53.054191]: Temperature: 24.74 C
+Rust_driver [2026-04-06T17:59:53.188414]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:54.063406]: Temperature: 24.75 C
+Rust_driver [2026-04-06T17:59:54.200602]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:55.072615]: Temperature: 24.75 C
+Rust_driver [2026-04-06T17:59:55.210284]: Temperature: 24.74 C
+C_driver [2026-04-06T17:59:56.084346]: Temperature: 24.75 C
+Rust_driver [2026-04-06T17:59:56.220343]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:57.095792]: Temperature: 24.74 C
+Rust_driver [2026-04-06T17:59:57.231652]: Temperature: 24.75 C
+C_driver [2026-04-06T17:59:58.107281]: Temperature: 24.74 C
+Rust_driver [2026-04-06T17:59:58.243199]: Temperature: 24.74 C
+C_driver [2026-04-06T17:59:59.118771]: Temperature: 24.75 C
+Rust_driver [2026-04-06T17:59:59.254699]: Temperature: 24.75 C
+C_driver [2026-04-06T18:00:00.130294]: Temperature: 24.74 C
+Rust_driver [2026-04-06T18:00:00.266149]: Temperature: 24.75 C
+C_driver [2026-04-06T18:00:01.141791]: Temperature: 24.74 C
+Rust_driver [2026-04-06T18:00:01.277978]: Temperature: 24.75 C
+C_driver [2026-04-06T18:00:02.151146]: Temperature: 24.74 C
+Rust_driver [2026-04-06T18:00:02.289665]: Temperature: 24.75 C
+C_driver [2026-04-06T18:00:03.160318]: Temperature: 24.75 C
+Rust_driver [2026-04-06T18:00:03.301455]: Temperature: 24.75 C
+C_driver [2026-04-06T18:00:04.169526]: Temperature: 24.76 C
+Rust_driver [2026-04-06T18:00:04.310658]: Temperature: 24.76 C
+
+==================================================
+  C Driver Metrics
+==================================================
+Total readings   : 19
+Restarts         : 0
+Duration         : 20.03s
+Throughput       : 0.95 reads/sec
+MTBF             : No failures detected
+Sensor reading variation (n=19):
+Mean        :   24.746 °C
+Std-dev     :    0.007 °C
+Min         :   24.740 °C
+Max         :   24.760 °C
+Range       :    0.020 °C
+Spikes (>3σ): 0
+Latency (inter-reading interval, n=17):
+Mean        : 1010.606 ms
+Std-dev     :    1.118 ms
+Worst-case  : 1011.736 ms
+Resource usage (driver process):
+Mem mean    :   1408.0 KB
+Mem peak    :   1408.0 KB
+Mem trend   : +0.0000 KB/sample (stable ✓)
+
+==================================================
+  Rust Driver Metrics
+==================================================
+Total readings   : 20
+Restarts         : 0
+Duration         : 20.03s
+Throughput       : 1.00 reads/sec
+MTBF             : No failures detected
+Sensor reading variation (n=20):
+Mean        :   24.751 °C
+Std-dev     :    0.005 °C
+Min         :   24.740 °C
+Max         :   24.760 °C
+Range       :    0.020 °C
+Spikes (>3σ): 0
+Latency (inter-reading interval, n=18):
+Mean        : 1011.204 ms
+Std-dev     :    0.927 ms
+Worst-case  : 1012.463 ms
+Resource usage (driver process):
+Mem mean    :   1798.0 KB
+Mem peak    :   1800.0 KB
+Mem trend   : +0.0119 KB/sample (growing ⚠)
+
+==================================================
+  Comparison / Delta Metrics
+==================================================
+
+Paired readings: 19
+Average |C - Rust|: 0.0053 C
+Max |C - Rust|: 0.0200 C

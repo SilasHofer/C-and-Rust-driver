@@ -1,0 +1,18 @@
+[gcc compile]
+main.c: In function ‘main’:
+main.c:54:46: error: passing argument 2 of ‘bme280_read_temperature’ from incompatible pointer type [-Wincompatible-pointer-types]
+   54 |         if (bme280_read_temperature(&sensor, &temp_c) < 0) {
+      |                                              ^~~~~~~
+      |                                              |
+      |                                              double *
+In file included from main.c:10:
+bme280.h:20:56: note: expected ‘float *’ but argument is of type ‘double *’
+   20 | int bme280_read_temperature(struct bme280 *dev, float *temp_c);
+      |                                                 ~~~~~~~^~~~~~
+main.c:60:31: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘double’ [-Wformat=]
+   60 |         printf("Temperature: %d C\n", temp_c);
+      |                              ~^       ~~~~~~
+      |                               |       |
+      |                               int     double
+      |                              %f
+

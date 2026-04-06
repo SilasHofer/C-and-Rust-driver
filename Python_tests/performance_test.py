@@ -257,6 +257,7 @@ def capture_temperature_readings(
 
             if TEMP_PATTERN in line:
                 now = time.monotonic()
+                reading_ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]  # millisecond precision
 
                 # Latency
                 if last_ts is not None:
@@ -264,11 +265,11 @@ def capture_temperature_readings(
                 last_ts = now
 
                 count += 1
-                print(f"  [{count}/{samples}] {line}")
+                print(f"  [{count}/{samples}] [{reading_ts}] {line}")
 
                 if log_file and count % LOG_EVERY_N == 0:
                     log_file.write(
-                        f"[{count}/{samples}] {line}\n"
+                        f"[{count}/{samples}] [{reading_ts}] {line}\n"
                     )
 
             else:

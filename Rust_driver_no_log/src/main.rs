@@ -5,7 +5,6 @@ use std::thread;
 
 use bme280_bare_bones::{Bme280, DriverError};
 
-const I2C_PATH: &str = "/dev/i2c-1";
 const DEFAULT_ADDR: u8 = 0x76;
 
 fn main() {
@@ -45,15 +44,18 @@ fn run() -> Result<(), DriverError> {
     };
 
     // Open I2C device and initialize sensor
-    let file = OpenOptions::new().read(true).write(true).open(I2C_PATH)?;
-    let mut sensor = Bme280::new(file, addr)?;
+    let i2c_path = env::args().nth(3).unwrap_or_else(|| "/dev/i2c-1".to_string());
+    let use_lock = env::args().any(|arg| arg == "--coord-lock");
+    let file = OpenOptions::new().read(true).write(true).open(&i2c_path)?;
+    let mut sensor = Bme280::new(file, addr, use_lock)?;
 
     println!("BME280 sensor initialized successfully");
 
     loop {
         let temp_c = sensor.read_temperature_c()?;
-        println!("Temperature: {temp_c:.2} C");
-
+        // Raw data printed to stderr only
+        println!("Temperature: {temp_c:>.2} C");
+        
         if let Some(d) = delay {
             thread::sleep(d);
         }

@@ -5,15 +5,21 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <string.h>
+#include <sys/file.h>
 
 #include "i2c_linux.h"
 #include "bme280.h"
 
+#define LOCK_FILE "/tmp/bme280.lock"
+
 int main(int argc, char **argv)
 {
-    const char *i2c_path = "/dev/i2c-1";
+    char *i2c_path = "/dev/i2c-1";
     uint8_t addr = 0x76;
     float hz = 0;
+    int use_lock = 0;
+    int lock_fd = -1;
 
     if (argc > 1) {
         unsigned x = 0;
@@ -24,6 +30,18 @@ int main(int argc, char **argv)
 
     if (argc > 2) {
         hz = atof(argv[2]);
+    }
+    if (argc > 3) {
+    i2c_path = argv[3];
+    }
+
+    if (argc > 4 && strcmp(argv[4], "--coord-lock") == 0) {
+        use_lock = 1;
+        lock_fd = open(LOCK_FILE, O_CREAT | O_RDWR, 0666);
+        if (lock_fd < 0) {
+            perror("Failed to open lock file");
+            return 1;
+        }
     }
 
     useconds_t delay = 0;
@@ -47,11 +65,21 @@ int main(int argc, char **argv)
 
     printf("BME280 sensor initialized successfully\n");
     while(1){
+        if (use_lock && lock_fd >= 0) {
+            flock(lock_fd, LOCK_EX);
+        }
+
         float temp_c = 0.0f;
         if (bme280_read_temperature(&sensor, &temp_c) < 0) {
             fprintf(stderr, "Failed to read temperature\n");
+            if (use_lock && lock_fd >= 0) flock(lock_fd, LOCK_UN);
             close(fd);
+            if (lock_fd >= 0) close(lock_fd);
             return 3;
+        }
+
+        if (use_lock && lock_fd >= 0) {
+            flock(lock_fd, LOCK_UN);
         }
 
         printf("Temperature: %.2f C\n", temp_c);
@@ -63,5 +91,8 @@ int main(int argc, char **argv)
         }
     }
     close(fd);
+    if (lock_fd >= 0) {
+        close(lock_fd);
+    }
     return 0;
 }

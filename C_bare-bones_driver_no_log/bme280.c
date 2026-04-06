@@ -17,7 +17,7 @@ int bme280_init(struct bme280 *dev, int fd, uint8_t addr)
     if (i2c_set_slave(fd, addr) < 0)
         return -1;
 
-    if (i2c_read_u8(fd, 0xD0, &id) < 0)
+    if (i2c_read_u8(fd, addr, 0xD0, &id) < 0)
         return -1;
 
     if (id != 0x60) {
@@ -30,7 +30,7 @@ int bme280_init(struct bme280 *dev, int fd, uint8_t addr)
     usleep(2000); // 2 ms reset time
 
     // Read temperature calibration (0x88..0x8D)
-    if (i2c_read_buf(fd, 0x88, calib_buf, sizeof(calib_buf)) < 0)
+    if (i2c_read_buf(fd, addr, 0x88, calib_buf, sizeof(calib_buf)) < 0)
         return -1;
 
     dev->calib.dig_T1 = (uint16_t)((calib_buf[1] << 8) | calib_buf[0]);
@@ -66,14 +66,14 @@ int bme280_read_temperature(struct bme280 *dev, float *temp_c)
 
     // Wait until measurement done (bit 3 of status clears)
     for (int i = 0; i < 20; i++) {
-        if (i2c_read_u8(dev->fd, 0xF3, &status) < 0)
+        if (i2c_read_u8(dev->fd, dev->addr, 0xF3, &status) < 0)
             return -1;
         if ((status & 0x08) == 0)
             break;
         usleep(2000);
     }
 
-    if (i2c_read_buf(dev->fd, 0xFA, buf, sizeof(buf)) < 0)
+    if (i2c_read_buf(dev->fd, dev->addr, 0xFA, buf, sizeof(buf)) < 0)
         return -1;
 
     adc_T = (int32_t)((buf[0] << 12) | (buf[1] << 4) | (buf[2] >> 4));

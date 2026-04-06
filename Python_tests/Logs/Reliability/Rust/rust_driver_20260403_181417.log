@@ -1,0 +1,95 @@
+[cargo build]
+   Compiling bme280_bare_bones v0.1.0 (/home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log)
+    Finished `release` profile [optimized] target(s) in 14.47s
+
+[cargo run]
+Start time : 2026-04-03 18:14:32
+Timeout    : 60s (auto-restart enabled)
+
+    Finished `release` profile [optimized] target(s) in 0.11s
+     Running `target/release/bme280_bare_bones 0x76 0.0`
+BME280 sensor initialized successfully
+[100] Temperature: 22.96 C
+[200] Temperature: 23.00 C
+[300] Temperature: 22.99 C
+[400] Temperature: 23.01 C
+[500] Temperature: 23.02 C
+[600] Temperature: 23.02 C
+[700] Temperature: 23.02 C
+[800] Temperature: 23.02 C
+[900] Temperature: 23.02 C
+[1000] Temperature: 23.03 C
+[1100] Temperature: 23.04 C
+[1200] Temperature: 23.05 C
+[1300] Temperature: 23.06 C
+[1400] Temperature: 23.06 C
+[1500] Temperature: 23.06 C
+[1600] Temperature: 23.08 C
+[1700] Temperature: 23.09 C
+[1800] Temperature: 23.10 C
+[1900] Temperature: 23.12 C
+[2000] Temperature: 23.12 C
+[2100] Temperature: 23.10 C
+[2200] Temperature: 23.11 C
+[2300] Temperature: 23.09 C
+[2400] Temperature: 23.08 C
+[2500] Temperature: 23.08 C
+[2600] Temperature: 23.08 C
+[2700] Temperature: 23.10 C
+[2800] Temperature: 23.10 C
+[2900] Temperature: 23.12 C
+[3000] Temperature: 23.12 C
+[3100] Temperature: 23.12 C
+[3200] Temperature: 23.11 C
+[3300] Temperature: 23.13 C
+[3400] Temperature: 23.12 C
+[3500] Temperature: 23.14 C
+[3600] Temperature: 23.15 C
+[3700] Temperature: 23.15 C
+[3800] Temperature: 23.14 C
+[3900] Temperature: 23.14 C
+[4000] Temperature: 23.13 C
+[4100] Temperature: 23.14 C
+[4200] Temperature: 23.13 C
+[4300] Temperature: 23.14 C
+[4400] Temperature: 23.16 C
+[4500] Temperature: 23.15 C
+[4600] Temperature: 23.15 C
+[4700] Temperature: 23.14 C
+[4800] Temperature: 23.16 C
+[4900] Temperature: 23.16 C
+[5000] Temperature: 23.18 C
+[5100] Temperature: 23.17 C
+[5200] Temperature: 23.17 C
+[5300] Temperature: 23.17 C
+[5400] Temperature: 23.16 C
+[5500] Temperature: 23.16 C
+[5600] Temperature: 23.16 C
+[5700] Temperature: 23.17 C
+[5800] Temperature: 23.16 C
+[5900] Temperature: 23.16 C
+[6000] Temperature: 23.18 C
+[6100] Temperature: 23.18 C
+[6200] Temperature: 23.18 C
+[6300] Temperature: 23.18 C
+
+Total readings   : 6364
+Restarts         : 0
+Duration         : 60.01s
+Throughput       : 106.04 reads/sec
+MTBF            : No failures detected
+Sensor reading variation (n=6364):
+Mean        :   23.108 °C
+Std-dev     :    0.061 °C
+Min         :   22.750 °C
+Max         :   23.200 °C
+Range       :    0.450 °C
+Spikes (>3σ): 0
+Latency (inter-reading interval, n=6363):
+Mean        :    9.372 ms
+Std-dev     :    0.364 ms
+Worst-case  :   12.958 ms
+Resource usage (driver process):
+Mem mean    :   1834.9 KB
+Mem peak    :  27740.0 KB
+Mem trend   : -0.0954 KB/sample (shrinking)

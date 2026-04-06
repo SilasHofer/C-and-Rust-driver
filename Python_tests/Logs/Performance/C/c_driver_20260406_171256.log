@@ -1,0 +1,1124 @@
+[gcc compile]
+
+[run]
+Start time : 2026-04-06 17:12:59
+Target     : 1000 readings (logging every 10)
+
+[RAW] T=2466 (0.01C units), temp_c=24.660000
+BME280 sensor initialized successfully
+[RAW] T=2468 (0.01C units), temp_c=24.680000
+[RAW] T=2469 (0.01C units), temp_c=24.690001
+[RAW] T=2468 (0.01C units), temp_c=24.680000
+[RAW] T=2469 (0.01C units), temp_c=24.690001
+[RAW] T=2469 (0.01C units), temp_c=24.690001
+[RAW] T=2470 (0.01C units), temp_c=24.700001
+[RAW] T=2470 (0.01C units), temp_c=24.700001
+[RAW] T=2471 (0.01C units), temp_c=24.709999
+[RAW] T=2471 (0.01C units), temp_c=24.709999
+[10/1000] [2026-04-06 17:12:59.969] Temperature: 24.709999 C
+[RAW] T=2472 (0.01C units), temp_c=24.719999
+[RAW] T=2472 (0.01C units), temp_c=24.719999
+[RAW] T=2472 (0.01C units), temp_c=24.719999
+[RAW] T=2474 (0.01C units), temp_c=24.740000
+[RAW] T=2473 (0.01C units), temp_c=24.730000
+[RAW] T=2474 (0.01C units), temp_c=24.740000
+[RAW] T=2475 (0.01C units), temp_c=24.750000
+[RAW] T=2474 (0.01C units), temp_c=24.740000
+[RAW] T=2475 (0.01C units), temp_c=24.750000
+[RAW] T=2475 (0.01C units), temp_c=24.750000
+[20/1000] [2026-04-06 17:13:00.075] Temperature: 24.750000 C
+[RAW] T=2476 (0.01C units), temp_c=24.760000
+[RAW] T=2476 (0.01C units), temp_c=24.760000
+[RAW] T=2477 (0.01C units), temp_c=24.770000
+[RAW] T=2477 (0.01C units), temp_c=24.770000
+[RAW] T=2477 (0.01C units), temp_c=24.770000
+[RAW] T=2478 (0.01C units), temp_c=24.780001
+[RAW] T=2477 (0.01C units), temp_c=24.770000
+[RAW] T=2478 (0.01C units), temp_c=24.780001
+[RAW] T=2478 (0.01C units), temp_c=24.780001
+[RAW] T=2478 (0.01C units), temp_c=24.780001
+[30/1000] [2026-04-06 17:13:00.171] Temperature: 24.780001 C
+[RAW] T=2478 (0.01C units), temp_c=24.780001
+[RAW] T=2478 (0.01C units), temp_c=24.780001
+[RAW] T=2479 (0.01C units), temp_c=24.790001
+[RAW] T=2479 (0.01C units), temp_c=24.790001
+[RAW] T=2479 (0.01C units), temp_c=24.790001
+[RAW] T=2479 (0.01C units), temp_c=24.790001
+[RAW] T=2479 (0.01C units), temp_c=24.790001
+[RAW] T=2480 (0.01C units), temp_c=24.799999
+[RAW] T=2480 (0.01C units), temp_c=24.799999
+[RAW] T=2480 (0.01C units), temp_c=24.799999
+[40/1000] [2026-04-06 17:13:00.271] Temperature: 24.799999 C
+[RAW] T=2481 (0.01C units), temp_c=24.809999
+[RAW] T=2483 (0.01C units), temp_c=24.830000
+[RAW] T=2479 (0.01C units), temp_c=24.790001
+[RAW] T=2481 (0.01C units), temp_c=24.809999
+[RAW] T=2482 (0.01C units), temp_c=24.820000
+[RAW] T=2483 (0.01C units), temp_c=24.830000
+[RAW] T=2481 (0.01C units), temp_c=24.809999
+[RAW] T=2482 (0.01C units), temp_c=24.820000
+[RAW] T=2481 (0.01C units), temp_c=24.809999
+[RAW] T=2481 (0.01C units), temp_c=24.809999
+[50/1000] [2026-04-06 17:13:00.377] Temperature: 24.809999 C
+[RAW] T=2482 (0.01C units), temp_c=24.820000
+[RAW] T=2482 (0.01C units), temp_c=24.820000
+[RAW] T=2483 (0.01C units), temp_c=24.830000
+[RAW] T=2484 (0.01C units), temp_c=24.840000
+[RAW] T=2482 (0.01C units), temp_c=24.820000
+[RAW] T=2483 (0.01C units), temp_c=24.830000
+[RAW] T=2484 (0.01C units), temp_c=24.840000
+[RAW] T=2484 (0.01C units), temp_c=24.840000
+[RAW] T=2483 (0.01C units), temp_c=24.830000
+[RAW] T=2483 (0.01C units), temp_c=24.830000
+[60/1000] [2026-04-06 17:13:00.473] Temperature: 24.830000 C
+[RAW] T=2484 (0.01C units), temp_c=24.840000
+[RAW] T=2484 (0.01C units), temp_c=24.840000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[70/1000] [2026-04-06 17:13:00.573] Temperature: 24.850000 C
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[80/1000] [2026-04-06 17:13:00.673] Temperature: 24.850000 C
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[90/1000] [2026-04-06 17:13:00.778] Temperature: 24.860001 C
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2485 (0.01C units), temp_c=24.850000
+[100/1000] [2026-04-06 17:13:00.883] Temperature: 24.850000 C
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[110/1000] [2026-04-06 17:13:00.981] Temperature: 24.879999 C
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2486 (0.01C units), temp_c=24.860001
+[120/1000] [2026-04-06 17:13:01.077] Temperature: 24.860001 C
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[130/1000] [2026-04-06 17:13:01.179] Temperature: 24.879999 C
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[140/1000] [2026-04-06 17:13:01.277] Temperature: 24.879999 C
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[150/1000] [2026-04-06 17:13:01.380] Temperature: 24.889999 C
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[160/1000] [2026-04-06 17:13:01.479] Temperature: 24.889999 C
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[170/1000] [2026-04-06 17:13:01.582] Temperature: 24.889999 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[180/1000] [2026-04-06 17:13:01.693] Temperature: 24.889999 C
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2488 (0.01C units), temp_c=24.879999
+[RAW] T=2487 (0.01C units), temp_c=24.870001
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[190/1000] [2026-04-06 17:13:01.789] Temperature: 24.889999 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[200/1000] [2026-04-06 17:13:01.884] Temperature: 24.900000 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[210/1000] [2026-04-06 17:13:01.982] Temperature: 24.900000 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[220/1000] [2026-04-06 17:13:02.084] Temperature: 24.900000 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2489 (0.01C units), temp_c=24.889999
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[230/1000] [2026-04-06 17:13:02.180] Temperature: 24.900000 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[240/1000] [2026-04-06 17:13:02.275] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[250/1000] [2026-04-06 17:13:02.372] Temperature: 24.900000 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[260/1000] [2026-04-06 17:13:02.471] Temperature: 24.920000 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[270/1000] [2026-04-06 17:13:02.567] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[280/1000] [2026-04-06 17:13:02.666] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[290/1000] [2026-04-06 17:13:02.767] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[300/1000] [2026-04-06 17:13:02.861] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[310/1000] [2026-04-06 17:13:02.961] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[320/1000] [2026-04-06 17:13:03.061] Temperature: 24.920000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[330/1000] [2026-04-06 17:13:03.163] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[340/1000] [2026-04-06 17:13:03.263] Temperature: 24.910000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[350/1000] [2026-04-06 17:13:03.365] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[360/1000] [2026-04-06 17:13:03.465] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[370/1000] [2026-04-06 17:13:03.567] Temperature: 24.920000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[380/1000] [2026-04-06 17:13:03.676] Temperature: 24.920000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[390/1000] [2026-04-06 17:13:03.791] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[400/1000] [2026-04-06 17:13:03.889] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[410/1000] [2026-04-06 17:13:04.000] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[420/1000] [2026-04-06 17:13:04.108] Temperature: 24.910000 C
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[430/1000] [2026-04-06 17:13:04.208] Temperature: 24.910000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[440/1000] [2026-04-06 17:13:04.300] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[450/1000] [2026-04-06 17:13:04.403] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[460/1000] [2026-04-06 17:13:04.503] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[470/1000] [2026-04-06 17:13:04.601] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[480/1000] [2026-04-06 17:13:04.708] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[490/1000] [2026-04-06 17:13:04.822] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2490 (0.01C units), temp_c=24.900000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[500/1000] [2026-04-06 17:13:04.934] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[510/1000] [2026-04-06 17:13:05.037] Temperature: 24.910000 C
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[520/1000] [2026-04-06 17:13:05.130] Temperature: 24.920000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[530/1000] [2026-04-06 17:13:05.230] Temperature: 24.920000 C
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2491 (0.01C units), temp_c=24.910000
+[540/1000] [2026-04-06 17:13:05.333] Temperature: 24.910000 C
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[550/1000] [2026-04-06 17:13:05.431] Temperature: 24.930000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[560/1000] [2026-04-06 17:13:05.528] Temperature: 24.930000 C
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[570/1000] [2026-04-06 17:13:05.627] Temperature: 24.930000 C
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[580/1000] [2026-04-06 17:13:05.724] Temperature: 24.930000 C
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[590/1000] [2026-04-06 17:13:05.822] Temperature: 24.940001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[600/1000] [2026-04-06 17:13:05.923] Temperature: 24.940001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[610/1000] [2026-04-06 17:13:06.031] Temperature: 24.930000 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2492 (0.01C units), temp_c=24.920000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[620/1000] [2026-04-06 17:13:06.131] Temperature: 24.930000 C
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[630/1000] [2026-04-06 17:13:06.235] Temperature: 24.940001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[640/1000] [2026-04-06 17:13:06.337] Temperature: 24.930000 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[650/1000] [2026-04-06 17:13:06.436] Temperature: 24.940001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[660/1000] [2026-04-06 17:13:06.540] Temperature: 24.940001 C
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[670/1000] [2026-04-06 17:13:06.641] Temperature: 24.940001 C
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[680/1000] [2026-04-06 17:13:06.738] Temperature: 24.940001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[690/1000] [2026-04-06 17:13:06.839] Temperature: 24.940001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[700/1000] [2026-04-06 17:13:06.938] Temperature: 24.940001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[710/1000] [2026-04-06 17:13:07.032] Temperature: 24.940001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[720/1000] [2026-04-06 17:13:07.130] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[730/1000] [2026-04-06 17:13:07.227] Temperature: 24.950001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[740/1000] [2026-04-06 17:13:07.323] Temperature: 24.950001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[750/1000] [2026-04-06 17:13:07.421] Temperature: 24.959999 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[760/1000] [2026-04-06 17:13:07.524] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[770/1000] [2026-04-06 17:13:07.629] Temperature: 24.940001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[780/1000] [2026-04-06 17:13:07.736] Temperature: 24.940001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[790/1000] [2026-04-06 17:13:07.832] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[800/1000] [2026-04-06 17:13:07.931] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[810/1000] [2026-04-06 17:13:08.030] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[820/1000] [2026-04-06 17:13:08.131] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[830/1000] [2026-04-06 17:13:08.229] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[840/1000] [2026-04-06 17:13:08.325] Temperature: 24.950001 C
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[850/1000] [2026-04-06 17:13:08.421] Temperature: 24.959999 C
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[860/1000] [2026-04-06 17:13:08.528] Temperature: 24.950001 C
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[870/1000] [2026-04-06 17:13:08.626] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[880/1000] [2026-04-06 17:13:08.727] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2493 (0.01C units), temp_c=24.930000
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[890/1000] [2026-04-06 17:13:08.833] Temperature: 24.940001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[900/1000] [2026-04-06 17:13:08.936] Temperature: 24.959999 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[910/1000] [2026-04-06 17:13:09.037] Temperature: 24.950001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[920/1000] [2026-04-06 17:13:09.145] Temperature: 24.950001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[930/1000] [2026-04-06 17:13:09.248] Temperature: 24.950001 C
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[940/1000] [2026-04-06 17:13:09.344] Temperature: 24.950001 C
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[950/1000] [2026-04-06 17:13:09.445] Temperature: 24.940001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[960/1000] [2026-04-06 17:13:09.547] Temperature: 24.940001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[970/1000] [2026-04-06 17:13:09.649] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[980/1000] [2026-04-06 17:13:09.752] Temperature: 24.950001 C
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2494 (0.01C units), temp_c=24.940001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[990/1000] [2026-04-06 17:13:09.851] Temperature: 24.950001 C
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[RAW] T=2495 (0.01C units), temp_c=24.950001
+[RAW] T=2496 (0.01C units), temp_c=24.959999
+[1000/1000] [2026-04-06 17:13:09.946] Temperature: 24.959999 C
+
+End time   : 2026-04-06 17:13:09
+Readings   : 1000/1000
+Duration   : 10.10s
+Throughput : 98.97 reads/sec
+Latency (inter-reading interval, n=999):
+Mean        :   10.075 ms
+Std-dev     :    1.159 ms
+Worst-case  :   19.238 ms
+CPU time (process accounting):
+CPU time     :    0.430 s
+CPU efficiency:     4.26 %
+Resource usage (driver process):
+CPU mean    :    4.2 %  (n=473)
+CPU peak    :   93.6 %
+Mem mean    :   1407.8 KB
+Mem peak    :   1408.0 KB

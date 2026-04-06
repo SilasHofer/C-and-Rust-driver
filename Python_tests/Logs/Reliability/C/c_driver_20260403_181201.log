@@ -1,0 +1,7 @@
+[gcc compile]
+
+[run]
+Start time : 2026-04-03 18:12:02
+Timeout    : 60s (auto-restart enabled)
+
+BME280 sensor initialized successfully

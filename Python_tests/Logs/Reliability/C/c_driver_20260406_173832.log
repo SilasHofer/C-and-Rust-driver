@@ -1,0 +1,28 @@
+[gcc compile]
+
+[run]
+Start time : 2026-04-06 17:38:33
+Timeout    : 20s (auto-restart enabled)
+
+BME280 sensor initialized successfully
+
+Total readings   : 20
+Restarts         : 0
+Duration         : 20.25s
+Throughput       : 0.99 reads/sec
+MTBF            : No failures detected
+Sensor reading variation (n=20):
+Mean        :   24.694 °C
+Std-dev     :    0.006 °C
+Min         :   24.680 °C
+Max         :   24.700 °C
+Range       :    0.020 °C
+Spikes (>3σ): 0
+Latency (inter-reading interval, n=19):
+Mean        : 1010.271 ms
+Std-dev     :    1.121 ms
+Worst-case  : 1012.061 ms
+Resource usage (driver process):
+Mem mean    :   1399.9 KB
+Mem peak    :   1400.0 KB
+Mem trend   : +0.0008 KB/sample (stable ✓)

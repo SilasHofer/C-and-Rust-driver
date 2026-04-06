@@ -79,6 +79,10 @@ def _latency_stats(intervals: list[float]) -> dict:
     inter-reading intervals (in seconds). Returns an empty dict if
     there are no intervals recorded.
     """
+    # Drop the first reading's interval to filter out cold-start/initialization lags
+    if len(intervals) > 2:
+        intervals = intervals[1:]
+
     n = len(intervals)
     if n == 0:
         return {}
@@ -518,74 +522,229 @@ def main() -> None:
 
     if args.parallel:
         print(f"\n{'─' * 50}")
-        print("  Parallel Mode: Alternating C/Rust readings")
+        print("  Parallel Mode: Concurrent C/Rust reading")
         print(f"{'─' * 50}")
 
-        c_temps    = []
-        rust_temps = []
-        timeout    = args.timeout
-        start      = time.monotonic()
-        read_index = 0
+        print("Compiling drivers...")
+        run_step("gcc compile", ["gcc", "-std=c11", "-D_DEFAULT_SOURCE", "-Wall", "-Wextra", "-O2", "main.c", "bme280.c", "i2c_linux.c", "-o", C_BINARY], cwd=C_DIR, timeout=COMPILE_TIMEOUT, log_file=None)
+        run_step("cargo build", ["cargo", "build", "--release"], cwd=RUST_DIR, timeout=COMPILE_TIMEOUT, log_file=None)
+        
+        c_cmd = [f"./{C_BINARY}", "0x76", str(args.hz), "/dev/i2c-1", "--coord-lock"]
+        # Call the Rust binary directly to skip 'cargo run' memory overhead and startup lag
+        rust_cmd = [str(RUST_DIR / "target" / "release" / "bme280_bare_bones"), "0x76", str(args.hz), "/dev/i2c-1", "--coord-lock"]
 
-        def get_temp_from_line(line):
-            import re
-            m = re.search(r"Temperature:\s*([-+]?[0-9]*\.?[0-9]+)", line)
-            if m:
-                return float(m.group(1))
-            return None
+        c_samples = []
+        rust_samples = []
+        c_intervals = []
+        rust_intervals = []
+        
+        c_last_ts = [None]
+        rust_last_ts = [None]
 
-        while time.monotonic() - start < timeout:
-            read_index += 1
-            if read_index % 2 == 1:
-                label = f"C_read_{read_index}"
-                cmd   = [f"./{C_BINARY}"]
-                cwd   = C_DIR
-            else:
-                label = f"Rust_read_{read_index}"
-                cmd   = ["cargo", "run", "--release"]
-                cwd   = RUST_DIR
+        samples_lock = threading.Lock()
+        stop_event = threading.Event()
+        record_event = threading.Event()
+        c_ready_event = threading.Event()
+        rust_ready_event = threading.Event()
 
-            try:
-                proc = subprocess.Popen(
-                    [str(c) for c in cmd],
-                    cwd=str(cwd),
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                )
-                temp_val = None
-                for line in proc.stdout:
-                    if TEMP_PATTERN in line:
-                        temp_val = get_temp_from_line(line)
-                        print(f"  [{read_index}] {label}: {line.strip()}")
-                        break
-                proc.kill()
-                proc.wait()
-                if temp_val is not None:
-                    if read_index % 2 == 1:
-                        c_temps.append(temp_val)
-                    else:
-                        rust_temps.append(temp_val)
+        log_file = None
+        if args.log:
+            log_path = SCRIPT_DIR / "Logs" / "Reliability" / "parallel" / f"parallel_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            log_file = open(log_path, "w")
+
+        print("\nStarting parallel temperature capture...")
+        
+        c_proc = subprocess.Popen([str(c) for c in c_cmd], cwd=str(C_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        time.sleep(0.1) # stagger
+        rust_proc = subprocess.Popen([str(c) for c in rust_cmd], cwd=str(RUST_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        
+        c_sampler = ResourceSampler(c_proc.pid)
+        rust_sampler = ResourceSampler(rust_proc.pid)
+        c_sampler.start()
+        rust_sampler.start()
+
+        def reader_thread(label, proc, samples_list, intervals_list, last_ts_ref, ready_ev):
+            while not stop_event.is_set():
+                line = proc.stdout.readline()
+                if not line:
+                    break
+                line = line.rstrip()
+                
+                if "initialized successfully" in line:
+                    ready_ev.set()
+
+                if TEMP_PATTERN in line:
+                    ready_ev.set() # Fallback flag
+                    if record_event.is_set():
+                        now = time.monotonic()
+                        m = _re.search(r"Temperature:\s*([-+]?[0-9]*\.?[0-9]+)", line)
+                        if m:
+                            temp = float(m.group(1))
+                            with samples_lock:
+                                samples_list.append((now, temp))
+                                if last_ts_ref[0] is not None:
+                                    intervals_list.append(now - last_ts_ref[0])
+                                last_ts_ref[0] = now
+                            out = f"{label} [{datetime.now().isoformat()}]: {line}"
+                            print(f"  {out}")
+                            if log_file:
+                                log_file.write(out + "\n")
+                                log_file.flush()
                 else:
-                    print(f"  x No temperature found for {label}")
-            except Exception as e:
-                print(f"  x Error running {label}: {e}")
+                    out = f"{label}: {line}"
+                    print(f"  {out}")
+                    if log_file:
+                        log_file.write(out + "\n")
+                        log_file.flush()
+
+        ct = threading.Thread(target=reader_thread, args=("C_driver", c_proc, c_samples, c_intervals, c_last_ts, c_ready_event), daemon=True)
+        rt = threading.Thread(target=reader_thread, args=("Rust_driver", rust_proc, rust_samples, rust_intervals, rust_last_ts, rust_ready_event), daemon=True)
+        
+        ct.start()
+        rt.start()
+
+        print("\n  Waiting for both drivers to initialize...")
+        c_ready_event.wait(timeout=10)
+        rust_ready_event.wait(timeout=10)
+        print("  Both drivers ready! Starting metric collection...")
+
+        start_time = time.monotonic()
+        record_event.set()
+
+        c_restarts = 0
+        rust_restarts = 0
+        try:
+            while time.monotonic() - start_time < args.timeout:
+                time.sleep(0.1)
+                if c_proc.poll() is not None:
+                    print(f"\n  ⚠ [C_driver] crashed! Restarting...")
+                    if log_file: log_file.write(f"\n  ⚠ [C_driver] crashed! Restarting...\n")
+                    c_restarts += 1
+                    c_sampler.stop()
+                    c_proc = subprocess.Popen([str(c) for c in c_cmd], cwd=str(C_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+                    c_sampler = ResourceSampler(c_proc.pid)
+                    c_sampler.start()
+                    ct = threading.Thread(target=reader_thread, args=("C_driver", c_proc, c_samples, c_intervals, c_last_ts, c_ready_event), daemon=True)
+                    ct.start()
+                    
+                if rust_proc.poll() is not None:
+                    print(f"\n  ⚠ [Rust_driver] crashed! Restarting...")
+                    if log_file: log_file.write(f"\n  ⚠ [Rust_driver] crashed! Restarting...\n")
+                    rust_restarts += 1
+                    rust_sampler.stop()
+                    rust_proc = subprocess.Popen([str(c) for c in rust_cmd], cwd=str(RUST_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+                    rust_sampler = ResourceSampler(rust_proc.pid)
+                    rust_sampler.start()
+                    rt = threading.Thread(target=reader_thread, args=("Rust_driver", rust_proc, rust_samples, rust_intervals, rust_last_ts, rust_ready_event), daemon=True)
+                    rt.start()
+        except KeyboardInterrupt:
+            print("\nInterrupted.")
+            
+        elapsed = time.monotonic() - start_time
+        stop_event.set()
+        c_sampler.stop()
+        rust_sampler.stop()
+        
+        c_proc.terminate()
+        rust_proc.terminate()
+        try:
+            c_proc.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            c_proc.kill()
+        try:
+            rust_proc.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            rust_proc.kill()
+        
+        with samples_lock:
+            c_vals = [s[1] for s in c_samples]
+            r_vals = [s[1] for s in rust_samples]
+            
+        c_throughput = len(c_vals) / elapsed if elapsed > 0 else 0
+        r_throughput = len(r_vals) / elapsed if elapsed > 0 else 0
 
         print(f"\n{'=' * 50}")
-        print("  Comparison of Sensor Readings")
+        print("  C Driver Metrics")
         print(f"{'=' * 50}")
-        min_len = min(len(c_temps), len(rust_temps))
-        diffs   = []
-        for idx in range(min_len):
-            diff = abs(c_temps[idx] - rust_temps[idx])
-            diffs.append(diff)
-            print(f"  Pair {idx+1}: C={c_temps[idx]:.2f}  Rust={rust_temps[idx]:.2f}  |d|={diff:.4f}")
-        if diffs:
-            print(f"\n  Average |d|: {sum(diffs)/len(diffs):.4f}")
-            print(f"  Max |d|: {max(diffs):.4f}")
+        if log_file:
+            log_file.write(f"\n{'=' * 50}\n  C Driver Metrics\n{'=' * 50}\n")
+        
+        c_summary = (f"Total readings   : {len(c_vals)}\n"
+                     f"Restarts         : {c_restarts}\n"
+                     f"Duration         : {elapsed:.2f}s\n"
+                     f"Throughput       : {c_throughput:.2f} reads/sec\n"
+                     f"MTBF             : {elapsed / (c_restarts + 1):.2f}s\n")
+        print(c_summary, end="")
+        if log_file:
+            log_file.write(c_summary)
+            
+        _print_sensor_stats(_sensor_stats(c_vals), log_file)
+        _print_latency_stats(_latency_stats(c_intervals), log_file)
+        _print_resource_stats(_resource_stats(c_sampler.mem_samples), log_file)
+
+        print(f"\n{'=' * 50}")
+        print("  Rust Driver Metrics")
+        print(f"{'=' * 50}")
+        if log_file:
+            log_file.write(f"\n{'=' * 50}\n  Rust Driver Metrics\n{'=' * 50}\n")
+        
+        r_summary = (f"Total readings   : {len(r_vals)}\n"
+                     f"Restarts         : {rust_restarts}\n"
+                     f"Duration         : {elapsed:.2f}s\n"
+                     f"Throughput       : {r_throughput:.2f} reads/sec\n"
+                     f"MTBF             : {elapsed / (rust_restarts + 1):.2f}s\n")
+        print(r_summary, end="")
+        if log_file:
+            log_file.write(r_summary)
+            
+        _print_sensor_stats(_sensor_stats(r_vals), log_file)
+        _print_latency_stats(_latency_stats(rust_intervals), log_file)
+        _print_resource_stats(_resource_stats(rust_sampler.mem_samples), log_file)
+
+        print(f"\n{'=' * 50}")
+        print("  Comparison / Delta Metrics")
+        print(f"{'=' * 50}")
+        if log_file:
+            log_file.write(f"\n{'=' * 50}\n  Comparison / Delta Metrics\n{'=' * 50}\n")
+        
+        def _local_pair_by_time(c_s, rust_s, max_gap_s):
+            pairs = []
+            i = j = 0
+            while i < len(c_s) and j < len(rust_s):
+                c_ts, c_tmp = c_s[i]
+                r_ts, r_tmp = rust_s[j]
+                dt = r_ts - c_ts
+                if abs(dt) <= max_gap_s:
+                    pairs.append((c_ts, c_tmp, r_ts, r_tmp, abs(c_tmp - r_tmp)))
+                    i += 1
+                    j += 1
+                elif dt < 0:
+                    j += 1
+                else:
+                    i += 1
+            return pairs
+
+        # Increased the gap limit slightly from 0.2 to 0.4s to account for minor loop offsets
+        pairs = _local_pair_by_time(c_samples, rust_samples, 0.4)
+        deltas = [p[4] for p in pairs]
+        
+        print(f"  Paired readings (gap <= 0.4s): {len(pairs)}")
+        if deltas:
+            d_mean = sum(deltas)/len(deltas)
+            d_max = max(deltas)
+            print(f"  Average |C - Rust|: {d_mean:.4f} °C")
+            print(f"  Max |C - Rust|    : {d_max:.4f} °C")
+            if log_file:
+                log_file.write(f"\nPaired readings: {len(pairs)}\nAverage |C - Rust|: {d_mean:.4f} C\nMax |C - Rust|: {d_max:.4f} C\n")
         else:
             print("  No valid pairs to compare.")
+            if log_file:
+                log_file.write("No valid pairs to compare.\n")
+        
         print(f"{'=' * 50}\n")
+        if log_file:
+            log_file.close()
         sys.exit(0)
 
     results: dict[str, bool] = {}
