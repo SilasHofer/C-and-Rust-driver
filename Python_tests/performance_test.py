@@ -415,10 +415,10 @@ def build_and_run_rust(timeout: int, log: bool, samples: int) -> bool:
         if not ok:
             return False
 
-        run_args = ["cargo", "run", "--release", "--", "0x76", 0]
+        run_args = [str(RUST_DIR / "target" / "release" / "bme280_bare_bones"), "0x76", "0"]
 
         ok = capture_temperature_readings(
-            "cargo run",
+            "rust binary",
             run_args,
             cwd=RUST_DIR,
             timeout=timeout,
@@ -514,7 +514,7 @@ def main() -> None:
                 cwd = C_DIR
             else:
                 label = f"Rust_read_{i}"
-                cmd = ["cargo", "run", "--release"]
+                cmd = [str(RUST_DIR / "target" / "release" / "bme280_bare_bones")]
                 cwd = RUST_DIR
 
             try:
