@@ -1,0 +1,136 @@
+[cargo build]
+    Finished `release` profile [optimized] target(s) in 0.59s
+
+[cleanup] Starting system cleanup...
+[cleanup] No leftover driver processes found.
+[cleanup] sync: OK
+[cleanup] drop_caches (3): OK
+[cleanup] Setting CPU governor to 'performance' on all 4 cores...
+[cleanup] CPU governor successfully set to 'performance' on all cores.
+[cleanup] Settling for 2s...
+[cleanup] Done — system is clean.
+[rust binary]
+Warm-up : 100 readings (excluded from metrics)
+Target : 100 readings (logging every 1)
+
+
+Warm-up complete
+Start time : 2026-04-10 15:37:08
+
+[1/100] [2026-04-10 15:37:08.080] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=N/A
+[2/100] [2026-04-10 15:37:08.089] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.268ms
+[3/100] [2026-04-10 15:37:08.099] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.368ms
+[4/100] [2026-04-10 15:37:08.110] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=11.547ms
+[5/100] [2026-04-10 15:37:08.119] Temperature: 25.35 C | mem=1792.0KB cpu=0.000s lat=8.975ms
+[6/100] [2026-04-10 15:37:08.129] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.431ms
+[7/100] [2026-04-10 15:37:08.140] Temperature: 25.35 C | mem=1792.0KB cpu=0.000s lat=11.431ms
+[8/100] [2026-04-10 15:37:08.150] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.354ms
+[9/100] [2026-04-10 15:37:08.159] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.456ms
+[10/100] [2026-04-10 15:37:08.168] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.374ms
+[11/100] [2026-04-10 15:37:08.178] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.406ms
+[12/100] [2026-04-10 15:37:08.187] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=9.092ms
+[13/100] [2026-04-10 15:37:08.197] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=9.725ms
+[14/100] [2026-04-10 15:37:08.208] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=11.552ms
+[15/100] [2026-04-10 15:37:08.217] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=9.257ms
+[16/100] [2026-04-10 15:37:08.227] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.492ms
+[17/100] [2026-04-10 15:37:08.238] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=11.555ms
+[18/100] [2026-04-10 15:37:08.248] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=9.483ms
+[19/100] [2026-04-10 15:37:08.259] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=11.447ms
+[20/100] [2026-04-10 15:37:08.271] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=11.455ms
+[21/100] [2026-04-10 15:37:08.280] Temperature: 25.38 C | mem=1792.0KB cpu=0.000s lat=9.391ms
+[22/100] [2026-04-10 15:37:08.292] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=11.524ms
+[23/100] [2026-04-10 15:37:08.301] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=9.300ms
+[24/100] [2026-04-10 15:37:08.310] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=9.111ms
+[25/100] [2026-04-10 15:37:08.319] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=8.981ms
+[26/100] [2026-04-10 15:37:08.331] Temperature: 25.35 C | mem=1792.0KB cpu=0.000s lat=11.454ms
+[27/100] [2026-04-10 15:37:08.342] Temperature: 25.36 C | mem=1792.0KB cpu=0.000s lat=11.468ms
+[28/100] [2026-04-10 15:37:08.354] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=11.474ms
+[29/100] [2026-04-10 15:37:08.363] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=9.126ms
+[30/100] [2026-04-10 15:37:08.372] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=9.440ms
+[31/100] [2026-04-10 15:37:08.382] Temperature: 25.37 C | mem=1792.0KB cpu=0.000s lat=9.400ms
+[32/100] [2026-04-10 15:37:08.391] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.641ms
+[33/100] [2026-04-10 15:37:08.401] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.558ms
+[34/100] [2026-04-10 15:37:08.412] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.448ms
+[35/100] [2026-04-10 15:37:08.424] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=12.193ms
+[36/100] [2026-04-10 15:37:08.436] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=11.492ms
+[37/100] [2026-04-10 15:37:08.445] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.072ms
+[38/100] [2026-04-10 15:37:08.454] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.204ms
+[39/100] [2026-04-10 15:37:08.466] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.501ms
+[40/100] [2026-04-10 15:37:08.477] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=11.443ms
+[41/100] [2026-04-10 15:37:08.486] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.048ms
+[42/100] [2026-04-10 15:37:08.496] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.498ms
+[43/100] [2026-04-10 15:37:08.505] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.300ms
+[44/100] [2026-04-10 15:37:08.514] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.359ms
+[45/100] [2026-04-10 15:37:08.524] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.614ms
+[46/100] [2026-04-10 15:37:08.533] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.211ms
+[47/100] [2026-04-10 15:37:08.542] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.025ms
+[48/100] [2026-04-10 15:37:08.554] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=11.451ms
+[49/100] [2026-04-10 15:37:08.565] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.470ms
+[50/100] [2026-04-10 15:37:08.574] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.067ms
+[51/100] [2026-04-10 15:37:08.584] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.513ms
+[52/100] [2026-04-10 15:37:08.593] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.024ms
+[53/100] [2026-04-10 15:37:08.602] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.846ms
+[54/100] [2026-04-10 15:37:08.614] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.646ms
+[55/100] [2026-04-10 15:37:08.623] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.234ms
+[56/100] [2026-04-10 15:37:08.632] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.119ms
+[57/100] [2026-04-10 15:37:08.642] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.484ms
+[58/100] [2026-04-10 15:37:08.653] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=11.479ms
+[59/100] [2026-04-10 15:37:08.663] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.075ms
+[60/100] [2026-04-10 15:37:08.672] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.015ms
+[61/100] [2026-04-10 15:37:08.683] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.574ms
+[62/100] [2026-04-10 15:37:08.692] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.281ms
+[63/100] [2026-04-10 15:37:08.704] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.497ms
+[64/100] [2026-04-10 15:37:08.715] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.468ms
+[65/100] [2026-04-10 15:37:08.727] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.461ms
+[66/100] [2026-04-10 15:37:08.736] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=8.999ms
+[67/100] [2026-04-10 15:37:08.747] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.480ms
+[68/100] [2026-04-10 15:37:08.756] Temperature: 25.37 C | mem=1792.0KB cpu=0.010s lat=9.039ms
+[69/100] [2026-04-10 15:37:08.765] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=8.981ms
+[70/100] [2026-04-10 15:37:08.774] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=9.130ms
+[71/100] [2026-04-10 15:37:08.786] Temperature: 25.38 C | mem=1792.0KB cpu=0.010s lat=11.452ms
+[72/100] [2026-04-10 15:37:08.797] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=11.494ms
+[73/100] [2026-04-10 15:37:08.809] Temperature: 25.39 C | mem=1792.0KB cpu=0.020s lat=11.492ms
+[74/100] [2026-04-10 15:37:08.820] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=11.446ms
+[75/100] [2026-04-10 15:37:08.832] Temperature: 25.37 C | mem=1792.0KB cpu=0.020s lat=11.471ms
+[76/100] [2026-04-10 15:37:08.843] Temperature: 25.37 C | mem=1792.0KB cpu=0.020s lat=11.441ms
+[77/100] [2026-04-10 15:37:08.853] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.265ms
+[78/100] [2026-04-10 15:37:08.862] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.931ms
+[79/100] [2026-04-10 15:37:08.872] Temperature: 25.37 C | mem=1792.0KB cpu=0.020s lat=9.220ms
+[80/100] [2026-04-10 15:37:08.883] Temperature: 25.37 C | mem=1792.0KB cpu=0.020s lat=11.440ms
+[81/100] [2026-04-10 15:37:08.892] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.055ms
+[82/100] [2026-04-10 15:37:08.902] Temperature: 25.39 C | mem=1792.0KB cpu=0.020s lat=9.809ms
+[83/100] [2026-04-10 15:37:08.912] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.875ms
+[84/100] [2026-04-10 15:37:08.921] Temperature: 25.39 C | mem=1792.0KB cpu=0.020s lat=9.631ms
+[85/100] [2026-04-10 15:37:08.931] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.313ms
+[86/100] [2026-04-10 15:37:08.942] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=11.415ms
+[87/100] [2026-04-10 15:37:08.951] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.041ms
+[88/100] [2026-04-10 15:37:08.960] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.024ms
+[89/100] [2026-04-10 15:37:08.969] Temperature: 25.39 C | mem=1792.0KB cpu=0.020s lat=9.077ms
+[90/100] [2026-04-10 15:37:08.979] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.566ms
+[91/100] [2026-04-10 15:37:08.991] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=11.626ms
+[92/100] [2026-04-10 15:37:09.002] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=11.520ms
+[93/100] [2026-04-10 15:37:09.011] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.058ms
+[94/100] [2026-04-10 15:37:09.020] Temperature: 25.39 C | mem=1792.0KB cpu=0.020s lat=9.028ms
+[95/100] [2026-04-10 15:37:09.032] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=11.459ms
+[96/100] [2026-04-10 15:37:09.043] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=11.531ms
+[97/100] [2026-04-10 15:37:09.053] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.531ms
+[98/100] [2026-04-10 15:37:09.062] Temperature: 25.38 C | mem=1792.0KB cpu=0.020s lat=9.268ms
+[99/100] [2026-04-10 15:37:09.071] Temperature: 25.39 C | mem=1792.0KB cpu=0.020s lat=9.164ms
+[100/100] [2026-04-10 15:37:09.080] Temperature: 25.39 C | mem=1792.0KB cpu=0.020s lat=9.280ms
+
+End time : 2026-04-10 15:37:09
+Readings : 100/100
+Duration : 1.02s
+Throughput : 97.80 reads/sec
+Latency (inter-reading interval, n=99):
+Mean :   10.103 ms
+Std-dev :    1.083 ms
+Worst-case :   12.193 ms
+CPU time (process accounting):
+CPU time :    0.020 s
+CPU efficiency:     1.96 %
+Resource usage (driver process):
+CPU mean :    2.0 % (n=49)
+CPU peak :   48.1 %
+Mem mean :   1792.0 KB
+Mem peak :   1792.0 KB

@@ -1,0 +1,5 @@
+# C driver logs folder
+../Logs/Performance/C
+
+# Rust driver logs folder
+../Logs/Performance/Rust

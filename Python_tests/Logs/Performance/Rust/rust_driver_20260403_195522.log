@@ -1,6 +1,0 @@
-[cargo build]
-    Updating crates.io index
-error: no matching package named `i2c-dev` found
-location searched: crates.io index
-required by package `bme280_bare_bones v0.1.0 (/home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log)`
-
