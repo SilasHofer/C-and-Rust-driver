@@ -1,0 +1,6 @@
+4,2,30,2,4,"i2c_set_slave@9-12@./i2c_linux.c","./i2c_linux.c","i2c_set_slave","i2c_set_slave( int fd , uint8_t addr)",9,12
+20,2,141,4,24,"i2c_read_u8@14-37@./i2c_linux.c","./i2c_linux.c","i2c_read_u8","i2c_read_u8( int fd , uint8_t addr , uint8_t reg , uint8_t * data)",14,37
+9,2,52,3,9,"i2c_write_u8@39-47@./i2c_linux.c","./i2c_linux.c","i2c_write_u8","i2c_write_u8( int fd , uint8_t reg , uint8_t data)",39,47
+20,2,144,5,24,"i2c_read_buf@49-72@./i2c_linux.c","./i2c_linux.c","i2c_read_buf","i2c_read_buf( int fd , uint8_t addr , uint8_t reg , uint8_t * buf , size_t len)",49,72
+25,5,229,3,39,"bme280_init@9-47@./bme280.c","./bme280.c","bme280_init","bme280_init( struct bme280 * dev , int fd , uint8_t addr)",9,47
+33,9,349,2,45,"bme280_read_temperature@49-93@./bme280.c","./bme280.c","bme280_read_temperature","bme280_read_temperature( struct bme280 * dev , float * temp_c)",49,93

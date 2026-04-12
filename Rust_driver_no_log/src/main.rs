@@ -52,7 +52,7 @@ fn run() -> Result<(), DriverError> {
     println!("BME280 sensor initialized successfully");
 
     loop {
-        let temp_c = sensor.read_temperature_c()?;
+        let temp_c = sensor.read_temperature()?;
         // Raw data printed to stderr only
         println!("Temperature: {temp_c:>.2} C");
         

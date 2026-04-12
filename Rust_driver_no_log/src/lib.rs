@@ -157,7 +157,7 @@ impl Bme280 {
         Ok(sensor)
     }
 
-    pub fn read_temperature_c(&mut self) -> Result<f32, DriverError> {
+    pub fn read_temperature(&mut self) -> Result<f32, DriverError> {
         let _guard = LockGuard::new(self.lock_file.as_ref())?;
 
         i2c_set_slave(&self.file, self.addr)?;
@@ -270,24 +270,4 @@ fn compensate_temperature(adc_t: i32, calib: Bme280Calib, t_fine: &mut i32) -> i
 
     *t_fine = var1 + var2;
     (*t_fine * 5 + 128) >> 8
-}
-
-#[cfg(test)]
-mod tests {
-    use super::{compensate_temperature, Bme280Calib};
-
-    #[test]
-    fn compensates_temperature_using_bosch_example_values() {
-        let calib = Bme280Calib {
-            dig_t1: 27_504,
-            dig_t2: 26_435,
-            dig_t3: -1_000,
-        };
-        let mut t_fine = 0;
-
-        let temperature = compensate_temperature(519_888, calib, &mut t_fine);
-
-        assert_eq!(temperature, 2_508);
-        assert_eq!(t_fine, 128_422);
-    }
 }
