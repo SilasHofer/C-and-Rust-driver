@@ -1,0 +1,11 @@
+_dl_relocate_static_pie
+_fini
+_init
+_start
+bme280_init
+bme280_read_temperature
+i2c_read_buf
+i2c_read_u8
+i2c_set_slave
+i2c_write_u8
+main

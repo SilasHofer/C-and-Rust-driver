@@ -1,0 +1,285 @@
+0000000000217690 T __rustc::rust_panic
+0000000000216c10 T __rustc::__rust_alloc
+0000000000216c20 T __rustc::__rust_dealloc
+0000000000216c30 T __rustc::__rust_realloc
+0000000000217800 T __rustc::__rust_drop_panic
+0000000000217930 T __rustc::rust_begin_unwind
+0000000000247990 T __rustc::__rust_start_panic
+0000000000216c40 T __rustc::__rust_alloc_zeroed
+0000000000247a40 T __rustc::__rust_panic_cleanup
+00000000002179e0 T __rustc::__rust_foreign_exception
+0000000000217b10 T __rustc::__rust_alloc_error_handler
+0000000000216c50 T __rustc::__rust_no_alloc_shim_is_unstable_v2
+0000000000217b30 T <std::backtrace_rs::symbolize::gimli::parse_running_mmaps::MapsEntry as core::str::traits::FromStr>::from_str
+000000000024f1ab T miniz_oxide::inflate::core::decompress
+0000000000249a7c T rustc_demangle::try_demangle
+000000000024ce0f T rustc_demangle::demangle
+0000000000216cb0 T bme280_bare_bones::Bme280::read_temperature
+0000000000217030 T bme280_bare_bones::Bme280::new
+0000000000251b80 T <alloc::boxed::convert::<impl core::convert::From<alloc::string::String> for alloc::boxed::Box<dyn core::error::Error+core::marker::Sync+core::marker::Send>>::from::StringError as core::fmt::Debug>::fmt
+0000000000251ba0 T <alloc::boxed::convert::<impl core::convert::From<alloc::string::String> for alloc::boxed::Box<dyn core::error::Error+core::marker::Sync+core::marker::Send>>::from::StringError as core::fmt::Display>::fmt
+0000000000221e80 T std::backtrace_rs::symbolize::Symbol::name
+0000000000221f60 T std::fs::OpenOptions::_open
+0000000000222b60 T std::io::error::Error::new
+0000000000222c80 T std::io::error::Error::_new
+0000000000223110 T std::io::stdio::try_set_output_capture
+0000000000223410 T std::io::stdio::_print
+00000000002234e0 T std::io::stdio::_eprint
+00000000002235a0 T std::io::buffered::bufwriter::BufWriter<W>::write_all_cold
+0000000000223930 T std::rt::lang_start_internal
+0000000000224080 T std::env::current_dir
+0000000000224250 T std::env::current_exe
+0000000000224410 T std::env::args
+0000000000224430 T std::env::_var_os
+00000000002245a0 T std::env::args_os
+0000000000224820 T std::sys::thread_local::destructors::linux_like::register
+0000000000225210 T std::sys::fs::metadata
+00000000002271b0 T std::sys::args::unix::imp::ARGV_INIT_ARRAY::init_wrapper
+00000000002271d0 T std::sys::sync::once::futex::Once::call
+00000000002273f0 T std::sys::sync::mutex::futex::Mutex::lock_contended
+00000000002274e0 T std::sys::sync::rwlock::futex::RwLock::read_contended
+0000000000227680 T std::sys::sync::rwlock::futex::RwLock::wake_writer_or_readers
+0000000000227760 T std::sys::os_str::bytes::Slice::check_public_boundary::slow_path
+0000000000228030 T std::sys::backtrace::__rust_end_short_backtrace
+0000000000228040 T std::sys::backtrace::__rust_end_short_backtrace
+0000000000228050 T std::sys::backtrace::lock
+00000000002281c0 T std::path::Components::as_path
+0000000000228460 T std::path::Path::_strip_prefix
+0000000000228750 T std::path::Path::is_dir
+0000000000228840 T std::path::Path::is_file
+0000000000228930 T std::path::PathBuf::_set_extension
+000000000022902b T std::alloc::default_alloc_error_hook
+00000000002291a0 T std::alloc::rust_oom
+00000000002291f0 T std::panic::get_backtrace_style
+0000000000229630 T std::thread::functions::sleep
+0000000000229700 T std::process::exit
+0000000000229720 T std::process::abort
+0000000000229730 T std::panicking::panic_count::is_zero_slow_path
+0000000000229750 T std::panicking::panic_count::increase
+000000000022979e T std::panicking::default_hook
+0000000000229b00 T std::panicking::payload_as_str
+0000000000229b86 T std::panicking::panic_with_hook
+0000000000252620 T <str as core::fmt::Debug>::fmt
+00000000002529c0 T <char as core::fmt::Debug>::fmt
+000000000024d8f7 T <&T as core::fmt::Debug>::fmt
+000000000024d922 T <&T as core::fmt::Debug>::fmt
+000000000024d935 T <&T as core::fmt::Debug>::fmt
+0000000000252b60 T <str as core::fmt::Display>::fmt
+0000000000252b80 T <char as core::fmt::Display>::fmt
+000000000024d959 T <&T as core::fmt::Display>::fmt
+000000000024d96c T <&T as core::fmt::Display>::fmt
+0000000000217550 T <&T as core::fmt::Display>::fmt
+0000000000217540 T <&T as core::fmt::UpperHex>::fmt
+000000000024d98a T <[T] as core::fmt::Debug>::fmt
+0000000000252c60 T core::ffi::c_str::CStr::from_bytes_with_nul
+0000000000252d80 T core::fmt::pointer_fmt_inner
+0000000000253190 T core::fmt::num::imp::<impl core::fmt::Display for u8>::fmt
+0000000000253230 T core::fmt::num::imp::<impl core::fmt::Display for i32>::fmt
+00000000002532a0 T core::fmt::num::imp::<impl core::fmt::Display for u32>::fmt
+00000000002532f0 T core::fmt::num::imp::<impl core::fmt::Display for u64>::fmt
+00000000002532f0 T core::fmt::num::imp::<impl core::fmt::Display for usize>::fmt
+0000000000253440 T core::fmt::num::<impl core::fmt::LowerHex for u8>::fmt
+00000000002534b0 T core::fmt::num::<impl core::fmt::UpperHex for u8>::fmt
+0000000000253520 T core::fmt::num::<impl core::fmt::LowerHex for i32>::fmt
+0000000000253590 T core::fmt::num::<impl core::fmt::LowerHex for u64>::fmt
+0000000000253600 T core::fmt::num::<impl core::fmt::UpperHex for i32>::fmt
+0000000000253590 T core::fmt::num::<impl core::fmt::LowerHex for usize>::fmt
+000000000024d9f7 T core::fmt::Write::write_char
+000000000024da91 T core::fmt::Write::write_fmt
+0000000000253dc0 T core::fmt::float::<impl core::fmt::Display for f32>::fmt
+0000000000253e00 T core::fmt::write
+0000000000253fc0 T core::fmt::builders::DebugStruct::field
+0000000000254150 T core::fmt::builders::DebugSet::entry
+0000000000254150 T core::fmt::builders::DebugList::entry
+0000000000254270 T core::fmt::builders::DebugList::finish
+00000000002542b0 T core::fmt::Formatter::debug_list
+0000000000254350 T core::fmt::Formatter::pad_integral
+0000000000254d10 T core::fmt::Formatter::debug_tuple_field1_finish
+0000000000254e50 T core::fmt::Formatter::debug_struct_field1_finish
+0000000000254f00 T core::fmt::Formatter::pad
+0000000000255340 T core::fmt::Formatter::write_str
+0000000000255350 T core::num::bignum::Big32x40::mul_digits
+00000000002556a0 T core::num::bignum::Big32x40::mul_pow2
+00000000002558a0 T core::num::dec2flt::decimal_seq::DecimalSeq::left_shift
+0000000000255b10 T core::num::dec2flt::decimal_seq::DecimalSeq::right_shift
+0000000000255d00 T core::num::dec2flt::decimal_seq::DecimalSeq::round
+0000000000255df0 T core::num::dec2flt::decimal_seq::parse_decimal_seq
+0000000000256230 T core::num::dec2flt::parse::parse_number
+00000000002566f0 T core::num::dec2flt::<impl core::str::traits::FromStr for f64>::from_str
+0000000000256e40 T core::num::flt2dec::digits_to_dec_str
+0000000000257160 T core::num::flt2dec::strategy::grisu::format_exact_opt
+0000000000257560 T core::num::flt2dec::strategy::grisu::format_shortest_opt
+0000000000257c00 T core::num::flt2dec::strategy::dragon::format_exact
+0000000000258c40 T core::num::flt2dec::strategy::dragon::format_shortest
+0000000000259fb0 T core::num::flt2dec::strategy::dragon::mul_pow10
+0000000000217560 T core::ptr::drop_in_place<std::io::error::Error>
+0000000000217610 T core::ptr::drop_in_place<bme280_bare_bones::Bme280>
+0000000000217630 T core::ptr::drop_in_place<bme280_bare_bones::LockGuard>
+000000000025a420 T core::str::slice_error_fail
+000000000025a430 T core::str::slice_error_fail_rt
+000000000024daa4 T core::str::<impl str>::trim_start_matches
+000000000025a730 T core::str::count::do_count_chars
+000000000025ad00 T core::str::count::char_count_general_case
+000000000025add0 T core::str::pattern::StrSearcher::new
+000000000025b340 T core::str::converts::from_utf8
+000000000025b540 T core::cell::panic_already_borrowed
+000000000025b7a0 T core::slice::copy_from_slice_impl::len_mismatch_fail
+00000000002516fb T core::slice::<impl [T]>::copy_within
+0000000000247fc6 T core::slice::<impl [T]>::starts_with
+000000000025b7e0 T core::slice::sort::shared::smallsort::panic_on_ord_violation
+0000000000231120 T core::slice::sort::stable::driftsort_main
+0000000000231260 T core::slice::sort::stable::driftsort_main
+00000000002313b0 T core::slice::sort::stable::driftsort_main
+00000000002314f0 T core::slice::sort::stable::driftsort_main
+0000000000231650 T core::slice::sort::stable::driftsort_main
+000000000025b800 T core::slice::sort::stable::drift::sqrt_approx
+00000000002338d0 T core::slice::sort::stable::quicksort::quicksort
+00000000002342f0 T core::slice::sort::stable::quicksort::quicksort
+0000000000234cc0 T core::slice::sort::stable::quicksort::quicksort
+0000000000235710 T core::slice::sort::stable::quicksort::quicksort
+0000000000236130 T core::slice::sort::stable::quicksort::quicksort
+0000000000236ab0 T core::slice::sort::unstable::ipnsort
+0000000000236bb0 T core::slice::sort::unstable::heapsort::heapsort
+000000000025b830 T core::slice::index::slice_index_fail
+0000000000251758 T core::slice::index::range
+000000000025b900 T core::slice::memchr::memchr_aligned
+000000000025b9e0 T core::slice::memchr::memrchr
+000000000025baf0 T core::option::expect_failed
+000000000025bb30 T core::option::unwrap_failed
+000000000025bb50 T core::result::unwrap_failed
+000000000025bbb0 T core::unicode::unicode_data::grapheme_extend::lookup_slow
+000000000025bcb0 T core::unicode::printable::is_printable
+000000000025bf60 T core::panicking::panic_const::panic_const_div_by_zero
+000000000025bf80 T core::panicking::panic_const::panic_const_rem_by_zero
+000000000025bf99 T core::panicking::assert_failed
+00000000002370cb T core::panicking::assert_failed
+000000000025bfd0 T core::panicking::panic_nounwind
+000000000025bfeb T core::panicking::panic_in_cleanup
+000000000025bfff T core::panicking::panic_bounds_check
+000000000025c040 T core::panicking::panic_nounwind_fmt
+000000000025c075 T core::panicking::assert_failed_inner
+000000000025c163 T core::panicking::panic_cannot_unwind
+000000000025c180 T core::panicking::panic_nounwind_nobacktrace
+000000000025c1a0 T core::panicking::panic
+000000000025c1c0 T core::panicking::panic_fmt
+0000000000237100 t <*mut T as core::fmt::Debug>::fmt
+000000000024dd38 T <&mut T as core::fmt::Debug>::fmt
+0000000000237110 T <&std::fs::File as std::io::Read>::read_to_string
+0000000000237210 t <&mut T as core::fmt::Display>::fmt
+0000000000237a80 T <std::path::PathBuf as core::fmt::Debug>::fmt
+000000000025c1f0 T <core::fmt::Formatter as core::fmt::Write>::write_char
+0000000000255340 T <core::fmt::Formatter as core::fmt::Write>::write_str
+000000000025c200 T <core::fmt::Arguments as core::fmt::Display>::fmt
+0000000000248305 T alloc::collections::btree::map::BTreeMap<K,V,A>::get
+000000000024837d T alloc::collections::btree::map::BTreeMap<K,V,A>::entry
+0000000000248422 T alloc::collections::btree::map::entry::VacantEntry<K,V,A>::insert_entry
+00000000002484ee T alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Leaf>::push_with_handle
+000000000024858c T alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Internal>::push
+0000000000248651 T alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Owned,K,V,alloc::collections::btree::node::marker::Internal>::new_internal
+00000000002486d9 T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,NodeType>,alloc::collections::btree::node::marker::KV>::split_leaf_data
+00000000002486d9 T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,NodeType>,alloc::collections::btree::node::marker::KV>::split_leaf_data
+00000000002487ff T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Leaf>,alloc::collections::btree::node::marker::KV>::split
+000000000024889b T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Leaf>,alloc::collections::btree::node::marker::Edge>::insert_fit
+00000000002489a2 T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Leaf>,alloc::collections::btree::node::marker::Edge>::insert_recursing
+0000000000248bbc T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Leaf>,alloc::collections::btree::node::marker::Edge>::insert
+0000000000248d20 T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Internal>,alloc::collections::btree::node::marker::KV>::split
+0000000000248eac T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Internal>,alloc::collections::btree::node::marker::Edge>::insert_fit
+0000000000248ffb T alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut,K,V,alloc::collections::btree::node::marker::Internal>,alloc::collections::btree::node::marker::Edge>::insert
+0000000000251d90 T alloc::ffi::c_str::CString::_from_vec_unchecked
+0000000000251e80 T alloc::fmt::format::format_inner
+0000000000239770 T alloc::sync::Arc<T,A>::drop_slow
+0000000000239810 T alloc::sync::Arc<T,A>::drop_slow
+0000000000239880 T alloc::sync::Arc<T,A>::drop_slow
+00000000002398d0 T alloc::sync::Arc<T,A>::drop_slow
+0000000000252020 T alloc::alloc::handle_alloc_error
+0000000000249146 T alloc::boxed::Box<T,A>::new_uninit_in
+0000000000249177 T alloc::boxed::Box<T,A>::new_uninit_in
+0000000000252040 T alloc::string::String::try_reserve
+00000000002520d0 T alloc::string::String::from_utf8_lossy
+000000000025230b T alloc::raw_vec::handle_error
+0000000000252320 T alloc::raw_vec::capacity_overflow
+00000000002491a8 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239970 T alloc::raw_vec::RawVec<T,A>::grow_one
+00000000002399a0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239a10 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239a80 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239af0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239b60 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239bd0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239c40 T alloc::raw_vec::RawVec<T,A>::grow_one
+00000000002491e2 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239b60 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239af0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239b60 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239b60 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239cb0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239a80 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239b60 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239d20 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239bd0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239cb0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239d90 T alloc::raw_vec::RawVec<T,A>::grow_one
+00000000002399a0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239b60 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239d20 T alloc::raw_vec::RawVec<T,A>::grow_one
+00000000002399a0 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239a10 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239e00 T alloc::raw_vec::RawVec<T,A>::grow_one
+0000000000239a10 T alloc::raw_vec::RawVec<T,A>::grow_one
+000000000024921c T alloc::raw_vec::RawVecInner<A>::deallocate
+0000000000249262 T alloc::raw_vec::RawVecInner<A>::finish_grow
+0000000000249358 T alloc::raw_vec::RawVecInner<A>::grow_amortized
+00000000002493eb T alloc::raw_vec::RawVecInner<A>::try_allocate_in
+0000000000247feb T alloc::raw_vec::RawVecInner<A>::reserve::do_reserve_and_handle
+00000000002494a6 T gimli::read::abbrev::Attributes::push
+00000000002495df T gimli::read::abbrev::Abbreviation::new
+0000000000249661 T gimli::read::abbrev::Abbreviations::insert
+000000000025c220 T <core::str::lossy::Debug as core::fmt::Debug>::fmt
+0000000000242500 T <std::io::error::Error as core::fmt::Display>::fmt
+0000000000242700 T <&std::io::stdio::Stderr as std::io::Write>::write_fmt
+0000000000242950 T <&std::io::stdio::Stdout as std::io::Write>::write_fmt
+0000000000242ba0 T <std::io::stdio::StderrLock as std::io::Write>::write_all
+0000000000242cb0 T <std::io::stdio::StdoutLock as std::io::Write>::write_all
+0000000000242fb0 T <std::ffi::os_str::Display as core::fmt::Debug>::fmt
+000000000024dd60 T <rustc_demangle::Demangle as core::fmt::Display>::fmt
+0000000000237a80 T <std::ffi::os_str::OsString as core::fmt::Debug>::fmt
+000000000024de65 T <rustc_demangle::v0::Ident as core::fmt::Display>::fmt
+0000000000243240 T <std::ffi::os_str::Display as core::fmt::Display>::fmt
+0000000000243370 T <std::sys::stdio::unix::Stderr as std::io::Write>::write_vectored
+00000000002433e0 T <std::sys::stdio::unix::Stderr as std::io::Write>::write
+000000000025c5f0 T <core::cell::BorrowMutError as core::fmt::Display>::fmt
+0000000000237a80 T <std::sys::os_str::bytes::Buf as core::fmt::Debug>::fmt
+0000000000247bc0 T <&[u8] as object::read::read_ref::ReadRef>::read_bytes_at_until
+000000000025c610 T <core::fmt::builders::PadAdapter as core::fmt::Write>::write_char
+000000000025c670 T <core::fmt::builders::PadAdapter as core::fmt::Write>::write_str
+000000000024e29c T <rustc_demangle::DemangleStyle as core::fmt::Display>::fmt
+00000000002174a0 T <bme280_bare_bones::DriverError as core::fmt::Display>::fmt
+00000000002517a0 T adler2::Adler32::write_slice
+0000000000247c10 T memchr::arch::x86_64::memchr::memchr_raw::detect
+000000000024975b T <alloc::vec::Vec<T,A> as core::ops::drop::Drop>::drop
+000000000024975b T <alloc::vec::Vec<T,A> as core::ops::drop::Drop>::drop
+000000000025c8e0 T <core::num::error::ParseIntError as core::fmt::Display>::fmt
+000000000024e2f4 T <rustc_demangle::legacy::Demangle as core::fmt::Display>::fmt
+0000000000243420 T <std::env::Args as core::iter::traits::iterator::Iterator>::next
+000000000025c960 T <core::num::dec2flt::ParseFloatError as core::fmt::Display>::fmt
+000000000024975c T <gimli::read::abbrev::Attributes as core::ops::deref::Deref>::deref
+0000000000249798 T <alloc::raw_vec::RawVec<T,A> as core::ops::drop::Drop>::drop
+0000000000243500 T <std::backtrace_rs::symbolize::SymbolName as core::fmt::Display>::fmt
+00000000002435e0 T <std::path::Components as core::iter::traits::iterator::Iterator>::next
+0000000000252460 T <&[u8] as alloc::ffi::c_str::CString::new::SpecNewImpl>::spec_new_impl
+000000000024f186 T <rustc_demangle::SizeLimitedFmtAdapter<F> as core::fmt::Write>::write_str
+0000000000243f10 T <std::panicking::panic_handler::StaticStrPayload as core::fmt::Display>::fmt
+000000000025c9a0 T <core::str::lossy::Utf8Chunks as core::iter::traits::iterator::Iterator>::next
+0000000000243fa0 T <std::panicking::panic_handler::FormatStringPayload as core::fmt::Display>::fmt
+0000000000244050 T <std::panicking::panic_handler::StaticStrPayload as core::panic::PanicPayload>::take_box
+00000000002440a0 T <std::path::Components as core::iter::traits::double_ended::DoubleEndedIterator>::next_back
+0000000000244470 T <std::panicking::panic_handler::FormatStringPayload as core::panic::PanicPayload>::get
+0000000000244510 T <std::panicking::panic_handler::FormatStringPayload as core::panic::PanicPayload>::take_box
+0000000000252590 T <alloc::string::String as core::convert::From<alloc::borrow::Cow<str>>>::from
+0000000000244630 T <std::sys::backtrace::BacktraceLock::print::DisplayBacktrace as core::fmt::Display>::fmt
+0000000000217530 T <bme280_bare_bones::DriverError as core::convert::From<std::io::error::Error>>::from
+0000000000248045 T addr2line::line::Lines::find_location
+000000000024816f T addr2line::line::path_push
+0000000000215cd0 T _start
+0000000000216be0 T main
+00000000002473d0 T rust_eh_personality
