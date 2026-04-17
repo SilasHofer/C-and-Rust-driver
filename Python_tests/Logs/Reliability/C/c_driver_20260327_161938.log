@@ -1,6 +1,0 @@
-[gcc compile]
-main.c: In function ‘main’:
-main.c:25:14: error: implicit declaration of function ‘atof’ [-Wimplicit-function-declaration]
-   25 |         hz = atof(argv[2]);
-      |              ^~~~
-

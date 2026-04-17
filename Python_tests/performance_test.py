@@ -487,34 +487,41 @@ def capture_temperature_readings(
 
 
 # ── Driver runners ────────────────────────────────────────────────────────────
-def build_and_run_c(timeout: int, log: bool, samples: int) -> bool:
+def build_and_run_c(timeout: int, log: bool, samples: int, do_build: bool = True, log_dir: Path = None) -> bool:
     print(f"\n{'─' * 50}")
-    print(" C Driver — compile + run")
+    if do_build:
+        print(" C Driver — compile + run")
+    else:
+        print(" C Driver — run only")
     print(f"{'─' * 50}")
     log_file = None
     if log:
+        if log_dir is None:
+            log_dir = SCRIPT_DIR / "Logs" / "Performance" / "C"
+        log_dir.mkdir(parents=True, exist_ok=True)
         log_path = (
-            SCRIPT_DIR / "Logs" / "Performance" / "C"
+            log_dir
             / f"c_driver_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         )
         log_file = open(log_path, "w")
         print(f" Logging to: {log_path.name}")
 
     try:
-        ok = run_step(
-            "gcc compile",
-            [
-                "gcc", "-std=c11", "-D_DEFAULT_SOURCE",
-                "-Wall", "-Wextra", "-O2",
-                "main.c", "bme280.c", "i2c_linux.c",
-                "-o", C_BINARY,
-            ],
-            cwd=C_DIR,
-            timeout=timeout,
-            log_file=log_file,
-        )
-        if not ok:
-            return False
+        if do_build:
+            ok = run_step(
+                "gcc compile",
+                [
+                    "gcc", "-std=c11", "-D_DEFAULT_SOURCE",
+                    "-Wall", "-Wextra", "-O2",
+                    "main.c", "bme280.c", "i2c_linux.c",
+                    "-o", C_BINARY,
+                ],
+                cwd=C_DIR,
+                timeout=timeout,
+                log_file=log_file,
+            )
+            if not ok:
+                return False
 
         system_cleanup(log_file)
         ok = capture_temperature_readings(
@@ -532,29 +539,36 @@ def build_and_run_c(timeout: int, log: bool, samples: int) -> bool:
             log_file.close()
 
 
-def build_and_run_rust(timeout: int, log: bool, samples: int) -> bool:
+def build_and_run_rust(timeout: int, log: bool, samples: int, do_build: bool = True, log_dir: Path = None) -> bool:
     print(f"\n{'─' * 50}")
-    print(" Rust Driver — cargo build + run")
+    if do_build:
+        print(" Rust Driver — cargo build + run")
+    else:
+        print(" Rust Driver — run only")
     print(f"{'─' * 50}")
     log_file = None
     if log:
+        if log_dir is None:
+            log_dir = SCRIPT_DIR / "Logs" / "Performance" / "Rust"
+        log_dir.mkdir(parents=True, exist_ok=True)
         log_path = (
-            SCRIPT_DIR / "Logs" / "Performance" / "Rust"
+            log_dir
             / f"rust_driver_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         )
         log_file = open(log_path, "w")
         print(f" Logging to: {log_path.name}")
 
     try:
-        ok = run_step(
-            "cargo build",
-            ["cargo", "build", "--release"],
-            cwd=RUST_DIR,
-            timeout=timeout,
-            log_file=log_file,
-        )
-        if not ok:
-            return False
+        if do_build:
+            ok = run_step(
+                "cargo build",
+                ["cargo", "build", "--release"],
+                cwd=RUST_DIR,
+                timeout=timeout,
+                log_file=log_file,
+            )
+            if not ok:
+                return False
 
         system_cleanup(log_file)
         ok = capture_temperature_readings(
@@ -582,7 +596,7 @@ Examples:
   python3 run_drivers.py --c
   python3 run_drivers.py --rust
   python3 run_drivers.py --both --log
-  python3 run_drivers.py --both --samples 2000
+  python3 run_drivers.py --both --samples 2000 --runs 5
         """,
     )
     driver_group = parser.add_mutually_exclusive_group(required=False)
@@ -592,6 +606,10 @@ Examples:
     parser.add_argument(
         "--samples", type=int, default=TEMP_SAMPLES, metavar="N",
         help=f"Number of temperature readings to capture (default: {TEMP_SAMPLES})",
+    )
+    parser.add_argument(
+        "--runs", type=int, default=1, metavar="N",
+        help="Number of times to run the tests (default: 1)",
     )
     parser.add_argument(
         "--warmup", type=int, default=WARMUP_READS, metavar="N",
@@ -604,6 +622,14 @@ Examples:
     parser.add_argument(
         "--log", action="store_true",
         help="Save each driver's output to a timestamped .log file",
+    )
+    parser.add_argument(
+        "--no-build", action="store_true",
+        help="Skip compilation/build steps and run existing binaries only",
+    )
+    parser.add_argument(
+        "--log-dir", type=str, default=None, metavar="PATH",
+        help="Base directory for logs (overrides default timestamped folder structure)",
     )
     args = parser.parse_args()
 
@@ -620,13 +646,37 @@ def main() -> None:
     print(f" Started : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f" Root    : {ROOT_DIR}")
     print(f" Warm-up : {args.warmup} reads (excluded from metrics)")
+    print(f" Runs    : {args.runs} iteration(s)")
+    print(f" Build   : {'disabled' if args.no_build else 'enabled (first run only)'}")
     print("=" * 50)
 
+    # Create timestamped folder for this test run session (unless --log-dir is specified)
+    if args.log_dir:
+        run_folder = Path(args.log_dir)
+    else:
+        run_timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        run_folder = SCRIPT_DIR / "Logs" / f"performance_{run_timestamp}"
+    
+    if args.log:
+        run_folder.mkdir(parents=True, exist_ok=True)
+        print(f"\n Logs will be saved to: {run_folder}\n")
+
     results: dict[str, bool] = {}
-    if args.c or args.both:
-        results["C"] = build_and_run_c(args.timeout, args.log, args.samples)
-    if args.rust or args.both:
-        results["Rust"] = build_and_run_rust(args.timeout, args.log, args.samples)
+    
+    for i in range(args.runs):
+        if args.runs > 1:
+            print(f"\n{'=' * 50}")
+            print(f" RUN {i+1} OF {args.runs}")
+            print(f"{'=' * 50}")
+            
+        do_build = (i == 0 and not args.no_build)
+        
+        if args.c or args.both:
+            passed = build_and_run_c(args.timeout, args.log, args.samples, do_build=do_build, log_dir=run_folder if args.log else None)
+            results[f"C (Run {i+1})"] = passed
+        if args.rust or args.both:
+            passed = build_and_run_rust(args.timeout, args.log, args.samples, do_build=do_build, log_dir=run_folder if args.log else None)
+            results[f"Rust (Run {i+1})"] = passed
 
     print(f"\n{'=' * 50}")
     print(" Summary")

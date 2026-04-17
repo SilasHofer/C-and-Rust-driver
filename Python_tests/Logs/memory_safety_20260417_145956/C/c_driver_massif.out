@@ -1,0 +1,29 @@
+desc: --pages-as-heap=no --detailed-freq=1 --massif-out-file=/home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/memory_safety_20260417_145956/C/c_driver_massif.out
+cmd: ./c_driver 0x76 0
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n0: 0 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+#-----------
+snapshot=1
+#-----------
+time=111891
+mem_heap_B=4096
+mem_heap_extra_B=8
+mem_stacks_B=0
+heap_tree=detailed
+n1: 4096 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 4096 0x491EC87: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x492F6A7: _IO_doallocbuf (genops.c:373)
+   n1: 4096 0x492F6A7: _IO_doallocbuf (genops.c:368)
+    n1: 4096 0x492D8D3: _IO_file_overflow@@GLIBC_2.17 (fileops.c:746)
+     n1: 4096 0x492E363: _IO_new_file_xsputn (fileops.c:1245)
+      n1: 4096 0x492E363: _IO_file_xsputn@@GLIBC_2.17 (fileops.c:1198)
+       n1: 4096 0x4921A93: puts (ioputs.c:40)
+        n0: 4096 0x108E0B: main (main.c:66)

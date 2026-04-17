@@ -1,0 +1,12 @@
+Sequential validation summary
+============================================================
+Decision: PRACTICALLY_EQUIVALENT
+min_looks: 10
+stability_window: 8
+max_cv_change_pct: 0.1
+fixed_order: False
+Total C latency points   : 25974
+Total Rust latency points: 25974
+Mean C (ms): 11.285648
+Mean Rust (ms): 11.286722
+Rel diff (C-R) % CI: -0.009513% [-0.088241%, 0.069216%]
