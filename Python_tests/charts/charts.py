@@ -199,7 +199,7 @@ for d in driver_names:
     clean_names.append(name)
 
 for driver in driver_names:
-    driver_lat = []
+    driver_lat_mean = []   # mean latency per sample index across all runs
     driver_time = []
     driver_mem = []
     driver_cpu_mean = []
@@ -207,7 +207,10 @@ for driver in driver_names:
     time_offset = 0.0
     for sample_size, logs in grouped_data[driver].items():
         min_len = min([len(d["lat"]) for d in logs])
-        driver_lat.append(np.mean([d["lat"][:min_len] for d in logs], axis=0))
+
+        # Mean per sample index — represents a typical run, removes warm-up amplification
+        driver_lat_mean.append(np.mean([d["lat"][:min_len] for d in logs], axis=0))
+
         driver_mem.append(np.mean([d["mem"][:min_len] for d in logs], axis=0))
 
         avg_timestamps = logs[0]["timestamps"][:min_len]
@@ -226,7 +229,7 @@ for driver in driver_names:
             if d.get("cpu_peak_pct") is not None:
                 driver_cpu_peak.append(d["cpu_peak_pct"])
 
-    latencies.append(np.concatenate(driver_lat))
+    latencies.append(np.concatenate(driver_lat_mean) if driver_lat_mean else np.array([]))
     if driver_time:
         latency_times.append(np.concatenate(driver_time))
     else:
@@ -251,13 +254,33 @@ for name, lat in zip(clean_names, latencies):
         "outliers": int(outliers_count)
     }
 
-# 1. Box plot latency
-fig, ax = plt.subplots(figsize=(6,5))
-ax.boxplot(latencies, labels=clean_names, showfliers=True)
+# ----------------------------
+# 1. Box plot zoomed tightly to the actual whisker range
+# ----------------------------
+fig, ax = plt.subplots(figsize=(7, 6))
+
+all_lat_concat = np.concatenate(latencies)
+
+# Clip input data so matplotlib whiskers don't extend into extreme outlier territory
+lower_v, upper_v = np.percentile(all_lat_concat, [1, 99.5])
+latencies_for_plot = [np.clip(lat, lower_v, upper_v) for lat in latencies]
+
+bp = ax.boxplot(latencies_for_plot, labels=clean_names, showfliers=False,
+                medianprops=dict(color='orange', linewidth=2))
+
+# Zoom y-axis to just beyond the whisker range so boxes fill the plot
+all_whisker_vals = [w.get_ydata() for w in bp['whiskers']]
+wmin = min(v.min() for v in all_whisker_vals)
+wmax = max(v.max() for v in all_whisker_vals)
+pad = (wmax - wmin) * 0.15
+ax.set_ylim(wmin - pad, wmax + pad)
+
 ax.set_ylabel("Latency (ms)")
-ax.set_title("Latency distribution (with outliers)")
+ax.set_title("Latency distribution (mean per sample index, outliers hidden)")
+ax.grid(True, axis='y', linestyle='--', alpha=0.4)
 add_stats_text(ax, combined_stats)
 plt.tight_layout()
+plt.savefig(os.path.join(OUT_DIR, "figure1_box_latency.png"), dpi=150)
 plt.savefig(os.path.join(OUT_DIR, "figure1_box_latency.png"), dpi=150)
 plt.close()
 
@@ -265,11 +288,19 @@ plt.close()
 fig, ax = plt.subplots(figsize=(10,5))
 for name, lat in zip(clean_names, latencies):
     sorted_data = np.sort(lat)
-    yvals = np.arange(len(sorted_data))/float(len(sorted_data))
-    ax.plot(sorted_data, yvals, label=name)
+    yvals = np.arange(len(sorted_data)) / float(len(sorted_data))
+    ax.plot(sorted_data, yvals, label=name, linewidth=1.5)
+
+# Zoom x-axis tightly around the core distribution
+# With mean-per-index data the range is narrow so percentile-based zoom works well
+xlo = np.percentile(all_lat_concat, 0.5)
+xhi = np.percentile(all_lat_concat, 99.5)
+pad = (xhi - xlo) * 0.05
+ax.set_xlim(xlo - pad, xhi + pad)
+
 ax.set_xlabel("Latency (ms)")
 ax.set_ylabel("CDF")
-ax.set_title("Latency CDF")
+ax.set_title("Latency CDF (mean per sample index across runs)")
 ax.grid(True, linestyle="--", alpha=0.4)
 ax.legend()
 add_stats_text(ax, combined_stats)
@@ -375,5 +406,6 @@ if num_sizes > 0:
     plt.close()
 
 print(f"All plots saved in {OUT_DIR}")
-print("   → New CPU comparison chart: figure5_cpu_usage.png")
-print("   → Combined latency trend chart: figure6_latency_trend_combined.png")
+print("   -> figure1_box_latency.png     (zoomed box plot, 5th–99.5th percentile)")
+print("   -> figure2_cdf_latency.png     (zoomed to core distribution)")
+print("   -> figure6_latency_trend_combined.png  (clarified title)")
