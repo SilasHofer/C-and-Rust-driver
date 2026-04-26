@@ -36,22 +36,23 @@ SUMMARY_RAM_PATTERN = re.compile(r'RAM\s+mean=([\d.]+)MB\s+min=([\d.]+)MB\s+max=
 
 def add_stats_box_bottom_right(ax, stats_dict):
     """Formal summary box anchored in the bottom right corner."""
-    text_lines = []
-    # Ensure Reference is displayed first
     order = ["Reference", "C", "Rust"]
-    for label in order:
-        if label in stats_dict:
-            s = stats_dict[label]
-            text_lines.append(f"{label.upper()}")
-            text_lines.append(f" Mean: {s['mean']:.3f} °C")
-            text_lines.append(f" Std Dev: {s['std']:.3f} °C")
-            text_lines.append(f" n: {s['n']:,}")
-            text_lines.append("") 
-    
-    final_text = "\n".join(text_lines).strip()
-    ax.text(0.97, 0.05, final_text, transform=ax.transAxes, fontsize=9, 
+    present = [l for l in order if l in stats_dict]
+
+    text_lines = []
+    for i, label in enumerate(present):
+        if i > 0:
+            text_lines.append("")  # blank separator between groups
+        s = stats_dict[label]
+        text_lines.append(f"$\\mathbf{{{label}}}$")
+        text_lines.append(f" Mean: {s['mean']:.3f} \u00b0C")
+        text_lines.append(f" Std Dev: {s['std']:.3f} \u00b0C")
+        text_lines.append(f" n: {s['n']:,}")
+
+    final_text = "\n".join(text_lines)
+    ax.text(0.97, 0.05, final_text, transform=ax.transAxes, fontsize=9,
             verticalalignment='bottom', horizontalalignment='right',
-            bbox=dict(boxstyle="round,pad=0.5", alpha=0.9, facecolor='white', edgecolor='#cccccc'))
+            bbox=dict(boxstyle="round,pad=0.3", alpha=0.9, facecolor='white', edgecolor='#cccccc'))
 
 # ----------------------------
 # Specialized Parsers
@@ -126,7 +127,7 @@ for lbl in ["C", "Rust"]:
 # 1. Stability Line Chart (Hours + Bottom Right Box)
 print("  Generating Plot 1/5...")
 fig, ax = plt.subplots(figsize=(10, 5))
-ax.margins(y=0.4) 
+ax.set_ylim(18, 25.5)
 
 if ref_data:
     ax.plot(ref_data["time"][::500] / 3600, ref_data["temps"][::500], 
@@ -142,11 +143,10 @@ for lbl in ["C", "Rust"]:
 ax.set_title("Long-term Temperature Stability Comparison")
 ax.set_xlabel("Elapsed Time (hours)")
 ax.set_ylabel("Temperature ($^\circ$C)")
-ax.legend(loc='upper left', frameon=True)
+ax.legend(loc='upper left', frameon=True)   
 ax.grid(True, linestyle=':', alpha=0.6)
 add_stats_box_bottom_right(ax, stats)
-plt.tight_layout()
-plt.savefig(os.path.join(OUT_DIR, "stability_analysis.png"))
+plt.savefig(os.path.join(OUT_DIR, "stability_analysis.png"), bbox_inches='tight')
 
 # 2. Boxplot (Bottom Right Box)
 print("  Generating Plot 2/5...")
@@ -170,8 +170,7 @@ add_stats_box_bottom_right(ax, stats)
 ax.set_title("Distribution of Sensor Readings")
 ax.set_ylabel("Temperature ($^\circ$C)")
 ax.grid(True, axis='y', linestyle='--', alpha=0.3)
-plt.tight_layout()
-plt.savefig(os.path.join(OUT_DIR, "distribution_boxplot.png"))
+plt.savefig(os.path.join(OUT_DIR, "distribution_boxplot.png"), bbox_inches='tight')
 
 # 3. Accuracy (MAE)
 print("  Generating Plot 3/5...")
@@ -198,14 +197,29 @@ if ref_data:
 # 4. Memory Usage
 print("  Generating Plot 4/5...")
 fig, ax = plt.subplots(figsize=(10, 4))
+all_ram_kb = {}
 for lbl in ["C", "Rust"]:
     all_ram = []
-    for d in drivers[lbl]: all_ram.extend(d["ram"])
+    all_times = []
+    for d in drivers[lbl]:
+        all_ram.extend(d["ram"])
+        if len(d["time"]) > 0:
+            interval = d["time"][-1] / max(len(d["ram"]) - 1, 1)
+            all_times.extend([i * interval / 3600 for i in range(len(d["ram"]))])
     if all_ram:
-        ax.plot(all_ram, label=f"{lbl} Implementation", color=COLORS[lbl], linewidth=1.5)
-ax.set_title("Memory Consumption Profile")
-ax.set_xlabel("Observation Index")
-ax.set_ylabel("Memory Usage (MB)")
+        ram_kb = [v * 1000 for v in all_ram]
+        all_ram_kb[lbl] = ram_kb
+        x_axis = all_times if len(all_times) == len(ram_kb) else [i / 3600 for i in range(len(ram_kb))]
+        ax.plot(x_axis, ram_kb, label=lbl, color=COLORS[lbl], linewidth=1.5, marker='o', markersize=3)
+
+if all_ram_kb:
+    all_vals = [v for vals in all_ram_kb.values() for v in vals]
+    margin = (max(all_vals) - min(all_vals)) * 0.5 or 100
+    ax.set_ylim(min(all_vals) - margin, max(all_vals) + margin)
+
+ax.set_title("Memory over time")
+ax.set_xlabel("Elapsed Time (hours)")
+ax.set_ylabel("Memory (kB)")
 ax.legend()
 ax.grid(True, linestyle=':', alpha=0.6)
 plt.tight_layout()
@@ -220,6 +234,7 @@ restarts = [sum(d["restarts"] for d in drivers["C"]), sum(d["restarts"] for d in
 ax.bar(x-0.15, spikes, 0.3, label='Sensor Spikes', color='#e74c3c', alpha=0.7, edgecolor='black')
 ax.bar(x+0.15, restarts, 0.3, label='System Restarts', color='#c0392b', edgecolor='black')
 ax.set_xticks(x); ax.set_xticklabels(["C", "Rust"])
+ax.set_ylim(bottom=0)
 ax.set_ylabel("Event Count")
 ax.set_title("System Reliability Events")
 ax.legend()
