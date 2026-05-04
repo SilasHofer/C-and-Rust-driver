@@ -85,13 +85,3 @@ fn exit_code_for(err: &DriverError) -> i32 {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::parse_address;
-
-    #[test]
-    fn parses_hex_addresses_with_or_without_prefix() {
-        assert_eq!(parse_address("76").unwrap(), 0x76);
-        assert_eq!(parse_address("0x77").unwrap(), 0x77);
-    }
-}

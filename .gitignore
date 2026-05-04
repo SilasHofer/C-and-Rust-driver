@@ -2,10 +2,14 @@ C_driver/bme280_id
 C_driver/bme280_demo
 Rust_driver_no_log/target
 Rust_driver_no_log/Cargo.lock
-Rust_driver_with_log/target
-Rust_driver_with_log/Cargo.lock
+afl_fuzzing/Rust/target
+afl_fuzzing/Rust/Cargo.lock
 
 C_bare-bones_driver_no_log/c_driver
 C_driver/bme280_demo
 Python_tests/old_logs
+
+# Ignore AFL/fuzz output directories like out_temp, out_temp2, out_temp5, etc.
+out*/
+afl_fuzzing/Fuzzing_results/
 Python_tests/charts/reliability
