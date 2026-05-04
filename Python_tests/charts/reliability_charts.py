@@ -31,28 +31,79 @@ DATA_DIR = sys.argv[1]
 OUT_DIR = f"thesis_charts_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 os.makedirs(OUT_DIR, exist_ok=True)
 
-COLORS = {"C": "#1f77b4", "Rust": "#ff7f0e", "Reference": "#333333"}
+COLORS = {"C": "#1f77b4", "Rust": "#ff7f0e", "Reference": "#333333", "Diff": "#2ca02c"}
 SUMMARY_RAM_PATTERN = re.compile(r'RAM\s+mean=([\d.]+)MB\s+min=([\d.]+)MB\s+max=([\d.]+)MB')
 
-def add_stats_box_bottom_right(ax, stats_dict):
-    """Formal summary box anchored in the bottom right corner."""
-    order = ["Reference", "C", "Rust"]
+def add_stats_box(ax, stats_dict, unit="\u00b0C", order=("Reference", "C", "Rust"),
+                  fmt=".3f", position="bottom-right"):
+    """Formal summary box anchored at a corner of the axes.
+
+    position: 'bottom-right' (default, used by absolute-value plots) or 'top-right'
+              (used by derivative plots so the box doesn't sit in the noise band).
+    """
     present = [l for l in order if l in stats_dict]
+    # Allow custom-keyed dicts (e.g. for difference plots) by appending leftovers.
+    for k in stats_dict.keys():
+        if k not in present:
+            present.append(k)
 
     text_lines = []
     for i, label in enumerate(present):
         if i > 0:
             text_lines.append("")  # blank separator between groups
         s = stats_dict[label]
-        text_lines.append(f"$\\mathbf{{{label}}}$")
-        text_lines.append(f" Mean: {s['mean']:.3f} \u00b0C")
-        text_lines.append(f" Std Dev: {s['std']:.3f} \u00b0C")
+        # mathbf doesn't like spaces; collapse them for the bold header.
+        bold_label = label.replace(" ", "\\,")
+        text_lines.append(f"$\\mathbf{{{bold_label}}}$")
+        text_lines.append(f" Mean: {s['mean']:{fmt}} {unit}")
+        text_lines.append(f" Std Dev: {s['std']:{fmt}} {unit}")
         text_lines.append(f" n: {s['n']:,}")
 
     final_text = "\n".join(text_lines)
-    ax.text(0.97, 0.05, final_text, transform=ax.transAxes, fontsize=9,
-            verticalalignment='bottom', horizontalalignment='right',
+
+    if position == "top-right":
+        anchor_x, anchor_y, va = 0.97, 0.95, 'top'
+    else:  # bottom-right (default, preserves original behaviour)
+        anchor_x, anchor_y, va = 0.97, 0.05, 'bottom'
+
+    ax.text(anchor_x, anchor_y, final_text, transform=ax.transAxes, fontsize=9,
+            verticalalignment=va, horizontalalignment='right',
             bbox=dict(boxstyle="round,pad=0.3", alpha=0.9, facecolor='white', edgecolor='#cccccc'))
+
+def _sort_dedup(t, v):
+    """Sort (t, v) by t and drop duplicate timestamps so gradient/interp behave."""
+    t = np.asarray(t, dtype=float)
+    v = np.asarray(v, dtype=float)
+    if len(t) == 0:
+        return t, v
+    order = np.argsort(t)
+    t, v = t[order], v[order]
+    keep = np.concatenate(([True], np.diff(t) > 0))
+    return t[keep], v[keep]
+
+def _smooth_then_gradient(t, v, window_seconds=30.0):
+    """Time-windowed rolling mean on v, then central-difference derivative.
+
+    Returns dT/dt in deg C / hr.
+
+    The window length is converted from seconds to samples using the median
+    sample interval, so the same 30-second window applies regardless of whether
+    the series is sampled at ~44 Hz (drivers) or ~700 Hz (reference).
+
+    Smoothing first is essential: np.gradient on raw samples is dominated by
+    sample-to-sample LSB noise divided by tiny dt values, producing physically
+    meaningless 1000+ deg C/hr spikes. Smoothing collapses that noise floor
+    to the actual thermal-drift scale.
+    """
+    if len(t) < 3:
+        return np.array([], dtype=float)
+    dt_med = float(np.median(np.diff(t)))
+    if dt_med <= 0:
+        return np.array([], dtype=float)
+    window_samples = max(3, int(round(window_seconds / dt_med)))
+    v_smooth = pd.Series(v).rolling(window=window_samples, center=True,
+                                    min_periods=1).mean().to_numpy()
+    return np.gradient(v_smooth, t) * 3600.0  # deg C / hr
 
 # ----------------------------
 # Specialized Parsers
@@ -125,7 +176,7 @@ for lbl in ["C", "Rust"]:
 # ----------------------------
 
 # 1. Stability Line Chart (Hours + Bottom Right Box)
-print("  Generating Plot 1/5...")
+print("  Generating Plot 1/7...")
 fig, ax = plt.subplots(figsize=(10, 5))
 ax.set_ylim(18, 25.5)
 
@@ -145,11 +196,11 @@ ax.set_xlabel("Elapsed Time (hours)")
 ax.set_ylabel("Temperature ($^\circ$C)")
 ax.legend(loc='upper left', frameon=True)   
 ax.grid(True, linestyle=':', alpha=0.6)
-add_stats_box_bottom_right(ax, stats)
+add_stats_box(ax, stats)
 plt.savefig(os.path.join(OUT_DIR, "stability_analysis.png"), bbox_inches='tight')
 
 # 2. Boxplot (Bottom Right Box)
-print("  Generating Plot 2/5...")
+print("  Generating Plot 2/7...")
 fig, ax = plt.subplots(figsize=(8, 6))
 ax.margins(y=0.3)
 plot_data, labels = [], []
@@ -166,14 +217,14 @@ if plot_data:
         patch.set_facecolor(COLORS.get(l, "grey")); patch.set_alpha(0.5)
         patch.set_edgecolor('#333333')
 
-add_stats_box_bottom_right(ax, stats)
+add_stats_box(ax, stats)
 ax.set_title("Distribution of Sensor Readings")
 ax.set_ylabel("Temperature ($^\circ$C)")
 ax.grid(True, axis='y', linestyle='--', alpha=0.3)
 plt.savefig(os.path.join(OUT_DIR, "distribution_boxplot.png"), bbox_inches='tight')
 
 # 3. Accuracy (MAE)
-print("  Generating Plot 3/5...")
+print("  Generating Plot 3/7...")
 if ref_data:
     fig, ax = plt.subplots(figsize=(6, 5))
     mae_res = {}
@@ -195,7 +246,7 @@ if ref_data:
     plt.savefig(os.path.join(OUT_DIR, "accuracy_mae.png"))
 
 # 4. Memory Usage
-print("  Generating Plot 4/5...")
+print("  Generating Plot 4/7...")
 fig, ax = plt.subplots(figsize=(10, 4))
 all_ram_kb = {}
 for lbl in ["C", "Rust"]:
@@ -226,7 +277,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(OUT_DIR, "memory_profile.png"))
 
 # 5. Reliability Events
-print("  Generating Plot 5/5...")
+print("  Generating Plot 5/7...")
 fig, ax = plt.subplots(figsize=(7, 5))
 x = np.arange(2)
 spikes = [sum(d["spikes"] for d in drivers["C"]), sum(d["spikes"] for d in drivers["Rust"])]
@@ -240,5 +291,207 @@ ax.set_title("System Reliability Events")
 ax.legend()
 plt.tight_layout()
 plt.savefig(os.path.join(OUT_DIR, "reliability_events.png"))
+
+# 6. Derivative Stability — smoothed before differentiating
+# Differentiation removes any constant calibration offset between sensors, so the
+# three lines should overlap if they're tracking the same physical signal.
+# A 30-second rolling mean is applied to the temperature series BEFORE taking
+# the gradient. Without smoothing, np.gradient on raw samples is dominated by
+# sample-spacing x LSB-noise artifacts (~1000+ deg C/hr) and the visual is unusable.
+print("  Generating Plot 6/7...")
+fig, ax = plt.subplots(figsize=(10, 5))
+
+SMOOTH_WINDOW_SECONDS = 30.0
+DERIV_CLIP_SECONDS = 60.0   # exclude startup transient (consistent with Plot 7)
+deriv_stats = {}
+
+if ref_data:
+    ref_t, ref_v = _sort_dedup(ref_data["time"], ref_data["temps"])
+    if len(ref_t) > 2:
+        ref_deriv = _smooth_then_gradient(ref_t, ref_v, SMOOTH_WINDOW_SECONDS)
+        if len(ref_deriv) > 0:
+            # Clip first N seconds for both stats and plotting
+            clip_mask = ref_t >= DERIV_CLIP_SECONDS
+            ref_t_clipped = ref_t[clip_mask]
+            ref_deriv_clipped = ref_deriv[clip_mask]
+            if len(ref_deriv_clipped) > 0:
+                deriv_stats["Reference"] = {
+                    "mean": float(np.mean(ref_deriv_clipped)),
+                    "std": float(np.std(ref_deriv_clipped)),
+                    "n": int(len(ref_deriv_clipped)),
+                }
+                plot_step = max(1, len(ref_deriv_clipped) // 50000)
+                ax.plot(ref_t_clipped[::plot_step] / 3600, ref_deriv_clipped[::plot_step],
+                        label="Ground Truth",
+                        color=COLORS["Reference"], alpha=0.5, linewidth=0.8)
+
+for lbl in ["C", "Rust"]:
+    if not drivers[lbl]:
+        continue
+    all_t = np.concatenate([d["time"] for d in drivers[lbl]])
+    all_v = np.concatenate([d["temps"] for d in drivers[lbl]])
+    all_t, all_v = _sort_dedup(all_t, all_v)
+    if len(all_t) < 3:
+        continue
+
+    deriv = _smooth_then_gradient(all_t, all_v, SMOOTH_WINDOW_SECONDS)
+    if len(deriv) == 0:
+        continue
+
+    # Clip first N seconds for both stats and plotting
+    clip_mask = all_t >= DERIV_CLIP_SECONDS
+    t_clipped = all_t[clip_mask]
+    deriv_clipped = deriv[clip_mask]
+    if len(deriv_clipped) == 0:
+        continue
+
+    deriv_stats[lbl] = {
+        "mean": float(np.mean(deriv_clipped)),
+        "std": float(np.std(deriv_clipped)),
+        "n": int(len(deriv_clipped)),
+    }
+    plot_step = max(1, len(deriv_clipped) // 10000)
+    ax.plot(t_clipped[::plot_step] / 3600, deriv_clipped[::plot_step],
+            label=f"{lbl} Implementation",
+            color=COLORS[lbl], alpha=0.8, linewidth=1.2)
+
+ax.axhline(0, color='black', linewidth=0.5, linestyle='--', alpha=0.5)
+ax.set_title(f"Long-term Temperature Derivative Stability "
+             f"({int(SMOOTH_WINDOW_SECONDS)}s smoothed)")
+ax.set_xlabel("Elapsed Time (hours)")
+ax.set_ylabel("dT/dt ($^\\circ$C/hr)")
+ax.legend(loc='upper left', frameon=True)
+ax.grid(True, linestyle=':', alpha=0.6)
+
+# Transparency note about the startup clip
+ax.text(0.01, 0.02,
+        f"first {DERIV_CLIP_SECONDS:.0f}\u202fs of run excluded",
+        transform=ax.transAxes, fontsize=8, color='#666666',
+        verticalalignment='bottom', horizontalalignment='left')
+
+add_stats_box(ax, deriv_stats, unit="\u00b0C/hr", fmt=".3f", position="top-right")
+plt.savefig(os.path.join(OUT_DIR, "derivative_stability.png"), bbox_inches='tight')
+
+# 7. Pairwise Derivative Differences (C-Ref, Rust-Ref, C-Rust)
+# All series interpolated onto a common time grid, differentiated, then subtracted.
+# Strips out per-sensor baseline so any deviation from zero is a *real* tracking difference.
+#
+# n_points = 20,000 -- enough sample size for credible mean/std without drowning the
+# C-Rust signal in interpolation noise.
+# Startup transient (first STARTUP_CLIP_SECONDS) excluded -- np.gradient at the
+# linspace boundary plus any sensor warm-up makes the t=0 value an outlier that
+# just stretches the y-axis.
+print("  Generating Plot 7/7...")
+
+STARTUP_CLIP_SECONDS = 60.0
+
+c_t = c_v = r_t = r_v = None
+if drivers["C"]:
+    c_t, c_v = _sort_dedup(np.concatenate([d["time"] for d in drivers["C"]]),
+                           np.concatenate([d["temps"] for d in drivers["C"]]))
+if drivers["Rust"]:
+    r_t, r_v = _sort_dedup(np.concatenate([d["time"] for d in drivers["Rust"]]),
+                           np.concatenate([d["temps"] for d in drivers["Rust"]]))
+
+have_ref = ref_data is not None and len(ref_data["time"]) > 1
+have_c = c_t is not None and len(c_t) > 1
+have_r = r_t is not None and len(r_t) > 1
+
+# We need at least one of: (ref + driver) or (C + Rust) to draw any difference line.
+can_plot = (have_ref and (have_c or have_r)) or (have_c and have_r)
+
+if can_plot:
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    # Build common time grid over the overlap of available series
+    t_min = -np.inf
+    t_max = np.inf
+    if have_ref:
+        ref_t_sorted, ref_v_sorted = _sort_dedup(ref_data["time"], ref_data["temps"])
+        t_min = max(t_min, ref_t_sorted[0])
+        t_max = min(t_max, ref_t_sorted[-1])
+    if have_c:
+        t_min = max(t_min, c_t[0])
+        t_max = min(t_max, c_t[-1])
+    if have_r:
+        t_min = max(t_min, r_t[0])
+        t_max = min(t_max, r_t[-1])
+
+    # Skip the first STARTUP_CLIP_SECONDS so the boundary spike at t=0 doesn't
+    # pin the y-axis open.
+    t_min_eff = t_min + STARTUP_CLIP_SECONDS
+
+    if t_max > t_min_eff:
+        n_points = 20_000
+        common_t = np.linspace(t_min_eff, t_max, n_points)
+
+        ref_deriv = c_deriv = r_deriv = None
+        if have_ref:
+            ref_at = np.interp(common_t, ref_t_sorted, ref_v_sorted)
+            ref_deriv = np.gradient(ref_at, common_t) * 3600.0
+        if have_c:
+            c_at = np.interp(common_t, c_t, c_v)
+            c_deriv = np.gradient(c_at, common_t) * 3600.0
+        if have_r:
+            r_at = np.interp(common_t, r_t, r_v)
+            r_deriv = np.gradient(r_at, common_t) * 3600.0
+
+        # Decimate plotted line to ~10k points; stats use the full 20k arrays.
+        plot_step = max(1, n_points // 10000)
+        x_hours_plot = common_t[::plot_step] / 3600
+        diff_stats = {}
+
+        if have_c and have_ref:
+            arr = c_deriv - ref_deriv
+            ax.plot(x_hours_plot, arr[::plot_step], label="C \u2212 Reference",
+                    color=COLORS["C"], alpha=0.75, linewidth=1.0)
+            diff_stats["C-Ref"] = {
+                "mean": float(np.mean(arr)),
+                "std": float(np.std(arr)),
+                "n": int(len(arr)),
+            }
+        if have_r and have_ref:
+            arr = r_deriv - ref_deriv
+            ax.plot(x_hours_plot, arr[::plot_step], label="Rust \u2212 Reference",
+                    color=COLORS["Rust"], alpha=0.75, linewidth=1.0)
+            diff_stats["Rust-Ref"] = {
+                "mean": float(np.mean(arr)),
+                "std": float(np.std(arr)),
+                "n": int(len(arr)),
+            }
+        if have_c and have_r:
+            arr = c_deriv - r_deriv
+            ax.plot(x_hours_plot, arr[::plot_step], label="C \u2212 Rust",
+                    color=COLORS["Diff"], alpha=0.85, linewidth=1.0)
+            diff_stats["C-Rust"] = {
+                "mean": float(np.mean(arr)),
+                "std": float(np.std(arr)),
+                "n": int(len(arr)),
+            }
+
+        ax.axhline(0, color='black', linewidth=0.5, linestyle='--', alpha=0.5)
+        ax.set_title("Pairwise Derivative Differences (Baseline-Independent Comparison)")
+        ax.set_xlabel("Elapsed Time (hours)")
+        ax.set_ylabel("$\\Delta$(dT/dt) ($^\\circ$C/hr)")
+        ax.legend(loc='upper left', frameon=True)
+        ax.grid(True, linestyle=':', alpha=0.6)
+
+        # Transparency note about the startup clip (shown in the chart, mention
+        # in the thesis caption too).
+        ax.text(0.01, 0.02,
+                f"first {STARTUP_CLIP_SECONDS:.0f}\u202fs of run excluded",
+                transform=ax.transAxes, fontsize=8, color='#666666',
+                verticalalignment='bottom', horizontalalignment='left')
+
+        if diff_stats:
+            add_stats_box(
+                ax, diff_stats,
+                unit="\u00b0C/hr",
+                order=("C-Ref", "Rust-Ref", "C-Rust"),
+                fmt=".4f",
+                position="top-right",
+            )
+
+        plt.savefig(os.path.join(OUT_DIR, "derivative_differences.png"), bbox_inches='tight')
 
 print(f"\nSuccess. Thesis-ready charts saved to: {OUT_DIR}")
