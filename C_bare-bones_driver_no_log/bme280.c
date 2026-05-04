@@ -5,7 +5,6 @@
 #include "bme280.h"
 #include "i2c_linux.h"
 
-
 int bme280_init(struct bme280 *dev, int fd, uint8_t addr)
 {
     uint8_t id;
@@ -26,8 +25,12 @@ int bme280_init(struct bme280 *dev, int fd, uint8_t addr)
     }
 
     // Soft reset
+#ifndef FUZZING
     i2c_write_u8(fd, 0xE0, 0xB6);
     usleep(2000); // 2 ms reset time
+#else
+    i2c_write_u8(fd, 0xE0, 0xB6);
+#endif
 
     // Read temperature calibration (0x88..0x8D)
     if (i2c_read_buf(fd, addr, 0x88, calib_buf, sizeof(calib_buf)) < 0)
@@ -70,7 +73,9 @@ int bme280_read_temperature(struct bme280 *dev, float *temp_c)
             return -1;
         if ((status & 0x08) == 0)
             break;
+#ifndef FUZZING
         usleep(2000);
+#endif
     }
 
     if (i2c_read_buf(dev->fd, dev->addr, 0xFA, buf, sizeof(buf)) < 0)
