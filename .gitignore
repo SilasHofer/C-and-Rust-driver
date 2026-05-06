@@ -1,11 +1,11 @@
 C_driver/bme280_id
 C_driver/bme280_demo
-Rust_driver_no_log/target
-Rust_driver_no_log/Cargo.lock
+Rust_Driver/target
+Rust_Driver/Cargo.lock
 afl_fuzzing/Rust/target
 afl_fuzzing/Rust/Cargo.lock
 
-C_bare-bones_driver_no_log/c_driver
+C_Driver/c_driver
 C_driver/bme280_demo
 Python_tests/old_logs
 

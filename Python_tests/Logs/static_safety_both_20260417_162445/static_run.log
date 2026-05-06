@@ -1,0 +1,198 @@
+================================================================================
+Static Memory Safety Analysis — BOTH Drivers (No Sensor Required)
+Started     : 2026-04-17 16:24:45
+Output      : /home/silashofer/C-and-Rust-driver/Python_tests/Logs/static_safety_both_20260417_162445
+================================================================================
+
+C DRIVER ANALYSIS
+
+→ Compiling C driver
+   Running: gcc -std=c11 -D_DEFAULT_SOURCE -Wall -Wextra -Wpedantic -g -O0 main.c bme280.c i2c_linux.c -o c_driver_static
+
+
+   → Exit code: 0 (OK)
+
+→ Running cppcheck
+   Running: cppcheck --enable=all --inconclusive --quiet .
+
+bme280.c:1:0: information: Include file: <stdint.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stdint.h>
+^
+bme280.c:2:0: information: Include file: <stdio.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stdio.h>
+^
+bme280.c:3:0: information: Include file: <unistd.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <unistd.h>
+^
+bme280.h:3:0: information: Include file: <stdint.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stdint.h>
+^
+i2c_linux.h:4:0: information: Include file: <stdint.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stdint.h>
+^
+i2c_linux.h:5:0: information: Include file: <stddef.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stddef.h>
+^
+i2c_linux.h:6:0: information: Include file: <linux/i2c-dev.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <linux/i2c-dev.h>
+^
+i2c_linux.h:7:0: information: Include file: <sys/file.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <sys/file.h>
+^
+i2c_linux.c:3:0: information: Include file: <sys/ioctl.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <sys/ioctl.h>
+^
+i2c_linux.c:4:0: information: Include file: <linux/i2c-dev.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <linux/i2c-dev.h>
+^
+i2c_linux.c:5:0: information: Include file: <linux/i2c.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <linux/i2c.h>
+^
+i2c_linux.c:6:0: information: Include file: <unistd.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <unistd.h>
+^
+i2c_linux.c:7:0: information: Include file: <stdio.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stdio.h>
+^
+main.c:2:0: information: Include file: <stdio.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stdio.h>
+^
+main.c:3:0: information: Include file: <stdint.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stdint.h>
+^
+main.c:4:0: information: Include file: <stdlib.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <stdlib.h>
+^
+main.c:5:0: information: Include file: <fcntl.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <fcntl.h>
+^
+main.c:6:0: information: Include file: <unistd.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <unistd.h>
+^
+main.c:7:0: information: Include file: <sys/types.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <sys/types.h>
+^
+main.c:8:0: information: Include file: <string.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <string.h>
+^
+main.c:9:0: information: Include file: <sys/file.h> not found. Please note: Cppcheck does not need standard library headers to get proper results. [missingIncludeSystem]
+#include <sys/file.h>
+^
+nofile:0:0: information: Active checkers: 113/592 (use --checkers-report=<filename> to see details) [checkersReport]
+
+
+   → Exit code: 0 (OK)
+
+RUST DRIVER ANALYSIS
+
+→ Building Rust driver
+   Running: cargo build --release
+
+    Finished `release` profile [optimized] target(s) in 0.05s
+
+   → Exit code: 0 (OK)
+
+→ Running cargo clippy
+   Running: cargo clippy --release --all-targets -- -A clippy::all -W clippy::undocumented_unsafe_blocks -W clippy::missing_safety_doc
+
+    Checking bme280_bare_bones v0.1.0 (/home/silashofer/C-and-Rust-driver/Rust_driver_no_log)
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:191:15
+    |
+191 |     let ret = unsafe { libc::ioctl(file.as_raw_fd(), I2C_SLAVE, addr as libc::c_ulong) };
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+    = note: requested on the command line with `-W clippy::undocumented-unsafe-blocks`
+
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:206:19
+    |
+206 |     let written = unsafe {
+    |                   ^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:241:15
+    |
+241 |     let ret = unsafe { libc::ioctl(file.as_raw_fd(), I2C_RDWR, &mut data) };
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:250:15
+    |
+250 |     let ret = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX) };
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:258:15
+    |
+258 |     let ret = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_UN) };
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+
+warning: `bme280_bare_bones` (lib test) generated 5 warnings (4 duplicates)
+warning: `bme280_bare_bones` (lib) generated 5 warnings (1 duplicate)
+    Finished `release` profile [optimized] target(s) in 0.41s
+
+   → Exit code: 0 (OK)
+
+→ Running cargo geiger
+   Running: cargo geiger --output-format Ascii
+
+Metric output format: x/y
+    x = unsafe code used by the build
+    y = total unsafe code found in the crate
+
+Symbols:
+    :) = No `unsafe` usage found, declares #![forbid(unsafe_code)]
+    ?  = No `unsafe` usage found, missing #![forbid(unsafe_code)]
+    !  = `unsafe` usage found
+
+Functions  Expressions  Impls  Traits  Methods  Dependency
+
+0/0        15/15        0/0    0/0     0/0      !  bme280_bare_bones 0.1.0
+0/92       34/725       0/2    0/0     8/101    !  `-- libc 0.2.184
+
+0/92       49/740       0/2    0/0     8/101
+
+
+     Removed 31 files, 12.0MiB total
+   Compiling libc v0.2.184
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/build/libc-9b7cc5838f8d228d/build_script_build-9b7cc5838f8d228d.d","emit":"dep-info"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/build/libc-9b7cc5838f8d228d/build_script_build-9b7cc5838f8d228d","emit":"link"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/libc-61ace735d8291430.d","emit":"dep-info"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/liblibc-61ace735d8291430.rmeta","emit":"metadata"}
+    Checking bme280_bare_bones v0.1.0 (/home/silashofer/C-and-Rust-driver/Rust_driver_no_log)
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/bme280_bare_bones-7e023a5dbd97ca20.d","emit":"dep-info"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/libbme280_bare_bones-7e023a5dbd97ca20.rmeta","emit":"metadata"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/bme280_bare_bones-b719b2ff92b4cc99.d","emit":"dep-info"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/libbme280_bare_bones-b719b2ff92b4cc99.rmeta","emit":"metadata"}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.24s
+    Scanning done
+
+   → Exit code: 0 (OK)
+
+→ Running cargo audit
+   Running: cargo audit --color never
+
+    Fetching advisory database from `https://github.com/RustSec/advisory-db.git`
+      Loaded 1049 security advisories (from /home/silashofer/.cargo/advisory-db)
+    Updating crates.io index
+    Scanning Cargo.lock for vulnerabilities (2 crate dependencies)
+
+   → Exit code: 0 (OK)
+Unsafe audit file: /home/silashofer/C-and-Rust-driver/Python_tests/Logs/static_safety_both_20260417_162445/rust_unsafe_audit.md
+
+Full log: /home/silashofer/C-and-Rust-driver/Python_tests/Logs/static_safety_both_20260417_162445/static_run.log

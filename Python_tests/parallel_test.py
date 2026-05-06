@@ -19,10 +19,10 @@ from typing import Dict, List, Tuple
 SCRIPT_DIR  = Path(__file__).parent.resolve()
 ROOT_DIR    = SCRIPT_DIR.parent
 
-C_DIR       = ROOT_DIR / "C_bare-bones_driver_no_log"
+C_DIR       = ROOT_DIR / "C_Driver"
 C_BINARY    = "c_driver"
 
-RUST_DIR    = ROOT_DIR / "Rust_driver_no_log"
+RUST_DIR    = ROOT_DIR / "Rust_Driver"
 RUST_BINARY = RUST_DIR / "target" / "release" / "bme280_bare_bones"
 # ---------------------------------------------
 
