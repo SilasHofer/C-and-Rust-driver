@@ -1,0 +1,24 @@
+================================================================================
+Valgrind Memcheck Analysis — C and Rust Drivers
+Started  : 2026-04-18 17:21:02
+Duration : 45s
+Output   : /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/valgrind_memcheck_20260418_172102
+================================================================================
+
+Building C driver...
+Building Rust driver...
+
+→ Running Valgrind memcheck on c_driver for 45s
+   Letting it run for 45s and exit naturally...
+   Success → Log: /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/valgrind_memcheck_20260418_172102/C/c_driver_memcheck.log
+
+→ Running Valgrind memcheck on rust_driver for 45s
+   Letting it run for 45s and exit naturally...
+   Success → Log: /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/valgrind_memcheck_20260418_172102/Rust/rust_driver_memcheck.log
+
+================================================================================
+SUMMARY
+================================================================================
+C Driver log    : /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/valgrind_memcheck_20260418_172102/C/c_driver_memcheck.log
+Rust Driver log : /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/valgrind_memcheck_20260418_172102/Rust/rust_driver_memcheck.log
+Full run log    : /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/valgrind_memcheck_20260418_172102/run.log

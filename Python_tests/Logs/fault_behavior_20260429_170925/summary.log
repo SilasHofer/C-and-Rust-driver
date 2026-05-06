@@ -1,0 +1,114 @@
+=====================================================================================
+Fault Behaviour & Memory Cleanup Analysis (incl. Sensor Disconnection + OOM)
+Started     : 2026-04-29 17:09:25
+Duration    : 40s
+Output      : /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/fault_behavior_20260429_170925
+=====================================================================================
+
+Building drivers...
+
+======================================================================
+SCENARIO: GRACEFUL
+======================================================================
+
+→ C → graceful
+   Finished. Log: Cgraceful.log
+   Detection time : 20.0s
+   Exit code      : -2
+   Still reachable: 0 bytes
+
+→ Rust → graceful
+   Finished. Log: Rustgraceful.log
+   Detection time : 20.0s
+   Exit code      : -2
+   Still reachable: 0 bytes
+
+======================================================================
+SCENARIO: SIGTERM
+======================================================================
+
+→ C → sigterm
+   Finished. Log: Csigterm.log
+   Detection time : 20.0s
+   Exit code      : -15
+   Still reachable: 0 bytes
+
+→ Rust → sigterm
+   Finished. Log: Rustsigterm.log
+   Detection time : 20.0s
+   Exit code      : -15
+   Still reachable: 0 bytes
+
+======================================================================
+SCENARIO: SIGKILL
+======================================================================
+
+→ C → sigkill
+   Finished. Log: Csigkill.log
+   Detection time : 20.0s
+   Exit code      : -9
+   Still reachable: 0 bytes
+
+→ Rust → sigkill
+   Finished. Log: Rustsigkill.log
+   Detection time : 20.0s
+   Exit code      : -9
+   Still reachable: 0 bytes
+
+======================================================================
+SCENARIO: OOM
+======================================================================
+
+→ C → oom
+   *** SIMULATING OUT-OF-MEMORY (12 MB limit) ***
+   Forced kill after timeout
+   Finished. Log: Coom.log
+   Detection time : 35.0s
+   Exit code      : -9
+
+→ Rust → oom
+   *** SIMULATING OUT-OF-MEMORY (12 MB limit) ***
+   Forced kill after timeout
+   Finished. Log: Rustoom.log
+   Detection time : 35.0s
+   Exit code      : -9
+
+Waiting 20 seconds to reconnect sensor...
+
+======================================================================
+SCENARIO: SENSOR_DISCONNECT
+======================================================================
+
+→ C → sensor_disconnect
+   *** UNPLUG THE SENSOR NOW *** (waiting 15 seconds)
+   Finished. Log: Csensor_disconnect.log
+   Detection time : 35.0s
+   Exit code      : 3
+   Still reachable: 0 bytes
+   Driver messages: i2c_read_u8: I2C_RDWR failed: Remote I/O error
+Failed to read temperature
+
+→ Rust → sensor_disconnect
+   *** UNPLUG THE SENSOR NOW *** (waiting 15 seconds)
+   Finished. Log: Rustsensor_disconnect.log
+   Detection time : 35.0s
+   Exit code      : 1
+   Still reachable: 0 bytes
+   Driver messages: I/O error: Remote I/O error (os error 121)
+
+=====================================================================================
+STRUCTURED RESULTS TABLE – Copy directly into your thesis
+=====================================================================================
+Scenario             | Driver | Detection time (s) | Exit code | Definitely lost | Still reachable | Driver error messages | Notes
+graceful             | C      |               20.0 | -2        | 0               | 0               | None                  | -
+graceful             | Rust   |               20.0 | -2        | 0               | 0               | None                  | -
+sigterm              | C      |               20.0 | -15       | 0               | 0               | None                  | -
+sigterm              | Rust   |               20.0 | -15       | 0               | 0               | None                  | -
+sigkill              | C      |               20.0 | -9        | 0               | 0               | None                  | -
+sigkill              | Rust   |               20.0 | -9        | 0               | 0               | None                  | -
+oom                  | C      |               35.0 | -9        | N/A             | N/A             | None                  | -
+oom                  | Rust   |               35.0 | -9        | N/A             | N/A             | None                  | -
+sensor_disconnect    | C      |               35.0 | 3         | 0               | 0               | Yes                   | -
+sensor_disconnect    | Rust   |               35.0 | 1         | 0               | 0               | Yes                   | -
+
+Full raw logs (Valgrind + stdout) are in this folder.

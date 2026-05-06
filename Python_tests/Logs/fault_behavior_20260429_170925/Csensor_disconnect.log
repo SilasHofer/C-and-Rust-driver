@@ -1,0 +1,80 @@
+==3367== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3367==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3367==    by 0x10939B: i2c_read_u8 (i2c_linux.c:32)
+==3367==    by 0x108F83: bme280_init (bme280.c:20)
+==3367==    by 0x108DC3: main (main.c:60)
+==3367==  Address 0x1ffefffbbc is on thread 1's stack
+==3367==  in frame #1, created by i2c_read_u8 (i2c_linux.c:15)
+==3367==  Uninitialised value was created by a stack allocation
+==3367==    at 0x10931C: i2c_read_u8 (i2c_linux.c:15)
+==3367== 
+==3367== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3367==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3367==    by 0x10939B: i2c_read_u8 (i2c_linux.c:32)
+==3367==    by 0x108F83: bme280_init (bme280.c:20)
+==3367==    by 0x108DC3: main (main.c:60)
+==3367==  Address 0x1ffefffb96 is on thread 1's stack
+==3367==  in frame #1, created by i2c_read_u8 (i2c_linux.c:15)
+==3367==  Uninitialised value was created by a stack allocation
+==3367==    at 0x10931C: i2c_read_u8 (i2c_linux.c:15)
+==3367== 
+==3367== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3367==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3367==    by 0x1094AB: i2c_read_buf (i2c_linux.c:67)
+==3367==    by 0x108FFF: bme280_init (bme280.c:33)
+==3367==    by 0x108DC3: main (main.c:60)
+==3367==  Address 0x1ffefffbbc is on thread 1's stack
+==3367==  in frame #1, created by i2c_read_buf (i2c_linux.c:50)
+==3367==  Uninitialised value was created by a stack allocation
+==3367==    at 0x109424: i2c_read_buf (i2c_linux.c:50)
+==3367== 
+==3367== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3367==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3367==    by 0x1094AB: i2c_read_buf (i2c_linux.c:67)
+==3367==    by 0x108FFF: bme280_init (bme280.c:33)
+==3367==    by 0x108DC3: main (main.c:60)
+==3367==  Address 0x1ffefffb96 is on thread 1's stack
+==3367==  in frame #1, created by i2c_read_buf (i2c_linux.c:50)
+==3367==  Uninitialised value was created by a stack allocation
+==3367==    at 0x109424: i2c_read_buf (i2c_linux.c:50)
+==3367== 
+==3367== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3367==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3367==    by 0x10939B: i2c_read_u8 (i2c_linux.c:32)
+==3367==    by 0x109167: bme280_read_temperature (bme280.c:69)
+==3367==    by 0x108E3F: main (main.c:73)
+==3367==  Address 0x1ffefffbac is on thread 1's stack
+==3367==  in frame #1, created by i2c_read_u8 (i2c_linux.c:15)
+==3367==  Uninitialised value was created by a stack allocation
+==3367==    at 0x10931C: i2c_read_u8 (i2c_linux.c:15)
+==3367== 
+==3367== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3367==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3367==    by 0x10939B: i2c_read_u8 (i2c_linux.c:32)
+==3367==    by 0x109167: bme280_read_temperature (bme280.c:69)
+==3367==    by 0x108E3F: main (main.c:73)
+==3367==  Address 0x1ffefffb86 is on thread 1's stack
+==3367==  in frame #1, created by i2c_read_u8 (i2c_linux.c:15)
+==3367==  Uninitialised value was created by a stack allocation
+==3367==    at 0x10931C: i2c_read_u8 (i2c_linux.c:15)
+==3367== 
+==3367== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3367==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3367==    by 0x1094AB: i2c_read_buf (i2c_linux.c:67)
+==3367==    by 0x1091D7: bme280_read_temperature (bme280.c:76)
+==3367==    by 0x108E3F: main (main.c:73)
+==3367==  Address 0x1ffefffbac is on thread 1's stack
+==3367==  in frame #1, created by i2c_read_buf (i2c_linux.c:50)
+==3367==  Uninitialised value was created by a stack allocation
+==3367==    at 0x109424: i2c_read_buf (i2c_linux.c:50)
+==3367== 
+==3367== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3367==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3367==    by 0x1094AB: i2c_read_buf (i2c_linux.c:67)
+==3367==    by 0x1091D7: bme280_read_temperature (bme280.c:76)
+==3367==    by 0x108E3F: main (main.c:73)
+==3367==  Address 0x1ffefffb86 is on thread 1's stack
+==3367==  in frame #1, created by i2c_read_buf (i2c_linux.c:50)
+==3367==  Uninitialised value was created by a stack allocation
+==3367==    at 0x109424: i2c_read_buf (i2c_linux.c:50)
+==3367== 

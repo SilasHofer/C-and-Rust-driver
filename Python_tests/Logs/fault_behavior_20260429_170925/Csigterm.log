@@ -1,0 +1,91 @@
+==3053== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3053==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3053==    by 0x10939B: i2c_read_u8 (i2c_linux.c:32)
+==3053==    by 0x108F83: bme280_init (bme280.c:20)
+==3053==    by 0x108DC3: main (main.c:60)
+==3053==  Address 0x1ffefffbbc is on thread 1's stack
+==3053==  in frame #1, created by i2c_read_u8 (i2c_linux.c:15)
+==3053==  Uninitialised value was created by a stack allocation
+==3053==    at 0x10931C: i2c_read_u8 (i2c_linux.c:15)
+==3053== 
+==3053== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3053==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3053==    by 0x10939B: i2c_read_u8 (i2c_linux.c:32)
+==3053==    by 0x108F83: bme280_init (bme280.c:20)
+==3053==    by 0x108DC3: main (main.c:60)
+==3053==  Address 0x1ffefffb96 is on thread 1's stack
+==3053==  in frame #1, created by i2c_read_u8 (i2c_linux.c:15)
+==3053==  Uninitialised value was created by a stack allocation
+==3053==    at 0x10931C: i2c_read_u8 (i2c_linux.c:15)
+==3053== 
+==3053== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3053==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3053==    by 0x1094AB: i2c_read_buf (i2c_linux.c:67)
+==3053==    by 0x108FFF: bme280_init (bme280.c:33)
+==3053==    by 0x108DC3: main (main.c:60)
+==3053==  Address 0x1ffefffbbc is on thread 1's stack
+==3053==  in frame #1, created by i2c_read_buf (i2c_linux.c:50)
+==3053==  Uninitialised value was created by a stack allocation
+==3053==    at 0x109424: i2c_read_buf (i2c_linux.c:50)
+==3053== 
+==3053== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3053==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3053==    by 0x1094AB: i2c_read_buf (i2c_linux.c:67)
+==3053==    by 0x108FFF: bme280_init (bme280.c:33)
+==3053==    by 0x108DC3: main (main.c:60)
+==3053==  Address 0x1ffefffb96 is on thread 1's stack
+==3053==  in frame #1, created by i2c_read_buf (i2c_linux.c:50)
+==3053==  Uninitialised value was created by a stack allocation
+==3053==    at 0x109424: i2c_read_buf (i2c_linux.c:50)
+==3053== 
+==3053== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3053==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3053==    by 0x10939B: i2c_read_u8 (i2c_linux.c:32)
+==3053==    by 0x109167: bme280_read_temperature (bme280.c:69)
+==3053==    by 0x108E3F: main (main.c:73)
+==3053==  Address 0x1ffefffbac is on thread 1's stack
+==3053==  in frame #1, created by i2c_read_u8 (i2c_linux.c:15)
+==3053==  Uninitialised value was created by a stack allocation
+==3053==    at 0x10931C: i2c_read_u8 (i2c_linux.c:15)
+==3053== 
+==3053== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3053==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3053==    by 0x10939B: i2c_read_u8 (i2c_linux.c:32)
+==3053==    by 0x109167: bme280_read_temperature (bme280.c:69)
+==3053==    by 0x108E3F: main (main.c:73)
+==3053==  Address 0x1ffefffb86 is on thread 1's stack
+==3053==  in frame #1, created by i2c_read_u8 (i2c_linux.c:15)
+==3053==  Uninitialised value was created by a stack allocation
+==3053==    at 0x10931C: i2c_read_u8 (i2c_linux.c:15)
+==3053== 
+==3053== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3053==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3053==    by 0x1094AB: i2c_read_buf (i2c_linux.c:67)
+==3053==    by 0x1091D7: bme280_read_temperature (bme280.c:76)
+==3053==    by 0x108E3F: main (main.c:73)
+==3053==  Address 0x1ffefffbac is on thread 1's stack
+==3053==  in frame #1, created by i2c_read_buf (i2c_linux.c:50)
+==3053==  Uninitialised value was created by a stack allocation
+==3053==    at 0x109424: i2c_read_buf (i2c_linux.c:50)
+==3053== 
+==3053== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3053==    at 0x49A95D0: ioctl (ioctl.S:26)
+==3053==    by 0x1094AB: i2c_read_buf (i2c_linux.c:67)
+==3053==    by 0x1091D7: bme280_read_temperature (bme280.c:76)
+==3053==    by 0x108E3F: main (main.c:73)
+==3053==  Address 0x1ffefffb86 is on thread 1's stack
+==3053==  in frame #1, created by i2c_read_buf (i2c_linux.c:50)
+==3053==  Uninitialised value was created by a stack allocation
+==3053==    at 0x109424: i2c_read_buf (i2c_linux.c:50)
+==3053== 
+==3053== 4,096 bytes in 1 blocks are still reachable in loss record 1 of 1
+==3053==    at 0x488545C: malloc (vg_replace_malloc.c:446)
+==3053==    by 0x492EC87: _IO_file_doallocate (filedoalloc.c:101)
+==3053==    by 0x493F6A7: _IO_doallocbuf (genops.c:373)
+==3053==    by 0x493F6A7: _IO_doallocbuf (genops.c:368)
+==3053==    by 0x493D8D3: _IO_file_overflow@@GLIBC_2.17 (fileops.c:746)
+==3053==    by 0x493E363: _IO_new_file_xsputn (fileops.c:1245)
+==3053==    by 0x493E363: _IO_file_xsputn@@GLIBC_2.17 (fileops.c:1198)
+==3053==    by 0x4931A93: puts (ioputs.c:40)
+==3053==    by 0x108E0B: main (main.c:66)
+==3053== 

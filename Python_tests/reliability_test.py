@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Driver Test Runner for Raspberry Pi 3
-Compiles and runs the C driver, Rust driver, or both.
+Driver Test Runner for Raspberry Pi 3 - 48H LOW-RAM VERSION
+C + Rust parallel, batch writing, minimal RAM, throttling detection, stable final summary.
 
 Assumed folder layout (relative to this script's location):
   ../C_Driver/   <- C source files
@@ -10,6 +10,7 @@ Assumed folder layout (relative to this script's location):
 
 import argparse
 import math
+import shutil
 import subprocess
 import sys
 import time
@@ -18,9 +19,9 @@ from pathlib import Path
 import psutil
 import threading
 import re as _re
+import collections
 
-
-# -- Paths (resolved relative to this script's location) ----------------------
+# ====================== PATHS ======================
 SCRIPT_DIR  = Path(__file__).parent.resolve()
 ROOT_DIR    = SCRIPT_DIR.parent
 
@@ -28,745 +29,484 @@ C_DIR       = ROOT_DIR / "C_Driver"
 C_BINARY    = "c_driver"
 
 RUST_DIR    = ROOT_DIR / "Rust_Driver"
-RUST_BINARY = RUST_DIR / "target" / "debug" / "rust_driver_no_log"
-# -----------------------------------------------------------------------------
+RUST_BINARY = RUST_DIR / "target" / "release" / "bme280_bare_bones"
 
-
-def run_step(label: str, cmd: list, cwd: Path, timeout: int, log_file) -> bool:
-    """Run a shell command, print output, return True on success."""
-    print(f"\n  $ {' '.join(str(c) for c in cmd)}")
-    try:
-        result = subprocess.run(
-            [str(c) for c in cmd],
-            cwd=str(cwd),
-            timeout=timeout,
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
-        output = result.stdout or ""
-        print(output, end="")
-        if log_file:
-            log_file.write(f"[{label}]\n{output}\n")
-        if result.returncode != 0:
-            print(f"  x '{label}' exited with code {result.returncode}")
-            return False
-        return True
-
-    except FileNotFoundError as e:
-        msg = f"  x Command not found: {e}"
-        print(msg)
-        if log_file:
-            log_file.write(msg + "\n")
-        return False
-
-    except subprocess.TimeoutExpired:
-        msg = f"  x '{label}' timed out after {timeout}s"
-        print(msg)
-        if log_file:
-            log_file.write(msg + "\n")
-        return False
-
-
-TEMP_PATTERN = "Temperature:"
-LOG_EVERY_N  = 100
+TEMP_PATTERN    = "Temperature:"
+BATCH_SIZE      = 1500
+LOG_EVERY_N     = 2000
 COMPILE_TIMEOUT = 120
+HEALTH_INTERVAL = 10
+
+_BYTES_PER_LINE = 38
 
 
-def _latency_stats(intervals: list[float]) -> dict:
-    """
-    Compute mean, std-dev, and worst-case latency from a list of
-    inter-reading intervals (in seconds). Returns an empty dict if
-    there are no intervals recorded.
-    """
-    # Drop the first reading's interval to filter out cold-start/initialization lags
-    if len(intervals) > 2:
-        intervals = intervals[1:]
-
-    n = len(intervals)
-    if n == 0:
-        return {}
-    mean = sum(intervals) / n
-    variance = sum((x - mean) ** 2 for x in intervals) / n
-    return {
-        "n":        n,
-        "mean_ms":  mean * 1000,
-        "std_ms":   math.sqrt(variance) * 1000,
-        "worst_ms": max(intervals) * 1000,
-    }
+def get_latest_run_timestamp(log_dir: Path) -> str | None:
+    """Returns the timestamp of the latest existing test run (for resume after Pi crash)."""
+    if not log_dir.exists():
+        return None
+    files = list(log_dir.glob("c_readings_*.csv"))
+    if not files:
+        return None
+    latest = max(files, key=lambda f: f.stat().st_mtime)
+    name = latest.stem
+    if name.startswith("c_readings_"):
+        return name[11:]          # z.B. "20260422_141239"
+    return None
 
 
-def _resource_stats(mem_samples: list[float]) -> dict:
-    n_mem = len(mem_samples)
-    if n_mem == 0:
-        return {}
+# ====================== LOW-RAM HELPERS ======================
+class BatchWriter:
+    def __init__(self, csv_path: Path):
+        self.csv_path = csv_path
+        self.batch: list[str] = []
+        self.total_reads = 0
+        csv_path.parent.mkdir(parents=True, exist_ok=True)
+        if not csv_path.exists():
+            with open(csv_path, "w") as f:
+                f.write("timestamp,temperature_C\n")
 
-    result = {
-        "mem_mean_kb": (sum(mem_samples) / n_mem) / 1024,
-        "mem_peak_kb": max(mem_samples) / 1024,
-        "mem_n":       n_mem,
-    }
+    def add(self, temp: float) -> None:
+        ts_str = datetime.now().isoformat(timespec="microseconds")
+        self.batch.append(f"{ts_str},{temp:.3f}\n")
+        self.total_reads += 1
+        if len(self.batch) >= BATCH_SIZE:
+            self.flush()
 
-    if n_mem >= 2:
-        xs    = list(range(n_mem))
-        x_bar = sum(xs) / n_mem
-        y_bar = sum(mem_samples) / n_mem
-        num   = sum((xs[i] - x_bar) * (mem_samples[i] - y_bar) for i in range(n_mem))
-        den   = sum((xs[i] - x_bar) ** 2 for i in range(n_mem))
-        result["mem_slope_kb_per_sample"] = (num / den if den != 0 else 0.0) / 1024
+    def flush(self) -> None:
+        if self.batch:
+            with open(self.csv_path, "a") as f:
+                f.writelines(self.batch)
+            self.batch.clear()
 
-    return result
-
-
-def _print_latency_stats(stats: dict, log_file) -> None:
-    if not stats:
-        return
-    lines = [
-        f"  Latency (inter-reading interval, n={stats['n']}):",
-        f"    Mean        : {stats['mean_ms']:8.3f} ms",
-        f"    Std-dev     : {stats['std_ms']:8.3f} ms",
-        f"    Worst-case  : {stats['worst_ms']:8.3f} ms",
-    ]
-    for line in lines:
-        print(line)
-        if log_file:
-            log_file.write(line.lstrip() + "\n")
+    def final_flush(self) -> None:
+        self.flush()
 
 
-def _print_resource_stats(stats: dict, log_file) -> None:
-    if not stats:
-        return
-    lines = ["  Resource usage (driver process):"]
-    if "mem_mean_kb" in stats:
-        lines += [
-            f"    Mem mean    : {stats['mem_mean_kb']:8.1f} KB",
-            f"    Mem peak    : {stats['mem_peak_kb']:8.1f} KB",
-        ]
-    if "mem_slope_kb_per_sample" in stats:
-        slope = stats["mem_slope_kb_per_sample"]
-        trend = "growing ⚠" if slope > 0.01 else ("shrinking" if slope < -0.01 else "stable ✓")
-        lines.append(f"    Mem trend   : {slope:+.4f} KB/sample ({trend})")
+class RunningStats:
+    def __init__(self):
+        self.n = 0
+        self.mean = 0.0
+        self.M2 = 0.0
+        self.min_v = float("inf")
+        self.max_v = float("-inf")
+        self.spike_count = 0
+        self._window = collections.deque(maxlen=3)
 
-    for line in lines:
-        print(line)
-        if log_file:
-            log_file.write(line.lstrip() + "\n")
+    def update(self, x: float) -> None:
+        self.n += 1
+        delta = x - self.mean
+        self.mean += delta / self.n
+        self.M2 += delta * (x - self.mean)
+        self.min_v = min(self.min_v, x)
+        self.max_v = max(self.max_v, x)
+        self._window.append(x)
+        if len(self._window) == 3 and self.n > 10:
+            std = self.std()
+            if std > 0:
+                prev, cur, nxt = self._window
+                if abs(cur - prev) > 3 * std and abs(cur - nxt) > 3 * std:
+                    self.spike_count += 1
 
-def _sensor_stats(temp_values: list[float]) -> dict:
-    n = len(temp_values)
-    if n == 0:
-        return {}
-    mean     = sum(temp_values) / n
-    variance = sum((x - mean) ** 2 for x in temp_values) / n
-    std      = math.sqrt(variance)
-    min_v    = min(temp_values)
-    max_v    = max(temp_values)
+    def std(self) -> float:
+        return math.sqrt(self.M2 / (self.n - 1)) if self.n >= 2 else 0.0
 
-    # Spike: reading differs from both its neighbours by more than 3x the
-    # global std-dev. Ignores first and last reading (no two neighbours).
-    spikes = 0
-    for i in range(1, n - 1):
-        prev_diff = abs(temp_values[i] - temp_values[i - 1])
-        next_diff = abs(temp_values[i] - temp_values[i + 1])
-        if prev_diff > 3 * std and next_diff > 3 * std:
-            spikes += 1
+    def snapshot(self) -> str:
+        min_str = f"{self.min_v:.3f}" if self.min_v != float("inf") else "n/a"
+        max_str = f"{self.max_v:.3f}" if self.max_v != float("-inf") else "n/a"
+        return (f"n={self.n:,} mean={self.mean:.3f}C std={self.std():.3f}C "
+                f"min={min_str}C max={max_str}C spikes={self.spike_count}")
 
-    return {
-        "n":      n,
-        "mean":   mean,
-        "std":    std,
-        "min":    min_v,
-        "max":    max_v,
-        "range":  max_v - min_v,
-        "spikes": spikes,
-    }
-
-
-def _print_sensor_stats(stats: dict, log_file) -> None:
-    if not stats:
-        return
-    lines = [
-        f"  Sensor reading variation (n={stats['n']}):",
-        f"    Mean        : {stats['mean']:8.3f} °C",
-        f"    Std-dev     : {stats['std']:8.3f} °C",
-        f"    Min         : {stats['min']:8.3f} °C",
-        f"    Max         : {stats['max']:8.3f} °C",
-        f"    Range       : {stats['range']:8.3f} °C",
-        f"    Spikes (>3σ): {stats['spikes']}",
-    ]
-    for line in lines:
-        print(line)
-        if log_file:
-            log_file.write(line.lstrip() + "\n")
 
 class ResourceSampler:
-    def __init__(self, pid: int, interval: float = 0.02):
-        self.proc        = psutil.Process(pid)
-        self.interval    = interval
-        self.mem_samples = []
-        self._running    = False
-        self._thread     = None
+    def __init__(self, pid: int, interval: float = 0.5):
+        self._pid_lock = threading.Lock()
+        self._proc = psutil.Process(pid)
+        self.interval = interval
+        self._n = 0
+        self._mean = 0.0
+        self._M2 = 0.0
+        self._min = float("inf")
+        self._max = float("-inf")
+        self._running = False
+        self._thread = None
 
-    def start(self):
+    def update_pid(self, pid: int) -> None:
+        with self._pid_lock:
+            self._proc = psutil.Process(pid)
+
+    def start(self) -> None:
         self._running = True
-        self._thread  = threading.Thread(target=self._run, daemon=True)
+        self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
 
-    def stop(self):
+    def stop(self) -> None:
         self._running = False
         if self._thread:
-            self._thread.join()
+            self._thread.join(timeout=2)
 
-    def _run(self):
+    def _run(self) -> None:
         while self._running:
             try:
-                self.mem_samples.append(self.proc.memory_info().rss)
+                with self._pid_lock:
+                    rss = self._proc.memory_info().rss
+                self._n += 1
+                delta = rss - self._mean
+                self._mean += delta / self._n
+                self._M2 += delta * (rss - self._mean)
+                self._min = min(self._min, rss)
+                self._max = max(self._max, rss)
             except psutil.NoSuchProcess:
-                break
+                time.sleep(self.interval)
+            except Exception:
+                pass
             time.sleep(self.interval)
 
+    @property
+    def mean_mb(self) -> float:
+        return self._mean / 1024 / 1024
+
+    @property
+    def min_mb(self) -> float:
+        return self._min / 1024 / 1024 if self._min != float("inf") else 0.0
+
+    @property
+    def max_mb(self) -> float:
+        return self._max / 1024 / 1024 if self._max != float("-inf") else 0.0
+
+    @property
+    def std_mb(self) -> float:
+        return (math.sqrt(self._M2 / (self._n - 1)) / 1024 / 1024) if self._n >= 2 else 0.0
+
+    def snapshot(self) -> str:
+        return (f"RAM mean={self.mean_mb:.2f}MB min={self.min_mb:.2f}MB "
+                f"max={self.max_mb:.2f}MB std={self.std_mb:.2f}MB")
 
 
-def capture_temperature_readings(
-    label: str, cmd: list, cwd: Path, timeout: int, log_file
-) -> bool:
-    start_dt     = datetime.now()
-    global_start = time.monotonic()
+class DriverLogger:
+    def __init__(self, path: Path, enabled: bool):
+        self.path = path
+        self.enabled = enabled
+        self._lock = threading.Lock()
+        self._fh = open(path, "a", encoding="utf-8") if enabled else None
 
-    print(f"\n  Start time : {start_dt.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"  Running for {timeout}s with auto-restart on failure...\n")
-
-    if log_file:
-        log_file.write(f"[{label}]\n")
-        log_file.write(f"Start time : {start_dt.strftime('%Y-%m-%d %H:%M:%S')}\n")
-        log_file.write(f"Timeout    : {timeout}s (auto-restart enabled)\n\n")
-
-    total_count    = 0
-    restart_count  = 0
-    intervals      = []
-    last_ts        = None
-    all_mem_samples = []
-    failure_times  = []
-    temp_values    = []
-
-    while time.monotonic() - global_start < timeout:
-        proc           = None
-        error_detected = False
-        failure_reason = ""
-
+    def write(self, line: str) -> None:
+        if not self._fh:
+            return
         try:
-            proc = subprocess.Popen(
-                [str(c) for c in cmd],
-                cwd=str(cwd),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-            )
+            with self._lock:
+                self._fh.write(line if line.endswith("\n") else line + "\n")
+                self._fh.flush()
+        except OSError as e:
+            print(f"  [LOG WRITE ERROR] {self.path.name}: {e}")
 
-            sampler = ResourceSampler(proc.pid)
-            sampler.start()
-
-            for line in proc.stdout:
-                if time.monotonic() - global_start >= timeout:
-                    break
-
-                line = line.rstrip()
-
-                if "Failed to" in line or "error" in line.lower() or "panicked at" in line:
-                    error_detected = True
-                    failure_reason = line
-
-                if TEMP_PATTERN in line:
-                    now = time.monotonic()
-                    if last_ts is not None:
-                        intervals.append(now - last_ts)
-                    last_ts = now
-
-                    total_count += 1
-                    print(f"  [{total_count}] {line}")
-
-                    if log_file and total_count % LOG_EVERY_N == 0:
-                        log_file.write(f"[{total_count}] {line}\n")
-
-                    m = _re.search(r"Temperature:\s*([-+]?[0-9]*\.?[0-9]+)", line)
-                    if m:
-                        temp_values.append(float(m.group(1)))
-
-                else:
-                    print(f"  {line}")
-                    if log_file:
-                        log_file.write(line + "\n")
-
-                if error_detected:
-                    break
-
-            sampler.stop()
-            proc.kill()
-            proc.wait()
-
-            all_mem_samples.extend(sampler.mem_samples)
-
-            if error_detected:
-                restart_count += 1
-                failure_times.append(time.monotonic() - global_start)
-                ts  = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                msg = f"\n  ⚠ [{ts}] Restarting driver (#{restart_count}) due to: {failure_reason}"
-                print(msg)
-                if log_file:
-                    log_file.write(msg + "\n")
-                time.sleep(0.5)
-                continue
-
-        except Exception as e:
-            restart_count += 1
-            failure_times.append(time.monotonic() - global_start)
-            ts  = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            msg = f"\n  ⚠ [{ts}] Crash detected (#{restart_count}): {e}"
-            print(msg)
-            if log_file:
-                log_file.write(msg + "\n")
-            time.sleep(0.5)
-            continue
-
-    elapsed    = time.monotonic() - global_start
-    throughput = total_count / elapsed if elapsed > 0 else 0
-
-    # -- MTBF ------------------------------------------------------------------
-    if len(failure_times) >= 2:
-        gaps = [failure_times[i+1] - failure_times[i] for i in range(len(failure_times)-1)]
-        mtbf = sum(gaps) / len(gaps)
-    elif len(failure_times) == 1:
-        mtbf = failure_times[0]
-    else:
-        mtbf = None
-
-    # -- Summary ---------------------------------------------------------------
-    print(f"\n  Total readings  : {total_count}")
-    print(f"  Restarts        : {restart_count}")
-    print(f"  Duration        : {elapsed:.2f}s")
-    print(f"  Throughput      : {throughput:.2f} reads/sec")
-
-    if log_file:
-        log_file.write(f"\nTotal readings   : {total_count}\n")
-        log_file.write(f"Restarts         : {restart_count}\n")
-        log_file.write(f"Duration         : {elapsed:.2f}s\n")
-        log_file.write(f"Throughput       : {throughput:.2f} reads/sec\n")
-
-    if mtbf is not None:
-        mtbf_line = f"  MTBF            : {mtbf:.2f}s"
-        print(mtbf_line)
-        if log_file:
-            log_file.write(mtbf_line.lstrip() + "\n")
-    else:
-        print("  MTBF            : No failures detected")
-        if log_file:
-            log_file.write("MTBF            : No failures detected\n")
-
-    sen_stats = _sensor_stats(temp_values)
-    _print_sensor_stats(sen_stats, log_file)
-
-    lat_stats = _latency_stats(intervals)
-    _print_latency_stats(lat_stats, log_file)
-
-    res_stats = _resource_stats(all_mem_samples)
-    _print_resource_stats(res_stats, log_file)
-
-    return total_count > 0
+    def close(self) -> None:
+        if self._fh:
+            try:
+                self._fh.close()
+            except OSError:
+                pass
+            self._fh = None
 
 
-def build_and_run_c(timeout: int, log: bool, hz: float) -> bool:
-    print(f"\n{'─' * 50}")
-    print("  C Driver — compile + run")
-    print(f"{'─' * 50}")
-    print(hz)
-
-    log_file = None
-    if log:
-        log_path = SCRIPT_DIR / "Logs" / "Reliability" / "C" / f"c_driver_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        log_file = open(log_path, "w")
-        print(f"  Logging to: {log_path.name}")
-
+# ====================== SYSTEM HELPERS ======================
+def get_cpu_temp() -> float:
     try:
-        ok = run_step(
-            "gcc compile",
-            [
-                "gcc", "-std=c11", "-D_DEFAULT_SOURCE",
-                "-Wall", "-Wextra", "-O2",
-                "main.c", "bme280.c", "i2c_linux.c",
-                "-o", C_BINARY,
-            ],
-            cwd=C_DIR,
-            timeout=COMPILE_TIMEOUT,
-            log_file=log_file,
-        )
-        if not ok:
-            return False
-
-        cmd = [f"./{C_BINARY}"]
-        cmd.append("0x76")
-        if hz > 0:
-            cmd.append(str(hz))
-
-        ok = capture_temperature_readings(
-            "run",
-            cmd,
-            cwd=C_DIR,
-            timeout=timeout,
-            log_file=log_file,
-        )
-
-        print(f"\n  {'PASSED' if ok else 'FAILED'}")
-        return ok
-
-    finally:
-        if log_file:
-            log_file.close()
+        with open("/sys/class/thermal/thermal_zone0/temp") as f:
+            return float(f.read().strip()) / 1000.0
+    except Exception:
+        return -999.0
 
 
-def build_and_run_rust(timeout: int, log: bool, hz: float) -> bool:
-    print(f"\n{'─' * 50}")
-    print("  Rust Driver — cargo build + cargo run")
-    print(f"{'─' * 50}")
-
-    log_file = None
-    if log:
-        log_path = SCRIPT_DIR / "Logs" / "Reliability" / "Rust" / f"rust_driver_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        log_file = open(log_path, "w")
-        print(f"  Logging to: {log_path.name}")
-
+def get_throttled_status() -> str:
     try:
-        ok = run_step(
-            "cargo build",
-            ["cargo", "build", "--release"],
-            cwd=RUST_DIR,
-            timeout=COMPILE_TIMEOUT,
-            log_file=log_file,
-        )
-        if not ok:
-            return False
-
-        run_args = ["cargo", "run", "--release", "--", "0x76", str(hz)]
-
-        ok = capture_temperature_readings(
-            "cargo run",
-            run_args,
-            cwd=RUST_DIR,
-            timeout=timeout,
-            log_file=log_file,
-        )
-
-        print(f"\n  {'PASSED' if ok else 'FAILED'}")
-        return ok
-
-    finally:
-        if log_file:
-            log_file.close()
+        result = subprocess.run(["vcgencmd", "get_throttled"], capture_output=True, text=True, timeout=2)
+        out = result.stdout.strip()
+        return out.split("throttled=")[1].strip() if "throttled=" in out else out
+    except Exception:
+        return "ERROR"
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Compile and run C/Rust drivers on Raspberry Pi 3",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python run_drivers.py --c              # Compile + run C driver only
-  python run_drivers.py --rust           # Compile + run Rust driver only
-  python run_drivers.py --both           # Compile + run both drivers
-  python run_drivers.py --both --log     # Run both and save logs to Python_tests/
-  python run_drivers.py --both --timeout 120
-  python run_drivers.py --parallel       # Alternate C/Rust readings, compare results
-        """,
-    )
-
-    driver_group = parser.add_mutually_exclusive_group(required=False)
-    driver_group.add_argument("--c",    action="store_true", help="Compile and run the C driver only")
-    driver_group.add_argument("--rust", action="store_true", help="Compile and run the Rust driver only")
-    driver_group.add_argument("--both", action="store_true", help="Compile and run both drivers")
-
-    parser.add_argument(
-        "--timeout", type=int, default=60, metavar="SECONDS",
-        help="How long to collect readings in seconds (default: 60)",
-    )
-    parser.add_argument(
-        "--log", action="store_true", default=True,
-        help="Save each driver's output to a timestamped .log file in Python_tests/",
-    )
-    parser.add_argument(
-        "--parallel", action="store_true",
-        help="Alternate C/Rust readings, compare results at end",
-    )
-
-    parser.add_argument(
-        "--hz", type=float, default=1,
-        help="Driver frequency",
-    )
-
-    args = parser.parse_args()
-    if args.parallel:
-        args.both = True
-        args.c    = False
-        args.rust = False
-    if not (args.c or args.rust or args.both or args.parallel):
-        parser.error("one of the arguments --c --rust --both is required")
-    return args
+def run_step(label: str, cmd: list, cwd: Path, timeout: int) -> bool:
+    print(f"\n  $ {' '.join(str(c) for c in cmd)}")
+    try:
+        result = subprocess.run([str(c) for c in cmd], cwd=str(cwd), timeout=timeout,
+                                text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(result.stdout, end="")
+        return result.returncode == 0
+    except Exception as e:
+        print(f"  x {label} failed: {e}")
+        return False
 
 
-def main() -> None:
-    args = parse_args()
+def check_disk_space(log_dir: Path, hz: float, duration_s: int) -> None:
+    est_hz = 150.0 if hz == 0 else hz
+    est_bytes = est_hz * duration_s * _BYTES_PER_LINE * 2
+    est_gb = est_bytes / 1024 ** 3
+    label = "full speed" if hz == 0 else f"{hz} Hz"
+    try:
+        free_gb = shutil.disk_usage(log_dir).free / 1024 ** 3
+    except Exception:
+        free_gb = -1.0
+    print(f"\n  Disk space check ({label}):")
+    print(f"    Estimated CSV output : ~{est_gb:.2f} GB")
+    if free_gb >= 0:
+        print(f"    Available on SD card : {free_gb:.2f} GB")
+        if free_gb < est_gb * 1.2:
+            print("  WARNING: Less than 20% headroom!")
+    if hz == 0:
+        print("  INFO: Consider --hz 10; full speed adds unnecessary SD card wear.")
 
-    print("=" * 50)
-    print("  Raspberry Pi 3 — Driver Test Runner")
-    print(f"  Started : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"  Root    : {ROOT_DIR}")
-    print("=" * 50)
 
-    if args.parallel:
-        print(f"\n{'─' * 50}")
-        print("  Parallel Mode: Concurrent C/Rust reading")
-        print(f"{'─' * 50}")
-
-        print("Compiling drivers...")
-        run_step("gcc compile", ["gcc", "-std=c11", "-D_DEFAULT_SOURCE", "-Wall", "-Wextra", "-O2", "main.c", "bme280.c", "i2c_linux.c", "-o", C_BINARY], cwd=C_DIR, timeout=COMPILE_TIMEOUT, log_file=None)
-        run_step("cargo build", ["cargo", "build", "--release"], cwd=RUST_DIR, timeout=COMPILE_TIMEOUT, log_file=None)
-        
-        c_cmd = [f"./{C_BINARY}", "0x76", str(args.hz), "/dev/i2c-1", "--coord-lock"]
-        # Call the Rust binary directly to skip 'cargo run' memory overhead and startup lag
-        rust_cmd = [str(RUST_DIR / "target" / "release" / "bme280_bare_bones"), "0x76", str(args.hz), "/dev/i2c-1", "--coord-lock"]
-
-        c_samples = []
-        rust_samples = []
-        c_intervals = []
-        rust_intervals = []
-        
-        c_last_ts = [None]
-        rust_last_ts = [None]
-
-        samples_lock = threading.Lock()
-        stop_event = threading.Event()
-        record_event = threading.Event()
-        c_ready_event = threading.Event()
-        rust_ready_event = threading.Event()
-
-        log_file = None
-        if args.log:
-            log_path = SCRIPT_DIR / "Logs" / "Reliability" / "parallel" / f"parallel_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-            log_path.parent.mkdir(parents=True, exist_ok=True)
-            log_file = open(log_path, "w")
-
-        print("\nStarting parallel temperature capture...")
-        
-        c_proc = subprocess.Popen([str(c) for c in c_cmd], cwd=str(C_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-        time.sleep(0.1) # stagger
-        rust_proc = subprocess.Popen([str(c) for c in rust_cmd], cwd=str(RUST_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-        
-        c_sampler = ResourceSampler(c_proc.pid)
-        rust_sampler = ResourceSampler(rust_proc.pid)
-        c_sampler.start()
-        rust_sampler.start()
-
-        def reader_thread(label, proc, samples_list, intervals_list, last_ts_ref, ready_ev):
-            while not stop_event.is_set():
+def make_reader_thread(label, proc, batch_writer, stats, driver_log):
+    def _run():
+        while True:
+            try:
                 line = proc.stdout.readline()
-                if not line:
-                    break
-                line = line.rstrip()
-                
-                if "initialized successfully" in line:
-                    ready_ev.set()
+            except Exception:
+                break
+            if not line:
+                break
+            line = line.rstrip()
+            if TEMP_PATTERN in line:
+                m = _re.search(r"Temperature:\s*([-+]?[0-9]*\.?[0-9]+)", line)
+                if m:
+                    try:
+                        temp = float(m.group(1))
+                        batch_writer.add(temp)
+                        stats.update(temp)
+                        if batch_writer.total_reads % LOG_EVERY_N == 0:
+                            msg = f"Progress: {batch_writer.total_reads:,} readings"
+                            print(f"  {label} {msg}")
+                            driver_log.write(msg)
+                    except Exception:
+                        pass
+            else:
+                print(f"  {label}: {line}")
+                driver_log.write(line)
+    t = threading.Thread(target=_run, daemon=True, name=f"reader-{label}")
+    return t
 
-                if TEMP_PATTERN in line:
-                    ready_ev.set() # Fallback flag
-                    if record_event.is_set():
-                        now = time.monotonic()
-                        m = _re.search(r"Temperature:\s*([-+]?[0-9]*\.?[0-9]+)", line)
-                        if m:
-                            temp = float(m.group(1))
-                            with samples_lock:
-                                samples_list.append((now, temp))
-                                if last_ts_ref[0] is not None:
-                                    intervals_list.append(now - last_ts_ref[0])
-                                last_ts_ref[0] = now
-                            out = f"{label} [{datetime.now().isoformat()}]: {line}"
-                            print(f"  {out}")
-                            if log_file:
-                                log_file.write(out + "\n")
-                                log_file.flush()
-                else:
-                    out = f"{label}: {line}"
-                    print(f"  {out}")
-                    if log_file:
-                        log_file.write(out + "\n")
-                        log_file.flush()
 
-        ct = threading.Thread(target=reader_thread, args=("C_driver", c_proc, c_samples, c_intervals, c_last_ts, c_ready_event), daemon=True)
-        rt = threading.Thread(target=reader_thread, args=("Rust_driver", rust_proc, rust_samples, rust_intervals, rust_last_ts, rust_ready_event), daemon=True)
-        
-        ct.start()
-        rt.start()
+# ====================== MAIN ======================
+def main() -> None:
+    parser = argparse.ArgumentParser(description="48h Low-RAM Driver Stress-Test")
+    parser.add_argument("--parallel", action="store_true", required=True)
+    parser.add_argument("--duration", type=int, default=172800, help="Runtime in seconds (default 48 h)")
+    parser.add_argument("--hz", type=float, default=0, help="Sample rate Hz; 0 = full speed")
+    parser.add_argument("--no-log", action="store_true", default=False)
+    args = parser.parse_args()
+    log_enabled = not args.no_log
 
-        print("\n  Waiting for both drivers to initialize...")
-        c_ready_event.wait(timeout=10)
-        rust_ready_event.wait(timeout=10)
-        print("  Both drivers ready! Starting metric collection...")
+    print("=" * 70)
+    print("  Raspberry Pi 3 -- 48H LOW-RAM PARALLEL TEST")
+    print(f"  Started : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"  Duration: {args.duration} s  ({args.duration / 3600:.1f} h)")
+    print("=" * 70)
 
-        start_time = time.monotonic()
-        record_event.set()
+    # Compile
+    run_step("gcc compile", ["gcc", "-std=c11", "-D_DEFAULT_SOURCE", "-Wall", "-Wextra", "-O2",
+                             "main.c", "bme280.c", "i2c_linux.c", "-o", C_BINARY], C_DIR, COMPILE_TIMEOUT)
+    run_step("cargo build", ["cargo", "build", "--release"], RUST_DIR, COMPILE_TIMEOUT)
 
-        c_restarts = 0
-        rust_restarts = 0
-        try:
-            while time.monotonic() - start_time < args.timeout:
-                time.sleep(0.1)
-                if c_proc.poll() is not None:
-                    print(f"\n  ⚠ [C_driver] crashed! Restarting...")
-                    if log_file: log_file.write(f"\n  ⚠ [C_driver] crashed! Restarting...\n")
-                    c_restarts += 1
-                    c_sampler.stop()
-                    c_proc = subprocess.Popen([str(c) for c in c_cmd], cwd=str(C_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-                    c_sampler = ResourceSampler(c_proc.pid)
-                    c_sampler.start()
-                    ct = threading.Thread(target=reader_thread, args=("C_driver", c_proc, c_samples, c_intervals, c_last_ts, c_ready_event), daemon=True)
-                    ct.start()
-                    
-                if rust_proc.poll() is not None:
-                    print(f"\n  ⚠ [Rust_driver] crashed! Restarting...")
-                    if log_file: log_file.write(f"\n  ⚠ [Rust_driver] crashed! Restarting...\n")
-                    rust_restarts += 1
-                    rust_sampler.stop()
-                    rust_proc = subprocess.Popen([str(c) for c in rust_cmd], cwd=str(RUST_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-                    rust_sampler = ResourceSampler(rust_proc.pid)
-                    rust_sampler.start()
-                    rt = threading.Thread(target=reader_thread, args=("Rust_driver", rust_proc, rust_samples, rust_intervals, rust_last_ts, rust_ready_event), daemon=True)
-                    rt.start()
-        except KeyboardInterrupt:
-            print("\nInterrupted.")
-            
-        elapsed = time.monotonic() - start_time
-        stop_event.set()
+    # Log directory
+    log_dir = SCRIPT_DIR / "Logs" / "Reliability" / "parallel"
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    # === RESUME LOGIC AFTER PI CRASH ===
+    existing_ts = get_latest_run_timestamp(log_dir)
+    if existing_ts:
+        ts = existing_ts
+        print(f"✅ RESUMING previous test (timestamp: {ts})")
+    else:
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        print(f"Starting NEW test run (timestamp: {ts})")
+
+    c_csv = log_dir / f"c_readings_{ts}.csv"
+    rust_csv = log_dir / f"rust_readings_{ts}.csv"
+
+    c_log = DriverLogger(log_dir / f"c_driver_{ts}.log", log_enabled)
+    r_log = DriverLogger(log_dir / f"rust_driver_{ts}.log", log_enabled)
+    sys_log = DriverLogger(log_dir / f"system_{ts}.log", log_enabled)
+
+    readings_c = BatchWriter(c_csv)
+    readings_rust = BatchWriter(rust_csv)
+
+    # Header
+    if existing_ts is None:
+        header = (f"Test started : {datetime.now().isoformat()}\n"
+                  f"Duration     : {args.duration} s\n"
+                  f"Hz           : {args.hz if args.hz else 'full speed'}\n")
+        for lg in (c_log, r_log, sys_log):
+            lg.write(header)
+    else:
+        resume_msg = f"RESUMED at {datetime.now().isoformat()}\n"
+        for lg in (c_log, r_log, sys_log):
+            lg.write(resume_msg)
+
+    # Launch drivers
+    c_cmd = [f"./{C_BINARY}", "0x76", str(args.hz), "/dev/i2c-1", "--coord-lock"]
+    rust_cmd = [str(RUST_BINARY), "0x76", str(args.hz), "/dev/i2c-1", "--coord-lock"]
+
+    c_proc = subprocess.Popen(c_cmd, cwd=str(C_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+    time.sleep(0.2)
+    rust_proc = subprocess.Popen(rust_cmd, cwd=str(RUST_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+
+    c_sampler = ResourceSampler(c_proc.pid)
+    rust_sampler = ResourceSampler(rust_proc.pid)
+    c_sampler.start()
+    rust_sampler.start()
+
+    c_stats = RunningStats()
+    rust_stats = RunningStats()
+
+    max_cpu_temp = 0.0
+    throttle_events = 0
+    c_restarts = 0
+    rust_restarts = 0
+
+    ct = make_reader_thread("C_driver", c_proc, readings_c, c_stats, c_log)
+    rt = make_reader_thread("Rust_driver", rust_proc, readings_rust, rust_stats, r_log)
+    ct.start()
+    rt.start()
+
+    print("\n Both drivers running -- 48h Low-RAM test started!\n")
+
+    last_check = time.monotonic()
+    start_time = time.monotonic()
+
+    try:
+        while time.monotonic() - start_time < args.duration:
+            time.sleep(0.1)
+
+            if time.monotonic() - last_check >= HEALTH_INTERVAL:
+                now = datetime.now().isoformat(timespec="seconds")
+                cpu_temp = get_cpu_temp()
+                throttled = get_throttled_status()
+
+                if cpu_temp > max_cpu_temp and cpu_temp > 0:
+                    max_cpu_temp = cpu_temp
+
+                c_log.write(f"[{now}] CPU={cpu_temp:.1f}C throttled={throttled}\n"
+                            f"[{now}] Temp  {c_stats.snapshot()}\n"
+                            f"[{now}] {c_sampler.snapshot()}\n"
+                            f"[{now}] reads={readings_c.total_reads:,} restarts={c_restarts}")
+                r_log.write(f"[{now}] CPU={cpu_temp:.1f}C throttled={throttled}\n"
+                            f"[{now}] Temp  {rust_stats.snapshot()}\n"
+                            f"[{now}] {rust_sampler.snapshot()}\n"
+                            f"[{now}] reads={readings_rust.total_reads:,} restarts={rust_restarts}")
+                sys_log.write(f"[{now}] CPU={cpu_temp:.1f}C throttled={throttled} "
+                              f"c_reads={readings_c.total_reads:,} rust_reads={readings_rust.total_reads:,} "
+                              f"max_cpu={max_cpu_temp:.1f}C throttle_events={throttle_events}")
+
+                if throttled not in ("0x0", "ERROR"):
+                    throttle_events += 1
+                    warning = f"WARNING: THROTTLING DETECTED! vcgencmd = {throttled}"
+                    print(f"  {warning}")
+                    sys_log.write(warning)
+
+                last_check = time.monotonic()
+
+            # Crash & Restart
+            if c_proc.poll() is not None:
+                c_restarts += 1
+                msg = f"WARNING: C_driver crashed! Restart #{c_restarts}"
+                print(f"  {msg}")
+                c_log.write(msg)
+                sys_log.write(msg)
+                c_proc = subprocess.Popen(c_cmd, cwd=str(C_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+                c_sampler.update_pid(c_proc.pid)
+                ct = make_reader_thread("C_driver", c_proc, readings_c, c_stats, c_log)
+                ct.start()
+
+            if rust_proc.poll() is not None:
+                rust_restarts += 1
+                msg = f"WARNING: Rust_driver crashed! Restart #{rust_restarts}"
+                print(f"  {msg}")
+                r_log.write(msg)
+                sys_log.write(msg)
+                rust_proc = subprocess.Popen(rust_cmd, cwd=str(RUST_DIR), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+                rust_sampler.update_pid(rust_proc.pid)
+                rt = make_reader_thread("Rust_driver", rust_proc, readings_rust, rust_stats, r_log)
+                rt.start()
+
+    except KeyboardInterrupt:
+        print("\n Test manually stopped.")
+
+    finally:
+        readings_c.final_flush()
+        readings_rust.final_flush()
         c_sampler.stop()
         rust_sampler.stop()
-        
-        c_proc.terminate()
-        rust_proc.terminate()
-        try:
-            c_proc.wait(timeout=2)
-        except subprocess.TimeoutExpired:
-            c_proc.kill()
-        try:
-            rust_proc.wait(timeout=2)
-        except subprocess.TimeoutExpired:
-            rust_proc.kill()
-        
-        with samples_lock:
-            c_vals = [s[1] for s in c_samples]
-            r_vals = [s[1] for s in rust_samples]
-            
-        c_throughput = len(c_vals) / elapsed if elapsed > 0 else 0
-        r_throughput = len(r_vals) / elapsed if elapsed > 0 else 0
 
-        print(f"\n{'=' * 50}")
-        print("  C Driver Metrics")
-        print(f"{'=' * 50}")
-        if log_file:
-            log_file.write(f"\n{'=' * 50}\n  C Driver Metrics\n{'=' * 50}\n")
-        
-        c_summary = (f"Total readings   : {len(c_vals)}\n"
-                     f"Restarts         : {c_restarts}\n"
-                     f"Duration         : {elapsed:.2f}s\n"
-                     f"Throughput       : {c_throughput:.2f} reads/sec\n"
-                     f"MTBF             : {elapsed / (c_restarts + 1):.2f}s\n")
-        print(c_summary, end="")
-        if log_file:
-            log_file.write(c_summary)
-            
-        _print_sensor_stats(_sensor_stats(c_vals), log_file)
-        _print_latency_stats(_latency_stats(c_intervals), log_file)
-        _print_resource_stats(_resource_stats(c_sampler.mem_samples), log_file)
+        for p in (c_proc, rust_proc):
+            if p.poll() is None:
+                p.terminate()
+                try:
+                    p.wait(timeout=3)
+                except subprocess.TimeoutExpired:
+                    p.kill()
 
-        print(f"\n{'=' * 50}")
-        print("  Rust Driver Metrics")
-        print(f"{'=' * 50}")
-        if log_file:
-            log_file.write(f"\n{'=' * 50}\n  Rust Driver Metrics\n{'=' * 50}\n")
-        
-        r_summary = (f"Total readings   : {len(r_vals)}\n"
-                     f"Restarts         : {rust_restarts}\n"
-                     f"Duration         : {elapsed:.2f}s\n"
-                     f"Throughput       : {r_throughput:.2f} reads/sec\n"
-                     f"MTBF             : {elapsed / (rust_restarts + 1):.2f}s\n")
-        print(r_summary, end="")
-        if log_file:
-            log_file.write(r_summary)
-            
-        _print_sensor_stats(_sensor_stats(r_vals), log_file)
-        _print_latency_stats(_latency_stats(rust_intervals), log_file)
-        _print_resource_stats(_resource_stats(rust_sampler.mem_samples), log_file)
+        elapsed = max(time.monotonic() - start_time, 0.001)
 
-        print(f"\n{'=' * 50}")
-        print("  Comparison / Delta Metrics")
-        print(f"{'=' * 50}")
-        if log_file:
-            log_file.write(f"\n{'=' * 50}\n  Comparison / Delta Metrics\n{'=' * 50}\n")
-        
-        def _local_pair_by_time(c_s, rust_s, max_gap_s):
-            pairs = []
-            i = j = 0
-            while i < len(c_s) and j < len(rust_s):
-                c_ts, c_tmp = c_s[i]
-                r_ts, r_tmp = rust_s[j]
-                dt = r_ts - c_ts
-                if abs(dt) <= max_gap_s:
-                    pairs.append((c_ts, c_tmp, r_ts, r_tmp, abs(c_tmp - r_tmp)))
-                    i += 1
-                    j += 1
-                elif dt < 0:
-                    j += 1
-                else:
-                    i += 1
-            return pairs
+        def _safe_temp_str(v: float, fallback: str = "n/a") -> str:
+            if v in (float("inf"), float("-inf")):
+                return fallback
+            return f"{v:8.3f}"
 
-        # Increased the gap limit slightly from 0.2 to 0.4s to account for minor loop offsets
-        pairs = _local_pair_by_time(c_samples, rust_samples, 0.4)
-        deltas = [p[4] for p in pairs]
-        
-        print(f"  Paired readings (gap <= 0.4s): {len(pairs)}")
-        if deltas:
-            d_mean = sum(deltas)/len(deltas)
-            d_max = max(deltas)
-            print(f"  Average |C - Rust|: {d_mean:.4f} °C")
-            print(f"  Max |C - Rust|    : {d_max:.4f} °C")
-            if log_file:
-                log_file.write(f"\nPaired readings: {len(pairs)}\nAverage |C - Rust|: {d_mean:.4f} C\nMax |C - Rust|: {d_max:.4f} C\n")
-        else:
-            print("  No valid pairs to compare.")
-            if log_file:
-                log_file.write("No valid pairs to compare.\n")
-        
-        print(f"{'=' * 50}\n")
-        if log_file:
-            log_file.close()
-        sys.exit(0)
+        summary_lines = [
+            "", "="*70,
+            "  FINAL SUMMARY -- 48H LOW-RAM TEST",
+            "="*70,
+            f"  Elapsed          : {elapsed:.1f} s  ({elapsed / 3600:.2f} h)",
+            "",
+            "-- C Driver ----------------------------------------------------------",
+            f"  Total readings   : {readings_c.total_reads:,}",
+            f"  Throughput       : {readings_c.total_reads / elapsed:.2f} reads/sec",
+            f"  Restarts         : {c_restarts}",
+            f"  Temp mean        : {c_stats.mean:8.3f} C",
+            f"  Temp std-dev     : {c_stats.std():8.3f} C",
+            f"  Temp min         : {_safe_temp_str(c_stats.min_v)} C",
+            f"  Temp max         : {_safe_temp_str(c_stats.max_v)} C",
+            f"  Spike count      : {c_stats.spike_count}",
+            f"  RAM mean         : {c_sampler.mean_mb:6.2f} MB",
+            f"  RAM min          : {c_sampler.min_mb:6.2f} MB",
+            f"  RAM max          : {c_sampler.max_mb:6.2f} MB",
+            f"  RAM std-dev      : {c_sampler.std_mb:6.2f} MB",
+            "",
+            "-- Rust Driver -------------------------------------------------------",
+            f"  Total readings   : {readings_rust.total_reads:,}",
+            f"  Throughput       : {readings_rust.total_reads / elapsed:.2f} reads/sec",
+            f"  Restarts         : {rust_restarts}",
+            f"  Temp mean        : {rust_stats.mean:8.3f} C",
+            f"  Temp std-dev     : {rust_stats.std():8.3f} C",
+            f"  Temp min         : {_safe_temp_str(rust_stats.min_v)} C",
+            f"  Temp max         : {_safe_temp_str(rust_stats.max_v)} C",
+            f"  Spike count      : {rust_stats.spike_count}",
+            f"  RAM mean         : {rust_sampler.mean_mb:6.2f} MB",
+            f"  RAM min          : {rust_sampler.min_mb:6.2f} MB",
+            f"  RAM max          : {rust_sampler.max_mb:6.2f} MB",
+            f"  RAM std-dev      : {rust_sampler.std_mb:6.2f} MB",
+            "",
+            "-- System ------------------------------------------------------------",
+            f"  Max CPU temp     : {max_cpu_temp:.1f} C",
+            f"  Throttle events  : {throttle_events}",
+            "",
+            f"-- Output files in: {log_dir}",
+            f"  {c_csv.name}",
+            f"  {rust_csv.name}",
+            f"  {(log_dir / f'c_driver_{ts}.log').name}",
+            f"  {(log_dir / f'rust_driver_{ts}.log').name}",
+            f"  {(log_dir / f'system_{ts}.log').name}",
+            "="*70,
+        ]
 
-    results: dict[str, bool] = {}
+        output = "\n".join(summary_lines)
+        print(output)
+        sys_log.write(output)
 
-    if args.c or args.both:
-        results["C"] = build_and_run_c(args.timeout, args.log, args.hz)
-
-    if args.rust or args.both:
-        results["Rust"] = build_and_run_rust(args.timeout, args.log, args.hz)
-
-    print(f"\n{'=' * 50}")
-    print("  Summary")
-    print(f"{'=' * 50}")
-    all_passed = True
-    for driver, passed in results.items():
-        icon = "+" if passed else "x"
-        print(f"  {icon}  {driver} driver — {'PASSED' if passed else 'FAILED'}")
-        if not passed:
-            all_passed = False
-
-    print(f"{'=' * 50}\n")
-    sys.exit(0 if all_passed else 1)
+        c_log.close()
+        r_log.close()
+        sys_log.close()
 
 
 if __name__ == "__main__":

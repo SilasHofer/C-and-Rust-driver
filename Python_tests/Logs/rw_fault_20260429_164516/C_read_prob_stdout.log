@@ -1,0 +1,4 @@
+[i2c_fault_inject] target=read mode=prob every_n=5 prob=0.20 errno=5
+[i2c_fault_inject] READ fault #1 → errno=5 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+i2c_read_u8: I2C_RDWR failed: Input/output error
+Failed to initialize BME280 sensor

@@ -1,0 +1,5 @@
+[i2c_fault_inject] target=read mode=every_n every_n=5 prob=0.10 errno=19
+[i2c_fault_inject] READ fault #5 → errno=19 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+i2c_read_u8: I2C_RDWR failed: No such device
+Failed to read temperature
+BME280 sensor initialized successfully

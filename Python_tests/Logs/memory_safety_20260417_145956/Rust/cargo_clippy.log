@@ -1,6 +1,0 @@
-
-=== STDERR ===
-error: no such command: `clippy`
-
-	View all installed commands with `cargo --list`
-	Find a package to install `clippy` with `cargo search cargo-clippy`

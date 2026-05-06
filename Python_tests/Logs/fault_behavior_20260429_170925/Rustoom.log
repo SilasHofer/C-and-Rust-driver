@@ -1,0 +1,8 @@
+OOM TEST RESULT
+========================================
+Exit code      : -9
+Signal         : SIGKILL
+OOM suspected  : True
+
+Driver output:
+No error messages

@@ -68,10 +68,10 @@ def final_look(data: dict) -> dict:
 
 def plot_convergence(runs: list[dict], labels: list[str], out_path: str) -> None:
     n_runs = len(runs)
-    fig, axes = plt.subplots(1, n_runs, figsize=(7 * n_runs, 5), squeeze=False)
+    fig, axes = plt.subplots(n_runs, 1, figsize=(7, 4 * n_runs), squeeze=False)
 
     for col, (data, label, color) in enumerate(zip(runs, labels, COLORS)):
-        ax = axes[0][col]
+        ax = axes[col][0]
         s = extract_series(data)
         mde = data["params"]["mde_pct"]
         conf = data["params"]["confidence"]
@@ -127,8 +127,9 @@ def plot_convergence(runs: list[dict], labels: list[str], out_path: str) -> None
         ax2.set_xticklabels([f"{n//1000}k" for n in tick_n], fontsize=7)
         ax2.set_xlabel("Approx. total N per driver", fontsize=8)
 
-    fig.suptitle("Sequential validation — convergence over looks", fontsize=12, fontweight="bold", y=1.01)
-    plt.tight_layout()
+    fig.suptitle("Sequential validation — convergence over looks",
+                 fontsize=12, fontweight="bold", y=1.02)
+    plt.tight_layout(h_pad=3.0)
     plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
     print(f"  Saved: {out_path}")
