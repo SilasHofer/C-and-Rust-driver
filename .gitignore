@@ -8,7 +8,7 @@ afl_fuzzing/Rust/Cargo.lock
 C_Driver/c_driver
 C_driver/bme280_demo
 Python_tests/old_logs
-
+Python_tests/charts/Reliability
 # Ignore AFL/fuzz output directories like out_temp, out_temp2, out_temp5, etc.
 out*/
 afl_fuzzing/Fuzzing_results/
