@@ -309,13 +309,23 @@ plt.savefig(os.path.join(OUT_DIR, "figure2_cdf_latency.png"), dpi=150)
 plt.close()
 
 # 3. Memory over time (combined)
-fig, ax = plt.subplots(figsize=(10,5))
+fig, ax = plt.subplots(figsize=(10, 4))
+all_mem_kb = {}
 for name, mem in zip(clean_names, memories):
-    ax.plot(mem, label=name)
-ax.set_xlabel("Reading index")
-ax.set_ylabel("Memory (KB)")
+    if len(mem) > 0:
+        all_mem_kb[name] = mem
+        ax.plot(np.arange(len(mem)), mem, label=name, linewidth=1.5, marker='o', markersize=3)
+
+if all_mem_kb:
+    all_vals = np.concatenate(list(all_mem_kb.values()))
+    margin = (np.max(all_vals) - np.min(all_vals)) * 0.5 or 100
+    ax.set_ylim(np.min(all_vals) - margin, np.max(all_vals) + margin)
+
 ax.set_title("Memory over time")
+ax.set_xlabel("Reading index")
+ax.set_ylabel("Memory (kB)")
 ax.legend()
+ax.grid(True, linestyle=':', alpha=0.6)
 plt.tight_layout()
 plt.savefig(os.path.join(OUT_DIR, "figure3_memory.png"), dpi=150)
 plt.close()

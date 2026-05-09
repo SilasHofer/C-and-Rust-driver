@@ -1,0 +1,4 @@
+[i2c_fault_inject] target=both mode=every_n every_n=5 prob=0.10 errno=5
+BME280 sensor initialized successfully
+[i2c_fault_inject] READ fault #5 → errno=5 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+I/O error: Input/output error (os error 5)

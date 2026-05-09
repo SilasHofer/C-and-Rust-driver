@@ -1,0 +1,104 @@
+==3196== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3196==    at 0x49E95D0: ioctl (ioctl.S:26)
+==3196==    by 0x1121DF: bme280_bare_bones::Bme280::new (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x11177F: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111B13: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111AFB: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x12D03F: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111D1B: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==  Address 0x1ffefff8ec is on thread 1's stack
+==3196==  in frame #1, created by bme280_bare_bones::Bme280::new (???:)
+==3196==  Uninitialised value was created by a stack allocation
+==3196==    at 0x1120A8: bme280_bare_bones::Bme280::new (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196== 
+==3196== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3196==    at 0x49E95D0: ioctl (ioctl.S:26)
+==3196==    by 0x1121DF: bme280_bare_bones::Bme280::new (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x11177F: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111B13: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111AFB: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x12D03F: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111D1B: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==  Address 0x1ffefff8c6 is on thread 1's stack
+==3196==  in frame #1, created by bme280_bare_bones::Bme280::new (???:)
+==3196==  Uninitialised value was created by a stack allocation
+==3196==    at 0x1120A8: bme280_bare_bones::Bme280::new (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196== 
+==3196== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3196==    at 0x49E95D0: ioctl (ioctl.S:26)
+==3196==    by 0x11227B: bme280_bare_bones::Bme280::new (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x11177F: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111B13: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111AFB: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x12D03F: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111D1B: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==  Address 0x1ffefff8ec is on thread 1's stack
+==3196==  in frame #1, created by bme280_bare_bones::Bme280::new (???:)
+==3196==  Uninitialised value was created by a stack allocation
+==3196==    at 0x1120A8: bme280_bare_bones::Bme280::new (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196== 
+==3196== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3196==    at 0x49E95D0: ioctl (ioctl.S:26)
+==3196==    by 0x11227B: bme280_bare_bones::Bme280::new (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x11177F: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111B13: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111AFB: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x12D03F: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111D1B: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==  Address 0x1ffefff8c6 is on thread 1's stack
+==3196==  in frame #1, created by bme280_bare_bones::Bme280::new (???:)
+==3196==  Uninitialised value was created by a stack allocation
+==3196==    at 0x1120A8: bme280_bare_bones::Bme280::new (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196== 
+==3196== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3196==    at 0x49E95D0: ioctl (ioctl.S:26)
+==3196==    by 0x111E97: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x1117EF: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111B13: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111AFB: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x12D03F: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111D1B: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==  Address 0x1ffefff8cc is on thread 1's stack
+==3196==  in frame #1, created by bme280_bare_bones::Bme280::read_temperature_c (???:)
+==3196==  Uninitialised value was created by a stack allocation
+==3196==    at 0x111DA8: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196== 
+==3196== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3196==    at 0x49E95D0: ioctl (ioctl.S:26)
+==3196==    by 0x111E97: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x1117EF: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111B13: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111AFB: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x12D03F: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111D1B: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==  Address 0x1ffefff8a6 is on thread 1's stack
+==3196==  in frame #1, created by bme280_bare_bones::Bme280::read_temperature_c (???:)
+==3196==  Uninitialised value was created by a stack allocation
+==3196==    at 0x111DA8: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196== 
+==3196== Syscall param ioctl(I2C_RDWR) points to uninitialised byte(s)
+==3196==    at 0x49E95D0: ioctl (ioctl.S:26)
+==3196==    by 0x111FCF: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x1117EF: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111B13: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111AFB: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x12D03F: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111D1B: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==  Address 0x1ffefff8cc is on thread 1's stack
+==3196==  in frame #1, created by bme280_bare_bones::Bme280::read_temperature_c (???:)
+==3196==  Uninitialised value was created by a stack allocation
+==3196==    at 0x111DA8: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196== 
+==3196== Syscall param ioctl(I2C_RDWR).msgs points to uninitialised byte(s)
+==3196==    at 0x49E95D0: ioctl (ioctl.S:26)
+==3196==    by 0x111FCF: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x1117EF: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111B13: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111AFB: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x12D03F: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==    by 0x111D1B: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196==  Address 0x1ffefff8a6 is on thread 1's stack
+==3196==  in frame #1, created by bme280_bare_bones::Bme280::read_temperature_c (???:)
+==3196==  Uninitialised value was created by a stack allocation
+==3196==    at 0x111DA8: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==3196== 

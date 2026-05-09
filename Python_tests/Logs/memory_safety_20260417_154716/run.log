@@ -1,0 +1,44 @@
+============================================================
+ Raspberry Pi 3B — Memory Safety Test Runner
+ Started    : 2026-04-17 15:47:16
+ Output     : /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/memory_safety_20260417_154716
+ Valgrind   : ['memcheck', 'helgrind', 'massif']
+ Rust tools : ['asan', 'geiger', 'clippy', 'audit']
+ Duration   : 30s
+ LOW-MEMORY MODE active
+============================================================
+
+=== C Driver Analysis ===
+
+ [build] Compiling C driver with -g -O0...
+ [build] C build OK.
+
+ [c_driver/memcheck] Starting...
+
+ [c_driver/helgrind] Starting...
+
+ [c_driver/massif] Starting...
+
+=== Rust Driver Analysis ===
+
+ [build] Compiling Rust driver (release)...
+    Finished `release` profile [optimized] target(s) in 4.78s
+ [build] Rust build OK.
+ [audit] Unsafe audit stub written: /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/memory_safety_20260417_154716/Rust/rust_unsafe_audit.md
+
+ [rust_driver/memcheck] Starting...
+
+ [rust_driver/helgrind] Starting...
+
+ [rust_driver/massif] Starting...
+
+ [asan] Preparing AddressSanitizer build...
+ [asan] Skipped: no nightly toolchain.
+ [geiger] Skipped: cargo geiger not installed.
+
+ [clippy] Running cargo clippy...
+ [audit] Skipped: cargo audit not installed.
+
+ Summary written to: /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/memory_safety_20260417_154716/summary.md
+
+ Done.

@@ -1,0 +1,167 @@
+=====================================================================================
+Read/Write Fault Injection — BME280 C vs Rust drivers
+Started    : 2026-04-29 16:45:17
+Duration   : 40s per driver per scenario
+Injector   : /home/pi/Documents/C-and-Rust-driver/Python_tests/i2c_fault_inject.so
+Output     : /home/pi/Documents/C-and-Rust-driver/Python_tests/Logs/rw_fault_20260429_164516
+=====================================================================================
+
+Building LD_PRELOAD injector...
+  Injector built: /home/pi/Documents/C-and-Rust-driver/Python_tests/i2c_fault_inject.so
+
+Building C driver...
+  C driver built OK
+Building Rust driver...
+  Rust driver built OK
+
+======================================================================
+SCENARIO : READ_EVERY_N
+           Fail every 5th I2C read (EIO)
+======================================================================
+
+  → C | read_every_n
+    Fail every 5th I2C read (EIO)
+    Outcome        : Crashed/exited (rc=3) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=read mode=every_n every_n=5 prob=0.10 errno=5
+      [i2c_fault_inject] READ fault #5 → errno=5 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      i2c_read_u8: I2C_RDWR failed: Input/output error
+      Failed to read temperature
+
+  → Rust | read_every_n
+    Fail every 5th I2C read (EIO)
+    Outcome        : Crashed/exited (rc=1) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=read mode=every_n every_n=5 prob=0.10 errno=5
+      [i2c_fault_inject] READ fault #5 → errno=5 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      I/O error: Input/output error (os error 5)
+
+======================================================================
+SCENARIO : WRITE_EVERY_N
+           Fail every 5th I2C write (EIO)
+======================================================================
+
+  → C | write_every_n
+    Fail every 5th I2C write (EIO)
+    Outcome        : Crashed/exited (rc=3) after 0.2s
+    Successful reads: 1
+    Driver messages: [i2c_fault_inject] target=write mode=every_n every_n=5 prob=0.10 errno=5
+      [i2c_fault_inject] WRITE fault #5 → errno=5
+      Failed to write data: Input/output error
+      Failed to read temperature
+
+  → Rust | write_every_n
+    Fail every 5th I2C write (EIO)
+    Outcome        : Crashed/exited (rc=1) after 0.2s
+    Successful reads: 1
+    Driver messages: [i2c_fault_inject] target=write mode=every_n every_n=5 prob=0.10 errno=5
+      [i2c_fault_inject] WRITE fault #5 → errno=5
+      I/O error: Input/output error (os error 5)
+
+======================================================================
+SCENARIO : BOTH_EVERY_N
+           Fail every 5th read or write (EIO)
+======================================================================
+
+  → C | both_every_n
+    Fail every 5th read or write (EIO)
+    Outcome        : Crashed/exited (rc=3) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=both mode=every_n every_n=5 prob=0.10 errno=5
+      [i2c_fault_inject] READ fault #5 → errno=5 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      i2c_read_u8: I2C_RDWR failed: Input/output error
+      Failed to read temperature
+
+  → Rust | both_every_n
+    Fail every 5th read or write (EIO)
+    Outcome        : Crashed/exited (rc=1) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=both mode=every_n every_n=5 prob=0.10 errno=5
+      [i2c_fault_inject] READ fault #5 → errno=5 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      I/O error: Input/output error (os error 5)
+
+======================================================================
+SCENARIO : READ_PROB
+           20% random read failure rate (EIO)
+======================================================================
+
+  → C | read_prob
+    20% random read failure rate (EIO)
+    Outcome        : Crashed/exited (rc=2) after 0.0s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=read mode=prob every_n=5 prob=0.20 errno=5
+      [i2c_fault_inject] READ fault #1 → errno=5 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      i2c_read_u8: I2C_RDWR failed: Input/output error
+      Failed to initialize BME280 sensor
+
+  → Rust | read_prob
+    20% random read failure rate (EIO)
+    Outcome        : Crashed/exited (rc=1) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=read mode=prob every_n=5 prob=0.20 errno=5
+      [i2c_fault_inject] READ fault #1 → errno=5 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      I/O error: Input/output error (os error 5)
+
+======================================================================
+SCENARIO : ENODEV
+           Simulate device removal on reads (ENODEV)
+======================================================================
+
+  → C | enodev
+    Simulate device removal on reads (ENODEV)
+    Outcome        : Crashed/exited (rc=3) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=read mode=every_n every_n=5 prob=0.10 errno=19
+      [i2c_fault_inject] READ fault #5 → errno=19 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      i2c_read_u8: I2C_RDWR failed: No such device
+      Failed to read temperature
+
+  → Rust | enodev
+    Simulate device removal on reads (ENODEV)
+    Outcome        : Crashed/exited (rc=1) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=read mode=every_n every_n=5 prob=0.10 errno=19
+      [i2c_fault_inject] READ fault #5 → errno=19 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      I/O error: No such device (os error 19)
+
+======================================================================
+SCENARIO : ETIMEDOUT
+           Simulate I2C bus timeout on reads (ETIMEDOUT)
+======================================================================
+
+  → C | etimedout
+    Simulate I2C bus timeout on reads (ETIMEDOUT)
+    Outcome        : Crashed/exited (rc=3) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=read mode=every_n every_n=5 prob=0.10 errno=110
+      [i2c_fault_inject] READ fault #5 → errno=110 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      i2c_read_u8: I2C_RDWR failed: Connection timed out
+      Failed to read temperature
+
+  → Rust | etimedout
+    Simulate I2C bus timeout on reads (ETIMEDOUT)
+    Outcome        : Crashed/exited (rc=1) after 0.2s
+    Successful reads: 0
+    Driver messages: [i2c_fault_inject] target=read mode=every_n every_n=5 prob=0.10 errno=110
+      [i2c_fault_inject] READ fault #5 → errno=110 (EIO=5 ENODEV=19 ETIMEDOUT=110)
+      I/O error: Connection timed out (os error 110)
+
+=====================================================================================
+STRUCTURED RESULTS TABLE — Copy directly into your thesis
+=====================================================================================
+Scenario           Driver Detection (s)    Exit code    Reads OK   Driver error messages
+-------------------------------------------------------------------------------------
+read_every_n       C      0.2              3            0          [i2c_fault_inject] target=read
+read_every_n       Rust   0.2              1            0          [i2c_fault_inject] target=read
+write_every_n      C      0.2              3            1          [i2c_fault_inject] target=writ
+write_every_n      Rust   0.2              1            1          [i2c_fault_inject] target=writ
+both_every_n       C      0.2              3            0          [i2c_fault_inject] target=both
+both_every_n       Rust   0.2              1            0          [i2c_fault_inject] target=both
+read_prob          C      0.0              2            0          [i2c_fault_inject] target=read
+read_prob          Rust   0.2              1            0          [i2c_fault_inject] target=read
+enodev             C      0.2              3            0          [i2c_fault_inject] target=read
+enodev             Rust   0.2              1            0          [i2c_fault_inject] target=read
+etimedout          C      0.2              3            0          [i2c_fault_inject] target=read
+etimedout          Rust   0.2              1            0          [i2c_fault_inject] target=read
+
+Full stdout logs (including injector stderr) are in this folder.

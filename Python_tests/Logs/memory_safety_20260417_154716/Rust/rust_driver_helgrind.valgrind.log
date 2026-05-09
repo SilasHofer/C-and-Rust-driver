@@ -1,0 +1,23 @@
+==2840== Helgrind, a thread error detector
+==2840== Copyright (C) 2007-2024, and GNU GPL'd, by OpenWorks LLP et al.
+==2840== Using Valgrind-3.24.0 and LibVEX; rerun with -h for copyright info
+==2840== Command: /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones 0x76 0
+==2840== Parent PID: 2562
+==2840== 
+==2840== 
+==2840== Process terminating with default action of signal 2 (SIGINT)
+==2840==    at 0x499263C: __internal_syscall_cancel (cancellation.c:64)
+==2840==    by 0x49CE25B: clock_nanosleep@@GLIBC_2.17 (clock_nanosleep.c:48)
+==2840==    by 0x49D887F: nanosleep (nanosleep.c:25)
+==2840==    by 0x1360DB: std::thread::sleep (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==2840==    by 0x110AEF: bme280_bare_bones::Bme280::read_temperature_c (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==2840==    by 0x110067: bme280_bare_bones::main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==2840==    by 0x10F747: std::sys::backtrace::__rust_begin_short_backtrace (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==2840==    by 0x10F733: std::rt::lang_start::{{closure}} (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==2840==    by 0x13437B: std::rt::lang_start_internal (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==2840==    by 0x1104C7: main (in /home/pi/Documents/C-and-Rust-driver/Rust_driver_no_log/target/release/bme280_bare_bones)
+==2840== 
+==2840== Use --history-level=approx or =none to gain increased speed, at
+==2840== the cost of reduced accuracy of conflicting-access information
+==2840== For lists of detected and suppressed errors, rerun with: -s
+==2840== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

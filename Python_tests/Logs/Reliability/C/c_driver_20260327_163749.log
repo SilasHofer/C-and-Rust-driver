@@ -1,7 +1,0 @@
-[gcc compile]
-
-[run]
-Start time : 2026-03-27 16:37:53
-Timeout    : 10000s (logging every 100 readings)
-
-BME280 sensor initialized successfully
