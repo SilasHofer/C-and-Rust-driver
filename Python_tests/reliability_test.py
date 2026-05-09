@@ -29,7 +29,7 @@ C_DIR       = ROOT_DIR / "C_Driver"
 C_BINARY    = "c_driver"
 
 RUST_DIR    = ROOT_DIR / "Rust_Driver"
-RUST_BINARY = RUST_DIR / "target" / "release" / "bme280_bare_bones"
+RUST_BINARY = RUST_DIR / "target" / "release" / "Rust_Driver"
 
 TEMP_PATTERN    = "Temperature:"
 BATCH_SIZE      = 1500

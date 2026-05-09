@@ -20,11 +20,11 @@ fi
 
 case "$TARGET_KIND" in
     c)
-        TARGET="./fuzz_target"
+        TARGET="afl_fuzzing/C/fuzz_target"
         DEFAULT_OUT_DIR="./out_c_compare"
         ;;
     rust)
-        TARGET="./afl_fuzzing/rust-fuzzing/target/debug/fuzz_target"
+        TARGET="afl_fuzzing/Rust/target/debug/fuzz_target"
         DEFAULT_OUT_DIR="./out_rust_compare"
         ;;
     *)

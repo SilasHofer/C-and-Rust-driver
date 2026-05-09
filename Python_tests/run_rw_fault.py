@@ -28,11 +28,11 @@ from pathlib import Path
 # ── Paths (same layout as existing script) ──────────────────────────────────
 SCRIPT_DIR  = Path(__file__).parent.resolve()
 ROOT_DIR    = SCRIPT_DIR.parent
-C_DIR       = ROOT_DIR / "C_bare-bones_driver_no_log"
-RUST_DIR    = ROOT_DIR / "Rust_driver_no_log"
+C_DIR       = ROOT_DIR / "C_Driver"
+RUST_DIR    = ROOT_DIR / "Rust_Driver"
 
 C_BINARY    = C_DIR / "c_driver"
-RUST_BINARY = RUST_DIR / "target" / "release" / "bme280_bare_bones"
+RUST_BINARY = RUST_DIR / "target" / "release" / "Rust_Driver"
 INJECTOR_SO = SCRIPT_DIR / "i2c_fault_inject.so"
 
 # ── Fault scenarios ──────────────────────────────────────────────────────────

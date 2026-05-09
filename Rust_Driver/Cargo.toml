@@ -1,5 +1,5 @@
 [package]
-name = "bme280_bare_bones"
+name = "Rust_Driver"
 version = "0.1.0"
 edition = "2021"
 
