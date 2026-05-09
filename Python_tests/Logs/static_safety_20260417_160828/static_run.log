@@ -1,0 +1,136 @@
+======================================================================
+Static Memory Safety Analysis (No Sensor Required)
+Started     : 2026-04-17 16:08:28
+Project     : ../Rust_driver_no_log
+Output      : /home/silashofer/C-and-Rust-driver/Python_tests/Logs/static_safety_20260417_160828
+======================================================================
+
+1. Building Rust driver...
+Running: cargo build --release
+   Compiling libc v0.2.184
+   Compiling bme280_bare_bones v0.1.0 (/home/silashofer/C-and-Rust-driver/Rust_driver_no_log)
+    Finished `release` profile [optimized] target(s) in 1.61s
+
+  → Exit code: 0
+
+2. Running cargo clippy (unsafe lints)...
+Running: cargo clippy --release --all-targets -- -A clippy::all -W clippy::undocumented_unsafe_blocks -W clippy::missing_safety_doc -W clippy::multiple_unsafe_ops_per_block -W clippy::cast_ptr_alignment -W clippy::ptr_as_ptr
+    Checking libc v0.2.184
+    Checking bme280_bare_bones v0.1.0 (/home/silashofer/C-and-Rust-driver/Rust_driver_no_log)
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:191:15
+    |
+191 |     let ret = unsafe { libc::ioctl(file.as_raw_fd(), I2C_SLAVE, addr as libc::c_ulong) };
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+    = note: requested on the command line with `-W clippy::undocumented-unsafe-blocks`
+
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:206:19
+    |
+206 |     let written = unsafe {
+    |                   ^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+
+warning: `as` casting between raw pointers without changing their constness
+   --> src/lib.rs:209:13
+    |
+209 |             payload.as_ptr() as *const libc::c_void,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try `pointer::cast`, a safer alternative: `payload.as_ptr().cast::<libc::c_void>()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#ptr_as_ptr
+    = note: requested on the command line with `-W clippy::ptr-as-ptr`
+
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:241:15
+    |
+241 |     let ret = unsafe { libc::ioctl(file.as_raw_fd(), I2C_RDWR, &mut data) };
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:250:15
+    |
+250 |     let ret = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX) };
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+
+warning: unsafe block missing a safety comment
+   --> src/lib.rs:258:15
+    |
+258 |     let ret = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_UN) };
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider adding a safety comment on the preceding line
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#undocumented_unsafe_blocks
+
+warning: `bme280_bare_bones` (lib test) generated 6 warnings (1 duplicate) (run `cargo clippy --fix --lib -p bme280_bare_bones --tests -- -A clippy::all -W clippy::undocumented_unsafe_blocks -W clippy::missing_safety_doc -W clippy::multiple_unsafe_ops_per_block -W clippy::cast_ptr_alignment -W clippy::ptr_as_ptr` to apply 1 suggestion)
+warning: `bme280_bare_bones` (lib) generated 6 warnings (5 duplicates)
+    Finished `release` profile [optimized] target(s) in 0.72s
+
+  → Exit code: 0
+
+3. Running cargo geiger (unsafe usage)...
+Running: cargo geiger --output-format Ascii
+
+Metric output format: x/y
+    x = unsafe code used by the build
+    y = total unsafe code found in the crate
+
+Symbols:
+    :) = No `unsafe` usage found, declares #![forbid(unsafe_code)]
+    ?  = No `unsafe` usage found, missing #![forbid(unsafe_code)]
+    !  = `unsafe` usage found
+
+Functions  Expressions  Impls  Traits  Methods  Dependency
+
+0/0        15/15        0/0    0/0     0/0      !  bme280_bare_bones 0.1.0
+0/92       34/725       0/2    0/0     8/101    !  `-- libc 0.2.184
+
+0/92       49/740       0/2    0/0     8/101
+
+     Removed 40 files, 13.8MiB total
+   Compiling libc v0.2.184
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/build/libc-9b7cc5838f8d228d/build_script_build-9b7cc5838f8d228d.d","emit":"dep-info"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/build/libc-9b7cc5838f8d228d/build_script_build-9b7cc5838f8d228d","emit":"link"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/libc-61ace735d8291430.d","emit":"dep-info"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/liblibc-61ace735d8291430.rmeta","emit":"metadata"}
+    Checking bme280_bare_bones v0.1.0 (/home/silashofer/C-and-Rust-driver/Rust_driver_no_log)
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/bme280_bare_bones-6a0278d853921ac0.d","emit":"dep-info"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/libbme280_bare_bones-6a0278d853921ac0.rmeta","emit":"metadata"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/bme280_bare_bones-00bf81ed99644b5c.d","emit":"dep-info"}
+{"$message_type":"artifact","artifact":"/home/silashofer/C-and-Rust-driver/Rust_driver_no_log/target/debug/deps/libbme280_bare_bones-00bf81ed99644b5c.rmeta","emit":"metadata"}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.04s
+    Scanning done
+
+  → Exit code: 0
+
+4. Running cargo audit (vulnerabilities)...
+Running: cargo audit --color never
+    Fetching advisory database from `https://github.com/RustSec/advisory-db.git`
+      Loaded 1049 security advisories (from /home/silashofer/.cargo/advisory-db)
+    Updating crates.io index
+    Scanning Cargo.lock for vulnerabilities (2 crate dependencies)
+
+  → Exit code: 0
+
+5. Generating unsafe audit Markdown...
+   Unsafe audit file: /home/silashofer/C-and-Rust-driver/Python_tests/Logs/static_safety_20260417_160828/rust_unsafe_audit.md
+
+======================================================================
+SUMMARY
+Build   : OK
+Clippy  : OK
+Geiger  : OK
+Audit   : OK
+Log     : /home/silashofer/C-and-Rust-driver/Python_tests/Logs/static_safety_20260417_160828/static_run.log
+Markdown: /home/silashofer/C-and-Rust-driver/Python_tests/Logs/static_safety_20260417_160828/rust_unsafe_audit.md
+======================================================================
