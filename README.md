@@ -481,7 +481,75 @@ grep -r "unsafe" Rust_Driver/src/  # Count unsafe blocks
 
 ### Ground Truth Sensor Setup
 
-**TODO:** Ground truth sensor configuration will be added here. This section describes how to set up a separate Raspberry Pi with a BME280 sensor for reference measurements.
+To validate that driver readings are correct, collect reference sensor data from the Pimoroni BME280 Python library, which provides sensor-native compensation and calibration.
+
+#### Installation
+
+1. **Clone the Pimoroni BME280 library**:
+   ```bash
+   git clone https://github.com/pimoroni/bme280-python.git
+   cd bme280-python
+   ```
+
+2. **Install in a virtual environment** (recommended):
+   ```bash
+   python3 -m venv ~/.virtualenvs/pimoroni
+   source ~/.virtualenvs/pimoroni/bin/activate
+   pip install .
+   ```
+
+   Alternatively, install system-wide:
+   ```bash
+   pip install pimoroni-bme280
+   ```
+
+#### Running Ground Truth Collection
+
+The `source_of_truth/` folder contains modified example scripts for continuous sensor logging:
+
+**Modified `compensated-temperature.py`** (from Pimoroni examples):
+- Reads temperature from BME280 with built-in sensor compensation
+- Logs readings to `temperature_readings.csv` with ISO 8601 timestamps
+- Supports `--duration` (seconds) and `--interval` (sampling interval in seconds)
+- Error handling: Retries on sensor failures, exits after 5 consecutive errors
+- Resume capability: If CSV exists, resumes from original start time
+
+**Modified `run-bme280.sh`** (wrapper script):
+- Runs the Python script with 48-hour duration (172800 seconds) to match reliability test
+- Uses `--interval 0` for maximum sampling speed (as fast as I2C allows)
+
+**To run ground truth collection**:
+
+```bash
+cd source_of_truth
+
+# Run for 48 hours (matches the reliability test)
+./run-bme280.sh
+
+# Or run manually with custom parameters
+python3 compensated-temperature.py --duration 172800 --interval 0
+```
+
+The script generates `temperature_readings.csv` with two columns:
+- Column 1: ISO 8601 timestamp (when reading was taken)
+- Column 2: Temperature in °C (sensor-compensated value)
+
+#### Comparing Driver Readings to Ground Truth
+
+Once ground truth data is collected:
+
+1. **Extract timestamps and readings** from driver logs and ground truth CSV
+2. **Synchronize by timestamp**: Match driver readings to ground truth readings within ±1 second
+3. **Calculate statistics**:
+   - Mean temperature for each driver vs. ground truth
+   - Standard deviation of readings
+   - Mean absolute deviation from ground truth
+4. **Compare behavior patterns**:
+   - Both should show same temperature trends (thermal response to environment)
+   - Both should have similar variance (same sensor, same conditions)
+   - Driver readings should stay within ±0.5°C of ground truth (typical BME280 accuracy)
+
+**Note**: The Pimoroni library applies factory calibration coefficients from the sensor's EEPROM, making it an authoritative reference. Your driver implementations should produce similar compensated values if calibration is correctly applied.
 
 ### Expected Results and Test Duration
 
