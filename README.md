@@ -1,6 +1,11 @@
 # User-Space Device Drivers in Embedded Systems: A Comparative Study of C and Rust
 
-This repository contains the source code and experimental results for the Bachelor's thesis "User-Space Device Drivers in Embedded Systems: A Comparative Study of C and Rust" by Alexander Sundvisson and Silas Hofer, submitted to Blekinge Institute of Technology in May 2026.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**Bachelor's thesis** by Alexander Sundvisson and Silas Hofer  
+Submitted to Blekinge Institute of Technology in May 2026
+
+Copyright © 2026 Alexander Sundvisson and Silas Hofer
 
 ## Abstract
 
@@ -582,8 +587,8 @@ All test scripts now correctly reference the Rust binary as `Rust_Driver` (match
 
 ### ✅ Fixed: Directory Path Inconsistencies  
 All test scripts now use the correct directory names:
-- `C_Driver` (was: `C_bare-bones_driver_no_log`)
-- `Rust_Driver` (was: `Rust_driver_no_log`)
+- `C_Driver` 
+- `Rust_Driver`
 
 ### ✅ Fixed: AFL++ Target Paths
 The fuzzing script now correctly references:
@@ -598,5 +603,8 @@ The full thesis PDF provides a detailed explanation of the methodology, results,
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**.  
+Both authors (Alexander Sundvisson and Silas Hofer) retain copyright.
+
+See the full [LICENSE](LICENSE) file for the complete legal text.
 
