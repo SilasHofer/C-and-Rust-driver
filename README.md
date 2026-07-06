@@ -5,6 +5,8 @@
 **Bachelor's thesis** by Alexander Sundvisson and Silas Hofer  
 Submitted to Blekinge Institute of Technology in May 2026
 
+[Bachelor's thesis](https://urn.kb.se/resolve?urn=urn:nbn:se:bth-29775)
+
 Copyright © 2026 Alexander Sundvisson and Silas Hofer
 
 ## Abstract
